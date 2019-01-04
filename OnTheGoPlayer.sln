@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.28307.168
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OnTheGoPlayer", "OnTheGoPlayer\OnTheGoPlayer.csproj", "{86BBE860-BBA7-4CE4-AE0C-A7066855130F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OnTheGoPlayer.Test", "OnTheGoPlayer.Test\OnTheGoPlayer.Test.csproj", "{FBB2B389-2E6E-4763-9183-D0BC5D362B60}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{86BBE860-BBA7-4CE4-AE0C-A7066855130F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{86BBE860-BBA7-4CE4-AE0C-A7066855130F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{86BBE860-BBA7-4CE4-AE0C-A7066855130F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FBB2B389-2E6E-4763-9183-D0BC5D362B60}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FBB2B389-2E6E-4763-9183-D0BC5D362B60}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FBB2B389-2E6E-4763-9183-D0BC5D362B60}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FBB2B389-2E6E-4763-9183-D0BC5D362B60}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

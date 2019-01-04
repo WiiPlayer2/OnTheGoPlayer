@@ -6,16 +6,17 @@ using System.Threading.Tasks;
 
 namespace OnTheGoPlayer.Models
 {
-    class Song
+    public class Song
     {
+        #region Public Properties
+
+        public string Album { get; }
+        public string Artist { get; }
+        public string FileFormat { get; }
         public int ID { get; }
 
         public string Title { get; }
 
-        public string Artist { get; }
-
-        public string Album { get; }
-
-        public string FileFormat { get; }
+        #endregion Public Properties
     }
 }

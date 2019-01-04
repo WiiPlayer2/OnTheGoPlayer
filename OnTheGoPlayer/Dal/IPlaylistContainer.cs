@@ -8,14 +8,21 @@ using System.Threading.Tasks;
 
 namespace OnTheGoPlayer.Dal
 {
-    interface IPlaylistContainer
+    public interface IPlaylistContainer
     {
-        Playlist Playlist { get; }
+        #region Public Properties
 
         bool IsDirty { get; }
+        Playlist Playlist { get; }
+
+        #endregion Public Properties
+
+        #region Public Methods
 
         Task<Stream> GetSongStream(Song song);
 
         void Save();
+
+        #endregion Public Methods
     }
 }
