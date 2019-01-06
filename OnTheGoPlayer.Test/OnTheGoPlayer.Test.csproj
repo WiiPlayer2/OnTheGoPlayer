@@ -70,10 +70,17 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Dal\MediaMonkeyDB\MMDBPlaylistContainerExporterTest.cs" />
+    <Compile Include="Helpers\Extensions\AssertionExtensions.cs" />
+    <Compile Include="Helpers\Extensions\PlaylistContainerAssertions.cs" />
+    <Compile Include="Helpers\Extensions\StreamAssertions.cs" />
+    <Compile Include="Dal\IO\PlaylistContainerReaderTest.cs" />
+    <Compile Include="Dal\IO\PlaylistContainerTestData.cs" />
+    <Compile Include="Dal\IO\PlaylistContainerWriterTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Dal\MediaMonkeyDB\mm-test.db" />
+    <EmbeddedResource Include="Dal\IO\test.container" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

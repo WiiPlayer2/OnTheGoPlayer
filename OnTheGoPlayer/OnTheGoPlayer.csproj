@@ -99,8 +99,13 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Dal\IO\Constants.cs" />
+    <Compile Include="Dal\IO\IOPlaylistContainer.cs" />
+    <Compile Include="Dal\IO\FilePlaylistContainer.cs" />
     <Compile Include="Dal\IO\PlaylistContainerReader.cs" />
     <Compile Include="Dal\IO\PlaylistContainerWriter.cs" />
+    <Compile Include="Dal\IO\StreamPlaylistContainer.cs" />
+    <Compile Include="Dal\IO\SubStream.cs" />
     <Compile Include="Dal\IPlaylistContainer.cs" />
     <Compile Include="Dal\IPlaylistContainerExporter.cs" />
     <Compile Include="Dal\MediaMonkeyDB\MMDBPlaylist.cs" />

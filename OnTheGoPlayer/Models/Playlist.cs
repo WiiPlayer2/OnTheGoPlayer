@@ -10,8 +10,8 @@ namespace OnTheGoPlayer.Models
     {
         #region Public Properties
 
-        public string Name { get; }
-        public IReadOnlyList<Song> Songs { get; }
+        public string Name { get; set; }
+        public IReadOnlyList<Song> Songs { get; set; }
 
         #endregion Public Properties
     }

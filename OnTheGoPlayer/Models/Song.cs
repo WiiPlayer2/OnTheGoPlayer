@@ -10,12 +10,15 @@ namespace OnTheGoPlayer.Models
     {
         #region Public Properties
 
-        public string Album { get; }
-        public string Artist { get; }
-        public string FileFormat { get; }
-        public int ID { get; }
+        public string Album { get; set; }
 
-        public string Title { get; }
+        public string Artist { get; set; }
+
+        public string FileFormat { get; set; }
+
+        public int ID { get; set; }
+
+        public string Title { get; set; }
 
         #endregion Public Properties
     }
