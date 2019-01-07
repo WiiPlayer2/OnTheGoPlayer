@@ -18,7 +18,7 @@ namespace OnTheGoPlayer.Dal.IO
 
         #region Public Constructors
 
-        public FilePlaylistContainer(string filePath, long offset, string name, IEnumerable<IOPlaylistContainer.SongDataEntry> songDataEntries)
+        public FilePlaylistContainer(string filePath, long offset, string name, IEnumerable<SongDataEntry> songDataEntries)
             : base(offset, name, songDataEntries)
         {
             this.filePath = filePath;
@@ -30,7 +30,9 @@ namespace OnTheGoPlayer.Dal.IO
 
         public override Task<Stream> GetSongStream(Song song)
         {
-            throw new NotImplementedException();
+            var entry = songDataEntries[song.ID];
+            var fstream = File.Open(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
+            return Task.FromResult<Stream>(new SubStream(fstream, entry.DataOffset + offset, entry.DataLength, false));
         }
 
         public override void Save()

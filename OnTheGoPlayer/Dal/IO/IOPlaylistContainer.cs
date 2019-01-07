@@ -14,6 +14,8 @@ namespace OnTheGoPlayer.Dal.IO
 
         protected readonly long offset;
 
+        protected readonly Dictionary<int, SongDataEntry> songDataEntries;
+
         #endregion Protected Fields
 
         #region Protected Constructors
@@ -26,6 +28,7 @@ namespace OnTheGoPlayer.Dal.IO
                 Name = name,
                 Songs = songDataEntries.Select(o => o.Song).ToList(),
             };
+            this.songDataEntries = songDataEntries.ToDictionary(o => o.ID);
         }
 
         #endregion Protected Constructors

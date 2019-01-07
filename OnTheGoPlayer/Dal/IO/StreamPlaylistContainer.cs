@@ -11,8 +11,7 @@ namespace OnTheGoPlayer.Dal.IO
     internal class StreamPlaylistContainer : IOPlaylistContainer
     {
         #region Private Fields
-
-        private Dictionary<int, SongDataEntry> songDataEntries;
+        
         private Stream stream;
 
         #endregion Private Fields
@@ -23,7 +22,6 @@ namespace OnTheGoPlayer.Dal.IO
             : base(offset, name, songDataEntries)
         {
             stream = baseStream;
-            this.songDataEntries = songDataEntries.ToDictionary(o => o.ID);
         }
 
         #endregion Public Constructors
@@ -33,7 +31,7 @@ namespace OnTheGoPlayer.Dal.IO
         public override Task<Stream> GetSongStream(Song song)
         {
             var entry = songDataEntries[song.ID];
-            return Task.FromResult<Stream>(new SubStream(stream, entry.DataOffset, entry.DataLength, true));
+            return Task.FromResult<Stream>(new SubStream(stream, entry.DataOffset + offset, entry.DataLength, true));
         }
 
         public override void Save()

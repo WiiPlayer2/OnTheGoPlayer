@@ -110,6 +110,7 @@
     <Compile Include="Dal\IPlaylistContainerExporter.cs" />
     <Compile Include="Dal\MediaMonkeyDB\MMDBPlaylist.cs" />
     <Compile Include="Dal\MediaMonkeyDB\MMDBPlaylistContainerExporter.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Models\Playlist.cs" />
     <Compile Include="Models\Song.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />

@@ -26,8 +26,7 @@ namespace OnTheGoPlayer.Test.Dal.IO
             memStream.Should().Equal(Resource.AsStream("test.container"));
         }
 
-        [TestMethod]
-        [Ignore]
+        //[TestMethod]
         public async Task WriteTestData()
         {
             Console.WriteLine(Environment.CurrentDirectory);

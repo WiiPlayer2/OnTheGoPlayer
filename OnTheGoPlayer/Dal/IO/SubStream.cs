@@ -30,8 +30,8 @@ namespace OnTheGoPlayer.Dal.IO
 
         public override long Position
         {
-            get => stream.Position + offset;
-            set => Seek(value + offset, SeekOrigin.Begin);
+            get => stream.Position - offset;
+            set => Seek(value, SeekOrigin.Begin);
         }
 
         #endregion Public Properties
@@ -44,6 +44,8 @@ namespace OnTheGoPlayer.Dal.IO
             this.offset = offset;
             Length = length;
             this.leaveOpen = leaveOpen;
+
+            Position = 0;
         }
 
         public override void Flush()
@@ -53,7 +55,7 @@ namespace OnTheGoPlayer.Dal.IO
 
         public override int Read(byte[] buffer, int offset, int count)
         {
-            var maxCount = (int)((this.offset + Length) - Position);
+            var maxCount = (int)(Length - Position);
             var actualCount = Math.Min(count, maxCount);
 
             if (actualCount == 0)
@@ -80,7 +82,7 @@ namespace OnTheGoPlayer.Dal.IO
                     break;
             }
 
-            if (position < this.offset || position >= this.offset + Length)
+            if (position < this.offset || position > this.offset + Length)
                 throw new NotSupportedException();
 
             stream.Seek(position, SeekOrigin.Begin);

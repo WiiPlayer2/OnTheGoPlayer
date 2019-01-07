@@ -19,7 +19,7 @@ namespace OnTheGoPlayer.Dal.IO
         #region Public Constructors
 
         public PlaylistContainerReader(string filePath)
-            : this(File.Open(filePath, FileMode.Open), false)
+            : this(File.Open(filePath, FileMode.Open, FileAccess.Read, FileShare.Read), false)
         {
             this.filePath = filePath;
         }
