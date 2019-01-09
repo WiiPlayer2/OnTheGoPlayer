@@ -20,12 +20,12 @@ namespace OnTheGoPlayer.Dal.IO
 
         #region Protected Constructors
 
-        protected IOPlaylistContainer(long offset, string name, IEnumerable<SongDataEntry> songDataEntries)
+        protected IOPlaylistContainer(long offset, PlaylistMetaData metaData, IEnumerable<SongDataEntry> songDataEntries)
         {
             this.offset = offset;
             Playlist = new Playlist
             {
-                Name = name,
+                MetaData = metaData,
                 Songs = songDataEntries.Select(o => o.Song).ToList(),
             };
             this.songDataEntries = songDataEntries.ToDictionary(o => o.ID);

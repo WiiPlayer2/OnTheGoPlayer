@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using OnTheGoPlayer.Helpers;
+using OnTheGoPlayer.Models;
 using SongsDB;
 
 namespace OnTheGoPlayer.Dal.MediaMonkeyCOM
@@ -36,11 +37,15 @@ namespace OnTheGoPlayer.Dal.MediaMonkeyCOM
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<(int ID, string Name)>> ListPlaylists()
+        public Task<IEnumerable<PlaylistMetaData>> ListPlaylists()
         {
-            return Task.Run<IEnumerable<(int ID, string Name)>>(() =>
+            return Task.Run<IEnumerable<PlaylistMetaData>>(() =>
             {
-                return GetPlaylists(application.PlaylistByID[0].ChildPlaylists).Select(o => (ID: o.ID, Name: o.Title)).ToList();
+                return GetPlaylists(application.PlaylistByID[0].ChildPlaylists).Select(o => new PlaylistMetaData
+                {
+                    ID = o.ID,
+                    Title = o.Title,
+                }).ToList();
             });
         }
 

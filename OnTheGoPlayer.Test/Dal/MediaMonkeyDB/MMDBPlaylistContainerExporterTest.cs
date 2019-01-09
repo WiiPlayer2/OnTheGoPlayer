@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OnTheGoPlayer.Dal.MediaMonkeyDB;
+using OnTheGoPlayer.Models;
 using Resourcer;
 using System;
 using System.Collections.Generic;
@@ -75,12 +76,12 @@ namespace OnTheGoPlayer.Test.Dal.MediaMonkeyDB
         public async Task ListPlaylists_WithTestDatabase_ReturnsCorrectEntries()
         {
             var exporter = new MMDBPlaylistContainerExporter();
-            var shouldBeEntries = new (int ID, string Name)[]
+            var shouldBeEntries = new[]
             {
-                (16, "Camille"),
-                (19, "DemFeels"),
-                (21, "Do not forget"),
-                (23, "Kled"),
+                new PlaylistMetaData{ ID = 16, Title = "Camille" },
+                new PlaylistMetaData{ ID = 19, Title = "DemFeels" },
+                new PlaylistMetaData{ ID = 21, Title = "Do not forget" },
+                new PlaylistMetaData{ ID = 23, Title = "Kled" },
             };
 
             await exporter.Open(dbFilepath);

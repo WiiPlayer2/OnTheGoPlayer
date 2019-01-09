@@ -11,15 +11,15 @@ namespace OnTheGoPlayer.Dal.IO
     internal class StreamPlaylistContainer : IOPlaylistContainer
     {
         #region Private Fields
-        
+
         private Stream stream;
 
         #endregion Private Fields
 
         #region Public Constructors
 
-        public StreamPlaylistContainer(Stream baseStream, long offset, string name, IEnumerable<SongDataEntry> songDataEntries)
-            : base(offset, name, songDataEntries)
+        public StreamPlaylistContainer(Stream baseStream, long offset, PlaylistMetaData metaData, IEnumerable<SongDataEntry> songDataEntries)
+            : base(offset, metaData, songDataEntries)
         {
             stream = baseStream;
         }

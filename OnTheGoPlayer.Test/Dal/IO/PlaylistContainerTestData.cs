@@ -17,7 +17,10 @@ namespace OnTheGoPlayer.Test.Dal.IO
                 var ret = Substitute.For<IPlaylistContainer>();
                 ret.Playlist.Returns(new Playlist
                 {
-                    Name = "Test Playlist",
+                    MetaData = new PlaylistMetaData
+                    {
+                        Title = "Test Playlist",
+                    },
                     Songs = Enumerable.Range(0, 2).Select(id => new Song
                     {
                         ID = id,

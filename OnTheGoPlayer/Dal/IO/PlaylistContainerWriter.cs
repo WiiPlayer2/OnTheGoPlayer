@@ -44,10 +44,19 @@ namespace OnTheGoPlayer.Dal.IO
             return Task.Run(async () =>
             {
                 writer.Write(Constants.CONTAINER_VERSION);
-                writer.Write(playlistContainer.Playlist.Name);
+                WriteMetaData(playlistContainer.Playlist.MetaData);
                 await WriteSongsTable(playlistContainer);
                 await WriteSongData(playlistContainer);
             });
+        }
+
+        #endregion Public Methods
+
+        #region Private Methods
+
+        private void WriteMetaData(PlaylistMetaData metaData)
+        {
+            writer.Write(metaData.Title);
         }
 
         private void WriteSong(Song song, long offset, long length)
@@ -82,6 +91,6 @@ namespace OnTheGoPlayer.Dal.IO
             }
         }
 
-        #endregion Public Methods
+        #endregion Private Methods
     }
 }

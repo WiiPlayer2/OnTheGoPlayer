@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace OnTheGoPlayer.Models
 {
-    public class Playlist
+    public class PlaylistMetaData
     {
         #region Public Properties
 
-        public PlaylistMetaData MetaData { get; set; }
+        public int ID { get; set; }
 
-        public IReadOnlyList<Song> Songs { get; set; }
+        public string Title { get; set; }
 
         #endregion Public Properties
     }

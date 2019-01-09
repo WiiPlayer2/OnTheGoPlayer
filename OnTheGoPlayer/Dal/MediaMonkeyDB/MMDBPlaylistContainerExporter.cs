@@ -1,4 +1,5 @@
 ﻿using Microsoft.Win32;
+using OnTheGoPlayer.Models;
 using SQLite;
 using System;
 using System.Collections.Generic;
@@ -47,10 +48,14 @@ namespace OnTheGoPlayer.Dal.MediaMonkeyDB
             throw new NotImplementedException();
         }
 
-        public async Task<IEnumerable<(int ID, string Name)>> ListPlaylists()
+        public async Task<IEnumerable<PlaylistMetaData>> ListPlaylists()
         {
             var dbPlaylists = await connection.QueryAsync<MMDBPlaylist>("SELECT IDPlaylist, PlaylistName FROM Playlists;");
-            return dbPlaylists.Select(o => (o.IDPlaylist, o.PlaylistName)).ToList();
+            return dbPlaylists.Select(o => new PlaylistMetaData
+            {
+                ID = o.IDPlaylist,
+                Title = o.PlaylistName,
+            }).ToList();
         }
 
         public async Task Open(string path)

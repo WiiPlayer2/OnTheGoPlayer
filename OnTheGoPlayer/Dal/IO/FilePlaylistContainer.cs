@@ -18,8 +18,8 @@ namespace OnTheGoPlayer.Dal.IO
 
         #region Public Constructors
 
-        public FilePlaylistContainer(string filePath, long offset, string name, IEnumerable<SongDataEntry> songDataEntries)
-            : base(offset, name, songDataEntries)
+        public FilePlaylistContainer(string filePath, long offset, PlaylistMetaData metaData, IEnumerable<SongDataEntry> songDataEntries)
+            : base(offset, metaData, songDataEntries)
         {
             this.filePath = filePath;
         }

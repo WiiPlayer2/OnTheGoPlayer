@@ -118,6 +118,7 @@
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Helpers\Extensions.cs" />
     <Compile Include="Models\Playlist.cs" />
+    <Compile Include="Models\PlaylistMetaData.cs" />
     <Compile Include="Models\Song.cs" />
     <Compile Include="ViewModels\ImportViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />

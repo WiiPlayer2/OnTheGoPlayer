@@ -1,4 +1,5 @@
-﻿using System;
+﻿using OnTheGoPlayer.Models;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -12,6 +13,7 @@ namespace OnTheGoPlayer.Dal.IO
         #region Private Fields
 
         private readonly string filePath;
+
         private BinaryReader reader;
 
         #endregion Private Fields
@@ -27,12 +29,16 @@ namespace OnTheGoPlayer.Dal.IO
         public PlaylistContainerReader(Stream inputStream)
             : this(inputStream, true) { }
 
+        #endregion Public Constructors
+
+        #region Private Constructors
+
         private PlaylistContainerReader(Stream inputStream, bool leaveOpen)
         {
             reader = new BinaryReader(inputStream, Encoding.UTF8, leaveOpen);
         }
 
-        #endregion Public Constructors
+        #endregion Private Constructors
 
         #region Public Methods
 
@@ -48,14 +54,25 @@ namespace OnTheGoPlayer.Dal.IO
                 if (containerVersion != Constants.CONTAINER_VERSION)
                     throw new InvalidDataException($"Invalid container version ({containerVersion})");
 
-                var name = reader.ReadString();
+                var metaData = ReadPlaylistMetaData();
                 var songEntries = ReadSongsTable();
                 var offset = reader.BaseStream.Position;
 
                 if (filePath == null)
-                    return new StreamPlaylistContainer(reader.BaseStream, offset, name, songEntries);
-                return new FilePlaylistContainer(filePath, offset, name, songEntries);
+                    return new StreamPlaylistContainer(reader.BaseStream, offset, metaData, songEntries);
+                return new FilePlaylistContainer(filePath, offset, metaData, songEntries);
             });
+        }
+
+        #endregion Public Methods
+
+        #region Private Methods
+
+        private PlaylistMetaData ReadPlaylistMetaData()
+        {
+            var metaData = new PlaylistMetaData();
+            metaData.Title = reader.ReadString();
+            return metaData;
         }
 
         private FilePlaylistContainer.SongDataEntry ReadSongDataEntry()
@@ -77,6 +94,6 @@ namespace OnTheGoPlayer.Dal.IO
             return Enumerable.Range(0, count).Select(_ => ReadSongDataEntry()).ToList();
         }
 
-        #endregion Public Methods
+        #endregion Private Methods
     }
 }
