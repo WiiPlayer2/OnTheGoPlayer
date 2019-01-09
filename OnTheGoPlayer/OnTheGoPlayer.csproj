@@ -112,9 +112,11 @@
     <Compile Include="Dal\IO\SubStream.cs" />
     <Compile Include="Dal\IPlaylistContainer.cs" />
     <Compile Include="Dal\IPlaylistContainerExporter.cs" />
+    <Compile Include="Dal\MediaMonkeyCOM\MMComPlaylistContainerExporter.cs" />
     <Compile Include="Dal\MediaMonkeyDB\MMDBPlaylist.cs" />
     <Compile Include="Dal\MediaMonkeyDB\MMDBPlaylistContainerExporter.cs" />
     <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="Helpers\Extensions.cs" />
     <Compile Include="Models\Playlist.cs" />
     <Compile Include="Models\Song.cs" />
     <Compile Include="ViewModels\ImportViewModel.cs" />
@@ -158,10 +160,20 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Bl\" />
-    <Folder Include="Dal\MediaMonkeyCOM\" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="FodyWeavers.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <COMReference Include="SongsDB">
+      <Guid>{E602ED16-8EF9-4F08-B09F-6F6E8306C51B}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Fody.3.3.5\build\Fody.targets" Condition="Exists('..\packages\Fody.3.3.5\build\Fody.targets')" />

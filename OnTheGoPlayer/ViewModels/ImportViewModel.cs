@@ -1,4 +1,5 @@
 ﻿using OnTheGoPlayer.Dal;
+using OnTheGoPlayer.Dal.MediaMonkeyCOM;
 using OnTheGoPlayer.Dal.MediaMonkeyDB;
 using System;
 using System.Collections.Generic;
@@ -35,9 +36,10 @@ namespace OnTheGoPlayer.ViewModels
 
         #region Public Properties
 
-        public IEnumerable<IPlaylistContainerExporter> Importers { get; } = new[]
+        public IEnumerable<IPlaylistContainerExporter> Importers { get; } = new IPlaylistContainerExporter[]
         {
             new MMDBPlaylistContainerExporter(),
+            new MMComPlaylistContainerExporter(),
         };
 
         public bool IsLoading { get; private set; }
@@ -63,13 +65,14 @@ namespace OnTheGoPlayer.ViewModels
         private async void Reload()
         {
             IsLoading = true;
+            Playlists = Enumerable.Empty<(int ID, string Name)>();
             try
             {
                 if (!SelectedImporter.IsOpen && !await SelectedImporter.TryOpen(Application.Current.MainWindow))
                     return;
 
                 if (SelectedImporter.IsOpen)
-                    Playlists = await SelectedImporter.ListPlaylists();
+                    Playlists = (await SelectedImporter.ListPlaylists()).OrderBy(o => o.Name).ToList();
             }
             finally
             {
