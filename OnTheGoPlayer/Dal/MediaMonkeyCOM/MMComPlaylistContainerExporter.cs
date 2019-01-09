@@ -41,7 +41,7 @@ namespace OnTheGoPlayer.Dal.MediaMonkeyCOM
         {
             return Task.Run<IEnumerable<PlaylistMetaData>>(() =>
             {
-                return GetPlaylists(application.PlaylistByID[0].ChildPlaylists).Select(o => new PlaylistMetaData
+                return GetAllChildPlaylists(application.PlaylistByID[0]).Select(o => new PlaylistMetaData
                 {
                     ID = o.ID,
                     Title = o.Title,
@@ -75,10 +75,9 @@ namespace OnTheGoPlayer.Dal.MediaMonkeyCOM
 
         #region Private Methods
 
-        private IEnumerable<SDBPlaylist> GetAllPlaylists(SDBPlaylist rootPlaylist)
-        {
-            return rootPlaylist.Yield().Concat(GetPlaylists(rootPlaylist.ChildPlaylists).SelectMany(o => GetAllPlaylists(o)));
-        }
+        private IEnumerable<SDBPlaylist> GetAllChildPlaylists(SDBPlaylist rootPlaylist) => GetPlaylists(rootPlaylist.ChildPlaylists).SelectMany(o => GetAllPlaylists(o));
+
+        private IEnumerable<SDBPlaylist> GetAllPlaylists(SDBPlaylist rootPlaylist) => rootPlaylist.Yield().Concat(GetAllChildPlaylists(rootPlaylist));
 
         private IEnumerable<SDBPlaylist> GetPlaylists(SDBPlaylists playlists)
         {
