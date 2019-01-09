@@ -5,7 +5,12 @@ using System.Text;
 
 namespace OnTheGoPlayer.ViewModels
 {
-    public class MainViewModel
+    internal class MainViewModel
     {
+        #region Public Properties
+
+        public ImportViewModel ImportViewModel { get; } = new ImportViewModel();
+
+        #endregion Public Properties
     }
 }
