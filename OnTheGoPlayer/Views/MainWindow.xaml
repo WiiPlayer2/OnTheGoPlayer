@@ -15,8 +15,8 @@
     <DockPanel>
         <TabControl>
             <TabItem Header="Player" />
-            <TabItem Header="Import">
-                <local:ImportView DataContext="{Binding ImportViewModel}" />
+            <TabItem Header="Export">
+                <local:ExportView DataContext="{Binding ExportViewModel}" />
             </TabItem>
         </TabControl>
     </DockPanel>

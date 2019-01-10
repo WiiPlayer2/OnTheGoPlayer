@@ -18,11 +18,15 @@ namespace OnTheGoPlayer.Views
     /// <summary>
     /// Interaction logic for ImportView.xaml
     /// </summary>
-    public partial class ImportView : UserControl
+    public partial class ExportView : UserControl
     {
-        public ImportView()
+        #region Public Constructors
+
+        public ExportView()
         {
             InitializeComponent();
         }
+
+        #endregion Public Constructors
     }
 }

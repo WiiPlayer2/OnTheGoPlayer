@@ -95,7 +95,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\ImportView.xaml">
+    <Page Include="Views\ExportView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -130,15 +130,16 @@
     <Compile Include="Models\Playlist.cs" />
     <Compile Include="Models\PlaylistMetaData.cs" />
     <Compile Include="Models\Song.cs" />
-    <Compile Include="ViewModels\ImportViewModel.cs" />
+    <Compile Include="ViewModels\ExportViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\Command.cs" />
+    <Compile Include="ViewModels\PlayerViewModel.cs" />
     <Compile Include="ViewModels\ProgressData.cs" />
     <Compile Include="Views\Controls\ProgressDataBar.xaml.cs">
       <DependentUpon>ProgressDataBar.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\ImportView.xaml.cs">
-      <DependentUpon>ImportView.xaml</DependentUpon>
+    <Compile Include="Views\ExportView.xaml.cs">
+      <DependentUpon>ExportView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>

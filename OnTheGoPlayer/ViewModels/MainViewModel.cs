@@ -9,7 +9,9 @@ namespace OnTheGoPlayer.ViewModels
     {
         #region Public Properties
 
-        public ImportViewModel ImportViewModel { get; } = new ImportViewModel();
+        public ExportViewModel ExportViewModel { get; } = new ExportViewModel();
+
+        public PlayerViewModel PlayerViewModel { get; } = new PlayerViewModel();
 
         #endregion Public Properties
     }
