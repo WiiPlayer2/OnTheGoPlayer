@@ -20,7 +20,7 @@ namespace OnTheGoPlayer.Dal
 
         Task Close();
 
-        Task<IPlaylistContainer> ExportPlaylist(int id);
+        Task<IPlaylistContainer> ExportPlaylist(int id, IProgress<(double?, string)> progress);
 
         Task<IEnumerable<PlaylistMetaData>> ListPlaylists();
 

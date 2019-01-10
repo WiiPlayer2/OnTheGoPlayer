@@ -91,6 +91,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="Views\Controls\ProgressDataBar.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\ImportView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -112,10 +116,16 @@
     <Compile Include="Dal\IO\SubStream.cs" />
     <Compile Include="Dal\IPlaylistContainer.cs" />
     <Compile Include="Dal\IPlaylistContainerExporter.cs" />
+    <Compile Include="Dal\MediaMonkeyCOM\MMComPlaylistContainer.cs" />
     <Compile Include="Dal\MediaMonkeyCOM\MMComPlaylistContainerExporter.cs" />
+    <Compile Include="Dal\MediaMonkeyCOM\MMComSongData.cs" />
     <Compile Include="Dal\MediaMonkeyDB\MMDBPlaylist.cs" />
     <Compile Include="Dal\MediaMonkeyDB\MMDBPlaylistContainerExporter.cs" />
     <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="Helpers\Converters\BooleanToVisibilityConverter.cs" />
+    <Compile Include="Helpers\Converters\ConverterMarkupExtension.cs" />
+    <Compile Include="Helpers\Converters\EqualityCompareConverter.cs" />
+    <Compile Include="Helpers\Converters\InvertBooleanConverter.cs" />
     <Compile Include="Helpers\Extensions.cs" />
     <Compile Include="Models\Playlist.cs" />
     <Compile Include="Models\PlaylistMetaData.cs" />
@@ -123,6 +133,10 @@
     <Compile Include="ViewModels\ImportViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\Command.cs" />
+    <Compile Include="ViewModels\ProgressData.cs" />
+    <Compile Include="Views\Controls\ProgressDataBar.xaml.cs">
+      <DependentUpon>ProgressDataBar.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\ImportView.xaml.cs">
       <DependentUpon>ImportView.xaml</DependentUpon>
     </Compile>

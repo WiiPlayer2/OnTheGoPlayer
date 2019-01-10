@@ -12,7 +12,6 @@ namespace OnTheGoPlayer.Dal
     {
         #region Public Properties
 
-        bool IsDirty { get; }
         Playlist Playlist { get; }
 
         #endregion Public Properties
@@ -20,8 +19,6 @@ namespace OnTheGoPlayer.Dal
         #region Public Methods
 
         Task<Stream> GetSongStream(Song song);
-
-        void Save();
 
         #endregion Public Methods
     }

@@ -30,6 +30,14 @@ namespace OnTheGoPlayer.Dal.IO
 
         #region Public Methods
 
+        public static async Task Write(string filePath, IPlaylistContainer playlistContainer, IProgress<(double?, string)> progress)
+        {
+            using (var writer = new PlaylistContainerWriter(filePath))
+            {
+                await writer.Write(playlistContainer, progress);
+            }
+        }
+
         public void Dispose()
         {
         }
@@ -39,14 +47,15 @@ namespace OnTheGoPlayer.Dal.IO
             await Task.Run(() => writer.Flush());
         }
 
-        public Task Write(IPlaylistContainer playlistContainer)
+        public Task Write(IPlaylistContainer playlistContainer, IProgress<(double?, string)> progress)
         {
+            progress.Report((null, "Writing meta data..."));
             return Task.Run(async () =>
             {
                 writer.Write(Constants.CONTAINER_VERSION);
                 WriteMetaData(playlistContainer.Playlist.MetaData);
                 await WriteSongsTable(playlistContainer);
-                await WriteSongData(playlistContainer);
+                await WriteSongData(playlistContainer, progress);
             });
         }
 
@@ -70,13 +79,19 @@ namespace OnTheGoPlayer.Dal.IO
             writer.Write(song.Album);
         }
 
-        private async Task WriteSongData(IPlaylistContainer playlistContainer)
+        private async Task WriteSongData(IPlaylistContainer playlistContainer, IProgress<(double?, string)> progress)
         {
+            var i = 0;
+            var count = playlistContainer.Playlist.Songs.Count;
             foreach (var song in playlistContainer.Playlist.Songs)
             {
+                progress.Report((((double)i) / count, $"Writing song {song.Artist} - {song.Title} ({i + 1}/{count})..."));
                 var stream = await playlistContainer.GetSongStream(song);
                 await stream.CopyToAsync(writer.BaseStream);
+
+                i++;
             }
+            progress.Report((1, string.Empty));
         }
 
         private async Task WriteSongsTable(IPlaylistContainer playlistContainer)

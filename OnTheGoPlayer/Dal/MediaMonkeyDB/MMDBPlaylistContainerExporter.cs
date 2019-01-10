@@ -43,7 +43,7 @@ namespace OnTheGoPlayer.Dal.MediaMonkeyDB
             }
         }
 
-        public Task<IPlaylistContainer> ExportPlaylist(int id)
+        public Task<IPlaylistContainer> ExportPlaylist(int id, IProgress<(double?, string)> progress)
         {
             throw new NotImplementedException();
         }

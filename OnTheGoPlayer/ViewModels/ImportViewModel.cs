@@ -1,4 +1,7 @@
-﻿using OnTheGoPlayer.Dal;
+﻿using Fody;
+using Microsoft.Win32;
+using OnTheGoPlayer.Dal;
+using OnTheGoPlayer.Dal.IO;
 using OnTheGoPlayer.Dal.MediaMonkeyCOM;
 using OnTheGoPlayer.Dal.MediaMonkeyDB;
 using OnTheGoPlayer.Models;
@@ -11,16 +14,31 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Threading;
 
 namespace OnTheGoPlayer.ViewModels
 {
     internal class ImportViewModel : INotifyPropertyChanged
     {
+        #region Private Fields
+
+        private readonly Dispatcher dispatcher = Dispatcher.CurrentDispatcher;
+
+        #endregion Private Fields
+
         #region Public Constructors
 
         public ImportViewModel()
         {
-            ReloadCommand = new Command(Reload, () => !IsLoading);
+            Progress = new ProgressData();
+            ReloadCommand = new Command(Reload, () => !Progress.IsWorking);
+            ExportCommand = new Command<PlaylistMetaData>(Export, _ => !Progress.IsWorking);
+
+            Progress.PropertyChanged += (_, __) =>
+            {
+                ReloadCommand.Refresh();
+                ExportCommand.Refresh(null);
+            };
         }
 
         #endregion Public Constructors
@@ -37,15 +55,17 @@ namespace OnTheGoPlayer.ViewModels
 
         #region Public Properties
 
+        public Command<PlaylistMetaData> ExportCommand { get; }
+
         public IEnumerable<IPlaylistContainerExporter> Importers { get; } = new IPlaylistContainerExporter[]
         {
             new MMDBPlaylistContainerExporter(),
             new MMComPlaylistContainerExporter(),
         };
 
-        public bool IsLoading { get; private set; }
-
         public IEnumerable<PlaylistMetaData> Playlists { get; private set; }
+
+        public ProgressData Progress { get; }
 
         public Command ReloadCommand { get; }
 
@@ -55,29 +75,72 @@ namespace OnTheGoPlayer.ViewModels
 
         #region Private Methods
 
-        private void OnIsLoadingChanged() => ReloadCommand.Refresh();
+        [ConfigureAwait(true)]
+        private async void Export(PlaylistMetaData obj)
+        {
+            Progress.Start();
+            try
+            {
+                Progress.Report((null, "Selecting export location..."));
+                var saveFileDialog = new SaveFileDialog()
+                {
+                    AddExtension = true,
+                    CheckPathExists = true,
+                    DefaultExt = "container",
+                    Filter = "Playlist Container (*.container)|*.container",
+                };
+                var result = saveFileDialog.ShowDialog(Application.Current.MainWindow) ?? false;
+                if (!result)
+                {
+                    Progress.Error("Exporting canceled.");
+                    return;
+                }
+
+                var container = await SelectedImporter.ExportPlaylist(obj.ID, Progress);
+                await PlaylistContainerWriter.Write(saveFileDialog.FileName, container, Progress);
+
+                Progress.Stop();
+            }
+            catch (Exception e)
+            {
+                Progress.Error(e);
+            }
+        }
+
+        private void OnIsLoadingChanged()
+        {
+            ReloadCommand.Refresh();
+            ExportCommand.Refresh(null);
+        }
 
         private void OnSelectedImporterChanged()
         {
-            if (!SelectedImporter.IsOpen)
-                Reload();
+            Playlists = Enumerable.Empty<PlaylistMetaData>();
+            Reload();
         }
 
         private async void Reload()
         {
-            IsLoading = true;
-            Playlists = Enumerable.Empty<PlaylistMetaData>();
+            Progress.Start();
             try
             {
-                if (!SelectedImporter.IsOpen && !await SelectedImporter.TryOpen(Application.Current.MainWindow))
-                    return;
+                if (!SelectedImporter.IsOpen)
+                {
+                    Progress.Report((null, "Opening exporter..."));
+                    if (!await SelectedImporter.TryOpen(Application.Current.MainWindow))
+                    {
+                        Progress.Error("Exporter wasn't opened.");
+                        return;
+                    }
+                }
 
-                if (SelectedImporter.IsOpen)
-                    Playlists = (await SelectedImporter.ListPlaylists()).OrderBy(o => o.Title).ToList();
+                Playlists = (await SelectedImporter.ListPlaylists()).OrderBy(o => o.Title).ToList();
+
+                Progress.Stop();
             }
-            finally
+            catch (Exception e)
             {
-                IsLoading = false;
+                Progress.Error(e);
             }
         }
 

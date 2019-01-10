@@ -2,6 +2,8 @@
     x:Class="OnTheGoPlayer.Views.ImportView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:OnTheGoPlayer.Views.Controls"
+    xmlns:conv="clr-namespace:OnTheGoPlayer.Helpers.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="clr-namespace:OnTheGoPlayer.ViewModels"
@@ -24,10 +26,39 @@
                 Command="{Binding ReloadCommand}"
                 Content="Reload" />
         </Grid>
-        <ProgressBar
+        <controls:ProgressDataBar
             Height="20"
-            DockPanel.Dock="Bottom"
-            IsIndeterminate="{Binding IsLoading}" />
-        <ListView ItemsSource="{Binding Playlists}" />
+            Data="{Binding Progress}"
+            DockPanel.Dock="Bottom">
+            <controls:ProgressDataBar.Style>
+                <Style TargetType="{x:Type controls:ProgressDataBar}">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Progress.IsWorking}" Value="True">
+                            <Setter Property="Visibility" Value="Visible" />
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding Progress.HasError}" Value="True">
+                            <Setter Property="Visibility" Value="Visible" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                    <Setter Property="Visibility" Value="Collapsed" />
+                </Style>
+            </controls:ProgressDataBar.Style>
+        </controls:ProgressDataBar>
+        <ListView ItemsSource="{Binding Playlists}">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <WrapPanel>
+                        <Button
+                            Margin="0,0,5,0"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Bottom"
+                            Command="{Binding RelativeSource={RelativeSource AncestorType=ListView}, Path=DataContext.ExportCommand}"
+                            CommandParameter="{Binding}"
+                            Content="Export" />
+                        <TextBlock Text="{Binding Title}" />
+                    </WrapPanel>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
     </DockPanel>
 </UserControl>
