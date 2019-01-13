@@ -42,6 +42,14 @@ namespace OnTheGoPlayer.Dal.IO
 
         #region Public Methods
 
+        public static async Task<IPlaylistContainer> Read(string filePath)
+        {
+            using (var reader = new PlaylistContainerReader(filePath))
+            {
+                return await reader.Read();
+            }
+        }
+
         public void Dispose()
         {
         }

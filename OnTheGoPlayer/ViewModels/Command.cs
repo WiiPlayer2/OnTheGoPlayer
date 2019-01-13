@@ -1,6 +1,7 @@
 ﻿using NullGuard;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -27,10 +28,16 @@ namespace OnTheGoPlayer.ViewModels
             : this(action, _ => true) { }
 
         public Command(Action<T> action, Func<T, bool> canExecute)
+            : this(action, canExecute, null) { }
+
+        public Command(Action<T> action, Func<T, bool> canExecute, INotifyPropertyChanged notifyingObject)
         {
             this.action = action;
             canExecuteFunc = canExecute;
             this.canExecute = canExecute(null);
+
+            if (notifyingObject != null)
+                notifyingObject.PropertyChanged += (_, __) => Refresh(default(T));
         }
 
         #endregion Public Constructors
@@ -78,7 +85,10 @@ namespace OnTheGoPlayer.ViewModels
             : this(action, () => true) { }
 
         public Command(Action action, Func<bool> canExecute)
-            : base(_ => action(), _ => canExecute()) { }
+            : this(action, canExecute, null) { }
+
+        public Command(Action action, Func<bool> canExecute, INotifyPropertyChanged notifyingObject)
+            : base(_ => action(), _ => canExecute(), notifyingObject) { }
 
         #endregion Public Constructors
 

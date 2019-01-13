@@ -4,6 +4,7 @@ using OnTheGoPlayer.Dal;
 using OnTheGoPlayer.Dal.IO;
 using OnTheGoPlayer.Dal.MediaMonkeyCOM;
 using OnTheGoPlayer.Dal.MediaMonkeyDB;
+using OnTheGoPlayer.Helpers;
 using OnTheGoPlayer.Models;
 using System;
 using System.Collections.Generic;
@@ -24,34 +25,36 @@ namespace OnTheGoPlayer.ViewModels
 
         private readonly Dispatcher dispatcher = Dispatcher.CurrentDispatcher;
 
+        private readonly MainViewModel mainViewModel;
+
         #endregion Private Fields
 
         #region Public Constructors
 
-        public ExportViewModel()
+        public ExportViewModel(MainViewModel mainViewModel)
         {
+            this.mainViewModel = mainViewModel;
+
             Progress = new ProgressData();
             ReloadCommand = new Command(Reload, () => !Progress.IsWorking);
             ExportCommand = new Command<PlaylistMetaData>(Export, _ => !Progress.IsWorking);
+            LoadCommand = new Command<PlaylistMetaData>(Load, _ => !Progress.IsWorking);
 
             Progress.PropertyChanged += (_, __) =>
             {
                 ReloadCommand.Refresh();
                 ExportCommand.Refresh(null);
+                LoadCommand.Refresh(null);
             };
         }
 
         #endregion Public Constructors
-
-#pragma warning disable 67
 
         #region Public Events
 
         public event PropertyChangedEventHandler PropertyChanged;
 
         #endregion Public Events
-
-#pragma warning restore 67
 
         #region Public Properties
 
@@ -62,6 +65,8 @@ namespace OnTheGoPlayer.ViewModels
             new MMDBPlaylistContainerExporter(),
             new MMComPlaylistContainerExporter(),
         };
+
+        public Command<PlaylistMetaData> LoadCommand { get; }
 
         public IEnumerable<PlaylistMetaData> LoadedPlaylists { get; private set; }
 
@@ -76,28 +81,21 @@ namespace OnTheGoPlayer.ViewModels
         #region Private Methods
 
         [ConfigureAwait(true)]
-        private async void Export(PlaylistMetaData obj)
+        private async void Export(PlaylistMetaData metaData)
         {
             Progress.Start();
             try
             {
                 Progress.Report((null, "Selecting export location..."));
-                var saveFileDialog = new SaveFileDialog()
-                {
-                    AddExtension = true,
-                    CheckPathExists = true,
-                    DefaultExt = "container",
-                    Filter = "Playlist Container (*.container)|*.container",
-                };
-                var result = saveFileDialog.ShowDialog(Application.Current.MainWindow) ?? false;
+                var (result, path) = Dialogs.ShowSaveContainer();
                 if (!result)
                 {
                     Progress.Error("Exporting canceled.");
                     return;
                 }
 
-                var container = await SelectedExporter.ExportPlaylist(obj.ID, Progress);
-                await PlaylistContainerWriter.Write(saveFileDialog.FileName, container, Progress);
+                var container = await SelectedExporter.ExportPlaylist(metaData.ID, Progress);
+                await PlaylistContainerWriter.Write(path, container, Progress);
 
                 Progress.Stop();
             }
@@ -105,6 +103,15 @@ namespace OnTheGoPlayer.ViewModels
             {
                 Progress.Error(e);
             }
+        }
+
+        [ConfigureAwait(true)]
+        private async void Load(PlaylistMetaData metaData)
+        {
+            await Progress.Do(async () =>
+            {
+                mainViewModel.LoadedPlaylist = await SelectedExporter.ExportPlaylist(metaData.ID, Progress);
+            });
         }
 
         private void OnSelectedExporterChanged()

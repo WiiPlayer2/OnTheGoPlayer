@@ -13,10 +13,26 @@ namespace OnTheGoPlayer.Dal.IO
         #region Private Fields
 
         private readonly bool leaveOpen;
+
         private readonly long offset;
+
         private Stream stream;
 
         #endregion Private Fields
+
+        #region Public Constructors
+
+        public SubStream(Stream baseStream, long offset, long length, bool leaveOpen)
+        {
+            stream = baseStream;
+            this.offset = offset;
+            Length = length;
+            this.leaveOpen = leaveOpen;
+
+            Position = 0;
+        }
+
+        #endregion Public Constructors
 
         #region Public Properties
 
@@ -37,16 +53,6 @@ namespace OnTheGoPlayer.Dal.IO
         #endregion Public Properties
 
         #region Public Methods
-
-        public SubStream(Stream baseStream, long offset, long length, bool leaveOpen)
-        {
-            stream = baseStream;
-            this.offset = offset;
-            Length = length;
-            this.leaveOpen = leaveOpen;
-
-            Position = 0;
-        }
 
         public override void Flush()
         {
@@ -74,7 +80,7 @@ namespace OnTheGoPlayer.Dal.IO
                     break;
 
                 case SeekOrigin.Current:
-                    position = Position + offset;
+                    position = Position + this.offset;
                     break;
 
                 case SeekOrigin.End:

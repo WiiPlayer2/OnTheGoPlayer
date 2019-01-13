@@ -17,15 +17,11 @@ namespace OnTheGoPlayer.ViewModels
 
         #endregion Private Fields
 
-#pragma warning disable 67
-
         #region Public Events
 
         public event PropertyChangedEventHandler PropertyChanged;
 
         #endregion Public Events
-
-#pragma warning restore 67
 
         #region Public Enums
 
@@ -60,6 +56,29 @@ namespace OnTheGoPlayer.ViewModels
 
         #region Public Methods
 
+        public void Do(Action action)
+        {
+            Do(() =>
+            {
+                action();
+                return Task.CompletedTask;
+            }).Wait();
+        }
+
+        public async Task Do(Func<Task> action)
+        {
+            Start();
+            try
+            {
+                await action();
+                Stop();
+            }
+            catch (Exception e)
+            {
+                Error(e);
+            }
+        }
+
         public void Error(string text) => SetStateAndText(State.Error, text);
 
         public void Error(Exception exception) => Error($"{exception.GetType().Name}: {exception.Message}");
@@ -84,7 +103,7 @@ namespace OnTheGoPlayer.ViewModels
 
         private void SetStateAndText(State state, string text)
         {
-            dispatcher.InvokeAsync(() =>
+            dispatcher.Invoke(() =>
             {
                 CurrentState = state;
                 Text = text;

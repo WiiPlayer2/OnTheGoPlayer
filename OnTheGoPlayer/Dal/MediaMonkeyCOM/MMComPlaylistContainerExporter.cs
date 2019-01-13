@@ -40,11 +40,11 @@ namespace OnTheGoPlayer.Dal.MediaMonkeyCOM
             {
                 var sdbPlaylist = application.PlaylistByID[id];
                 var metaData = ToPlaylistMetaData(sdbPlaylist);
-
-                var songs = Enumerable.Range(0, sdbPlaylist.Tracks.Count).Select(i =>
+                var tracks = sdbPlaylist.Tracks;
+                var songs = Enumerable.Range(0, tracks.Count).Select(i =>
                 {
-                    progress.Report((((double)i) / sdbPlaylist.Tracks.Count, $"Reading song #{i + 1}..."));
-                    var data = ToSongData(sdbPlaylist.Tracks.Item[i]);
+                    progress.Report((((double)i) / tracks.Count, $"Reading song #{i + 1}/{tracks.Count}..."));
+                    var data = ToSongData(tracks.Item[i]);
                     return data;
                 }).ToList();
                 progress.Report((1, "Finalizing container..."));
