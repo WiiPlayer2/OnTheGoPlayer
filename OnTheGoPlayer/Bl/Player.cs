@@ -32,6 +32,8 @@ namespace OnTheGoPlayer.Bl
     {
         #region Private Fields
 
+        private SongInfoDB db = new SongInfoDB();
+
         private IPlaylistContainer playlistContainer;
 
         private ISoundOut soundOut;
@@ -79,12 +81,7 @@ namespace OnTheGoPlayer.Bl
             set => waveSource?.SetPosition(value);
         }
 
-        // TODO make property to save volume in between songs
-        public float Volume
-        {
-            get => soundOut.Volume;
-            set => soundOut.Volume = value;
-        }
+        public float Volume { get; set; }
 
         #endregion Public Properties
 
@@ -181,8 +178,15 @@ namespace OnTheGoPlayer.Bl
             }
         }
 
+        private void OnVolumeChanged()
+        {
+            soundOut.Volume = Volume;
+        }
+
         private void SoundOut_Stopped(object sender, PlaybackStoppedEventArgs e)
         {
+            if (CurrentSong != null)
+                db.IncreaseCounter(CurrentSong);
             Next();
         }
 

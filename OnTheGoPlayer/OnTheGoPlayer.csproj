@@ -93,8 +93,10 @@
     </ApplicationDefinition>
     <Compile Include="Bl\NullWaveSource.cs" />
     <Compile Include="Bl\Player.cs" />
+    <Compile Include="Dal\SongInfoDB.cs" />
     <Compile Include="Helpers\Converters\TimespanToDoubleConverter.cs" />
     <Compile Include="Helpers\Dialogs.cs" />
+    <Compile Include="Models\SongInfo.cs" />
     <Compile Include="ViewModels\MenuViewModel.cs" />
     <Compile Include="Helpers\MethodBindingExpression.cs" />
     <Compile Include="ViewModels\PlayerControlViewModel.cs" />

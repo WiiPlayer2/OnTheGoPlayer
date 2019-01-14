@@ -9,7 +9,7 @@
     xmlns:local="clr-namespace:OnTheGoPlayer.Views.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="clr-namespace:OnTheGoPlayer.ViewModels"
-    Height="100"
+    Height="75"
     d:DataContext="{d:DesignInstance Type=vm:PlayerControlViewModel}"
     d:DesignHeight="200"
     d:DesignWidth="800"
@@ -20,7 +20,7 @@
             <ColumnDefinition MinWidth="50" MaxWidth="100" />
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
-        <StackPanel Orientation="Horizontal">
+        <StackPanel Margin="5" Orientation="Horizontal">
             <Button Command="{Binding PreviousCommand}" Content="Prev" />
             <Button Command="{Binding PlayCommand}" Content="Play">
                 <Button.Style>
@@ -57,13 +57,40 @@
             Minimum="0"
             Orientation="Horizontal"
             Value="{Binding Volume}" />
-        <Slider
-            Grid.Column="2"
-            Margin="5,0"
-            VerticalAlignment="Center"
-            IsMoveToPointEnabled="True"
-            Maximum="{Binding Length, Converter={conv:TimespanToDoubleConverter}}"
-            Minimum="0"
-            Value="{Binding Position, Converter={conv:TimespanToDoubleConverter}}" />
+        <Grid Grid.Column="2">
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <TextBlock
+                Grid.Row="0"
+                Margin="5"
+                VerticalAlignment="Center">
+                <TextBlock.Text>
+                    <MultiBinding StringFormat="{}{0} - {1} ({2})">
+                        <Binding Path="CurrentSong.Title" />
+                        <Binding Path="CurrentSong.Artist" />
+                        <Binding Path="CurrentSong.Album" />
+                    </MultiBinding>
+                </TextBlock.Text>
+            </TextBlock>
+            <DockPanel Grid.Row="1" Margin="5">
+                <TextBlock
+                    VerticalAlignment="Center"
+                    DockPanel.Dock="Left"
+                    Text="{Binding Position, StringFormat=h\\:mm\\:ss}" />
+                <TextBlock
+                    VerticalAlignment="Center"
+                    DockPanel.Dock="Right"
+                    Text="{Binding Length, StringFormat=h\\:mm\\:ss}" />
+                <Slider
+                    Margin="5,0"
+                    VerticalAlignment="Center"
+                    IsMoveToPointEnabled="True"
+                    Maximum="{Binding Length, Converter={conv:TimespanToDoubleConverter}}"
+                    Minimum="0"
+                    Value="{Binding Position, Converter={conv:TimespanToDoubleConverter}}" />
+            </DockPanel>
+        </Grid>
     </Grid>
 </UserControl>
