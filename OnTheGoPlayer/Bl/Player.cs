@@ -32,6 +32,8 @@ namespace OnTheGoPlayer.Bl
     {
         #region Private Fields
 
+        private static Random random = new Random();
+
         private SongInfoDB db = new SongInfoDB();
 
         private IPlaylistContainer playlistContainer;
@@ -73,6 +75,8 @@ namespace OnTheGoPlayer.Bl
 
         public PlayerState CurrentState { get; private set; }
 
+        public bool IsShuffleEnabled { get; set; }
+
         public TimeSpan Length => waveSource?.GetLength() ?? TimeSpan.Zero;
 
         public TimeSpan Position
@@ -100,8 +104,11 @@ namespace OnTheGoPlayer.Bl
         public void Next()
         {
             var songs = playlistContainer.Playlist.Songs.ToList();
-            var index = songs.IndexOf(CurrentSong);
-            var nextSong = songs[(index + 1) % songs.Count];
+
+            var nextIndex = songs.IndexOf(CurrentSong) + 1;
+            if (IsShuffleEnabled)
+                nextIndex = random.Next(songs.Count);
+            var nextSong = songs[nextIndex % songs.Count];
             Play(nextSong);
         }
 

@@ -32,6 +32,7 @@ namespace OnTheGoPlayer.ViewModels
             NextCommand = new Command(Player.Next);
             PlayCommand = new Command(Player.Play, () => CurrentState != PlayerState.Playing, this);
             PauseCommand = new Command(Player.Pause, () => CurrentState == PlayerState.Playing, this);
+            PlayPauseCommand = new Command(PlayPause);
 
             timer = new DispatcherTimer(TimeSpan.FromMilliseconds(100), DispatcherPriority.DataBind, TimerElapsed, Dispatcher.CurrentDispatcher);
             timer.Start();
@@ -51,6 +52,12 @@ namespace OnTheGoPlayer.ViewModels
 
         public PlayerState CurrentState => Player.CurrentState;
 
+        public bool IsShuffleEnabled
+        {
+            get => Player.IsShuffleEnabled;
+            set => Player.IsShuffleEnabled = value;
+        }
+
         public TimeSpan Length => Player.Length;
 
         public Command NextCommand { get; }
@@ -60,6 +67,8 @@ namespace OnTheGoPlayer.ViewModels
         public Command PlayCommand { get; }
 
         public Player Player { get; }
+
+        public Command PlayPauseCommand { get; }
 
         public TimeSpan Position
         {
@@ -101,6 +110,15 @@ namespace OnTheGoPlayer.ViewModels
             MapProperty(e, nameof(Player.CurrentSong), nameof(Length));
             MapProperty(e, nameof(Player.CurrentSong), nameof(CurrentSong));
             MapProperty(e, nameof(Player.CurrentState), nameof(CurrentState));
+            MapProperty(e, nameof(Player.IsShuffleEnabled), nameof(IsShuffleEnabled));
+        }
+
+        private void PlayPause()
+        {
+            if (CurrentState != PlayerState.Playing)
+                Player.Play();
+            else
+                Player.Pause();
         }
 
         private void TimerElapsed(object sender, EventArgs e)

@@ -11,9 +11,24 @@
     Width="800"
     Height="450"
     d:DataContext="{d:DesignInstance Type=vm:MainViewModel}"
+    Closed="{ev:MethodBinding {Binding PlayerViewModel},
+                              DisposePlayer}"
     DataContext="{StaticResource mainViewModel}"
-    Closed="{ev:MethodBinding {Binding PlayerViewModel}, DisposePlayer}"
     mc:Ignorable="d">
+    <Window.InputBindings>
+        <KeyBinding
+            Key="MediaPlayPause"
+            Command="{Binding PlayerViewModel.PlayerControlViewModel.PlayPauseCommand}"
+            HotkeyManager.RegisterGlobalHotkey="True" />
+        <KeyBinding
+            Key="MediaPreviousTrack"
+            Command="{Binding PlayerViewModel.PlayerControlViewModel.PreviousCommand}"
+            HotkeyManager.RegisterGlobalHotkey="True" />
+        <KeyBinding
+            Key="MediaNextTrack"
+            Command="{Binding PlayerViewModel.PlayerControlViewModel.NextCommand}"
+            HotkeyManager.RegisterGlobalHotkey="True" />
+    </Window.InputBindings>
     <DockPanel>
         <Menu
             DataContext="{Binding MenuViewModel}"

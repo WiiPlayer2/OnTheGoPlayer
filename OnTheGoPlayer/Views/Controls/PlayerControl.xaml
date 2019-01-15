@@ -19,6 +19,7 @@
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition MinWidth="50" MaxWidth="100" />
             <ColumnDefinition />
+            <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
         <StackPanel Margin="5" Orientation="Horizontal">
             <Button Command="{Binding PreviousCommand}" Content="Prev" />
@@ -92,5 +93,10 @@
                     Value="{Binding Position, Converter={conv:TimespanToDoubleConverter}}" />
             </DockPanel>
         </Grid>
+        <ToggleButton
+            Grid.Column="3"
+            Margin="5"
+            Content="Shuffle"
+            IsChecked="{Binding IsShuffleEnabled}" />
     </Grid>
 </UserControl>
