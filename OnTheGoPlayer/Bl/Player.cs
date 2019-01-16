@@ -27,6 +27,15 @@ namespace OnTheGoPlayer.Bl
         Paused,
     }
 
+    internal enum RepeatMode
+    {
+        Off,
+
+        RepeatAll,
+
+        RepeatOne,
+    }
+
     [Janitor.SkipWeaving]
     internal class Player : INotifyPropertyChanged, IDisposable
     {
@@ -69,6 +78,8 @@ namespace OnTheGoPlayer.Bl
         #region Public Properties
 
         public Playlist CurrentPlaylist => playlistContainer?.Playlist;
+
+        public RepeatMode CurrentRepeatMode { get; set; }
 
         [AllowNull]
         public Song CurrentSong { get; private set; }
@@ -194,7 +205,11 @@ namespace OnTheGoPlayer.Bl
         {
             if (CurrentSong != null)
                 db.IncreaseCounter(CurrentSong);
-            Next();
+
+            if (CurrentRepeatMode == RepeatMode.RepeatOne)
+                Play(CurrentSong);
+            else
+                Next();
         }
 
         #endregion Private Methods

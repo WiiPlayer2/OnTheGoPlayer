@@ -9,23 +9,34 @@
     xmlns:local="clr-namespace:OnTheGoPlayer.Views.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="clr-namespace:OnTheGoPlayer.ViewModels"
-    Height="75"
     d:DataContext="{d:DesignInstance Type=vm:PlayerControlViewModel}"
-    d:DesignHeight="200"
+    d:DesignHeight="100"
     d:DesignWidth="800"
     mc:Ignorable="d">
-    <Grid Margin="5">
+    <UserControl.Resources>
+        <Style TargetType="Button">
+            <Setter Property="Margin" Value="5" />
+            <Setter Property="Width" Value="50" />
+            <Setter Property="Height" Value="50" />
+        </Style>
+        <Style TargetType="ToggleButton">
+            <Setter Property="Margin" Value="5" />
+            <Setter Property="Width" Value="50" />
+            <Setter Property="Height" Value="50" />
+        </Style>
+    </UserControl.Resources>
+    <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition MinWidth="50" MaxWidth="100" />
             <ColumnDefinition />
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
-        <StackPanel Margin="5" Orientation="Horizontal">
+        <StackPanel Orientation="Horizontal">
             <Button Command="{Binding PreviousCommand}" Content="Prev" />
             <Button Command="{Binding PlayCommand}" Content="Play">
                 <Button.Style>
-                    <Style TargetType="{x:Type Button}">
+                    <Style BasedOn="{StaticResource {x:Type Button}}" TargetType="{x:Type Button}">
                         <Setter Property="Visibility" Value="Visible" />
                         <Style.Triggers>
                             <DataTrigger Binding="{Binding CurrentState}" Value="{x:Static bl:PlayerState.Playing}">
@@ -37,7 +48,7 @@
             </Button>
             <Button Command="{Binding PauseCommand}" Content="Pause">
                 <Button.Style>
-                    <Style TargetType="{x:Type Button}">
+                    <Style BasedOn="{StaticResource {x:Type Button}}" TargetType="{x:Type Button}">
                         <Setter Property="Visibility" Value="Collapsed" />
                         <Style.Triggers>
                             <DataTrigger Binding="{Binding CurrentState}" Value="{x:Static bl:PlayerState.Playing}">
@@ -93,10 +104,12 @@
                     Value="{Binding Position, Converter={conv:TimespanToDoubleConverter}}" />
             </DockPanel>
         </Grid>
-        <ToggleButton
-            Grid.Column="3"
-            Margin="5"
-            Content="Shuffle"
-            IsChecked="{Binding IsShuffleEnabled}" />
+        <StackPanel Grid.Column="3" Orientation="Horizontal">
+            <ToggleButton
+                Command="{Binding RepeatCycleCommand}"
+                CommandParameter="{Binding RelativeSource={RelativeSource Self}}"
+                Content="Repeat" />
+            <ToggleButton Content="Shuffle" IsChecked="{Binding IsShuffleEnabled}" />
+        </StackPanel>
     </Grid>
 </UserControl>

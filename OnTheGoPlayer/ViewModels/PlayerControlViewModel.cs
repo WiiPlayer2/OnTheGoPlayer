@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls.Primitives;
 using System.Windows.Threading;
 
 namespace OnTheGoPlayer.ViewModels
@@ -33,6 +34,7 @@ namespace OnTheGoPlayer.ViewModels
             PlayCommand = new Command(Player.Play, () => CurrentState != PlayerState.Playing, this);
             PauseCommand = new Command(Player.Pause, () => CurrentState == PlayerState.Playing, this);
             PlayPauseCommand = new Command(PlayPause);
+            RepeatCycleCommand = new Command<ToggleButton>(RepeatCycle);
 
             timer = new DispatcherTimer(TimeSpan.FromMilliseconds(100), DispatcherPriority.DataBind, TimerElapsed, Dispatcher.CurrentDispatcher);
             timer.Start();
@@ -47,6 +49,12 @@ namespace OnTheGoPlayer.ViewModels
         #endregion Public Events
 
         #region Public Properties
+
+        public RepeatMode CurrentRepeatMode
+        {
+            get => Player.CurrentRepeatMode;
+            set => Player.CurrentRepeatMode = value;
+        }
 
         public Song CurrentSong => Player.CurrentSong;
 
@@ -77,6 +85,8 @@ namespace OnTheGoPlayer.ViewModels
         }
 
         public Command PreviousCommand { get; }
+
+        public Command<ToggleButton> RepeatCycleCommand { get; }
 
         public float Volume
         {
@@ -111,6 +121,7 @@ namespace OnTheGoPlayer.ViewModels
             MapProperty(e, nameof(Player.CurrentSong), nameof(CurrentSong));
             MapProperty(e, nameof(Player.CurrentState), nameof(CurrentState));
             MapProperty(e, nameof(Player.IsShuffleEnabled), nameof(IsShuffleEnabled));
+            MapProperty(e, nameof(Player.CurrentRepeatMode), nameof(CurrentRepeatMode));
         }
 
         private void PlayPause()
@@ -119,6 +130,11 @@ namespace OnTheGoPlayer.ViewModels
                 Player.Play();
             else
                 Player.Pause();
+        }
+
+        private void RepeatCycle(ToggleButton obj)
+        {
+            CurrentRepeatMode = (obj.IsChecked ?? false) ? RepeatMode.RepeatOne : RepeatMode.RepeatAll;
         }
 
         private void TimerElapsed(object sender, EventArgs e)
