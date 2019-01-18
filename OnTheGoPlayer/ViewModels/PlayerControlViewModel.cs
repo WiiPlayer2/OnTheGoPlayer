@@ -29,8 +29,8 @@ namespace OnTheGoPlayer.ViewModels
             Player = new Player();
             Player.PropertyChanged += Player_PropertyChanged;
 
-            PreviousCommand = new Command(Player.Previous);
-            NextCommand = new Command(Player.Next);
+            PreviousCommand = new Command(Player.Previous, true);
+            NextCommand = new Command(Player.Next, true);
             PlayCommand = new Command(Player.Play, () => CurrentState != PlayerState.Playing, this);
             PauseCommand = new Command(Player.Pause, () => CurrentState == PlayerState.Playing, this);
             PlayPauseCommand = new Command(PlayPause);

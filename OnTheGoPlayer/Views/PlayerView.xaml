@@ -5,6 +5,8 @@
     xmlns:control="clr-namespace:OnTheGoPlayer.Views.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:ev="clr-namespace:Singulink.Windows.Data"
+    xmlns:helpers="clr-namespace:OnTheGoPlayer.Helpers"
+    xmlns:conv="clr-namespace:OnTheGoPlayer.Helpers.Converters"
     xmlns:local="clr-namespace:OnTheGoPlayer.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="clr-namespace:OnTheGoPlayer.ViewModels"
@@ -25,6 +27,24 @@
                     <GridViewColumn DisplayMemberBinding="{Binding Album}" Header="Album" />
                 </GridView>
             </ListView.View>
+            <ListView.ItemContainerStyle>
+                <Style>
+                    <Style.Resources>
+                        <helpers:BindingProxy x:Key="proxy" Data="{Binding}" />
+                    </Style.Resources>
+                    <Style.Triggers>
+                        <DataTrigger Value="True">
+                            <DataTrigger.Binding>
+                                <MultiBinding Converter="{conv:AllEqualConverter}">
+                                    <Binding Path="DataContext.CurrentSong" RelativeSource="{RelativeSource AncestorType=ListView}" />
+                                    <Binding />
+                                </MultiBinding>
+                            </DataTrigger.Binding>
+                            <Setter Property="Control.FontWeight" Value="Bold" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </ListView.ItemContainerStyle>
         </ListView>
     </DockPanel>
 </UserControl>

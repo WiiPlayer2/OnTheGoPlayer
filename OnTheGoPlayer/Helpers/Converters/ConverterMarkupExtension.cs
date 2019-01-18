@@ -17,4 +17,17 @@ namespace OnTheGoPlayer.Helpers.Converters
 
         #endregion Public Methods
     }
+
+    internal abstract class MultiConverterMarkupExtension : MarkupExtension, IMultiValueConverter
+    {
+        #region Public Methods
+
+        public abstract object Convert(object[] values, Type targetType, object parameter, CultureInfo culture);
+
+        public abstract object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture);
+
+        public override object ProvideValue(IServiceProvider serviceProvider) => this;
+
+        #endregion Public Methods
+    }
 }

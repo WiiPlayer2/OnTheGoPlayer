@@ -24,15 +24,19 @@ namespace OnTheGoPlayer.ViewModels
 
         #region Public Constructors
 
-        public Command(Action<T> action)
-            : this(action, _ => true) { }
+        public Command(Action<T> action, bool async = false)
+            : this(action, _ => true, async) { }
 
-        public Command(Action<T> action, Func<T, bool> canExecute)
-            : this(action, canExecute, null) { }
+        public Command(Action<T> action, Func<T, bool> canExecute, bool async = false)
+            : this(action, canExecute, null, async) { }
 
-        public Command(Action<T> action, Func<T, bool> canExecute, INotifyPropertyChanged notifyingObject)
+        public Command(Action<T> action, Func<T, bool> canExecute, INotifyPropertyChanged notifyingObject, bool async = false)
         {
-            this.action = action;
+            if (async)
+                this.action = o => Task.Run(() => action(o));
+            else
+                this.action = action;
+
             canExecuteFunc = canExecute;
             this.canExecute = canExecute(null);
 
@@ -81,14 +85,14 @@ namespace OnTheGoPlayer.ViewModels
     {
         #region Public Constructors
 
-        public Command(Action action)
-            : this(action, () => true) { }
+        public Command(Action action, bool async = false)
+            : this(action, () => true, async) { }
 
-        public Command(Action action, Func<bool> canExecute)
-            : this(action, canExecute, null) { }
+        public Command(Action action, Func<bool> canExecute, bool async = false)
+            : this(action, canExecute, null, async) { }
 
-        public Command(Action action, Func<bool> canExecute, INotifyPropertyChanged notifyingObject)
-            : base(_ => action(), _ => canExecute(), notifyingObject) { }
+        public Command(Action action, Func<bool> canExecute, INotifyPropertyChanged notifyingObject, bool async = false)
+            : base(_ => action(), _ => canExecute(), notifyingObject, async) { }
 
         #endregion Public Constructors
 

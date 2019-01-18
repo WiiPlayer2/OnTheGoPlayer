@@ -10,6 +10,10 @@ namespace OnTheGoPlayer.Helpers
     {
         #region Public Methods
 
+        public static void InvokePropertyChanged()
+        {
+        }
+
         public static IEnumerable<T> Yield<T>(this T obj)
         {
             if (obj == null)
