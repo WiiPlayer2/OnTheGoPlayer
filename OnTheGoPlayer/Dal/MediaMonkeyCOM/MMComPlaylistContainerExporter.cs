@@ -49,7 +49,7 @@ namespace OnTheGoPlayer.Dal.MediaMonkeyCOM
                 }).ToList();
                 progress.Report((1, "Finalizing container..."));
 
-                return new MMComPlaylistContainer(metaData, songs);
+                return new FilesPlaylistContainer(metaData, songs);
             });
         }
 
@@ -104,12 +104,7 @@ namespace OnTheGoPlayer.Dal.MediaMonkeyCOM
                 Album = song.AlbumName ?? string.Empty,
             };
 
-        private static MMComSongData ToSongData(SDBSongData song)
-            => new MMComSongData
-            {
-                Song = ToSong(song),
-                FilePath = song.Path,
-            };
+        private static (Song, string) ToSongData(SDBSongData song) => (ToSong(song), song.Path);
 
         private IEnumerable<SDBPlaylist> GetAllChildPlaylists(SDBPlaylist rootPlaylist) => GetPlaylists(rootPlaylist.ChildPlaylists).SelectMany(o => GetAllPlaylists(o));
 

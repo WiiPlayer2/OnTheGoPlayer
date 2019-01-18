@@ -99,6 +99,9 @@
     </ApplicationDefinition>
     <Compile Include="Bl\NullWaveSource.cs" />
     <Compile Include="Bl\Player.cs" />
+    <Compile Include="Dal\MediaMonkeyDB\MMDBMedia.cs" />
+    <Compile Include="Dal\MediaMonkeyDB\MMDBPlaylistSong.cs" />
+    <Compile Include="Dal\MediaMonkeyDB\MMDBSong.cs" />
     <Compile Include="Dal\SongInfoDB.cs" />
     <Compile Include="Helpers\Converters\AllEqualConverter.cs" />
     <Compile Include="Helpers\Converters\TimespanToDoubleConverter.cs" />
@@ -144,7 +147,7 @@
     <Compile Include="Dal\IO\SubStream.cs" />
     <Compile Include="Dal\IPlaylistContainer.cs" />
     <Compile Include="Dal\IPlaylistContainerExporter.cs" />
-    <Compile Include="Dal\MediaMonkeyCOM\MMComPlaylistContainer.cs" />
+    <Compile Include="Dal\FilesPlaylistContainer.cs" />
     <Compile Include="Dal\MediaMonkeyCOM\MMComPlaylistContainerExporter.cs" />
     <Compile Include="Dal\MediaMonkeyCOM\MMComSongData.cs" />
     <Compile Include="Dal\MediaMonkeyDB\MMDBPlaylist.cs" />

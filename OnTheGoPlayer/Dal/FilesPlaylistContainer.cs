@@ -6,19 +6,19 @@ using System.Text;
 using System.Threading.Tasks;
 using OnTheGoPlayer.Models;
 
-namespace OnTheGoPlayer.Dal.MediaMonkeyCOM
+namespace OnTheGoPlayer.Dal
 {
-    internal class MMComPlaylistContainer : IPlaylistContainer
+    internal class FilesPlaylistContainer : IPlaylistContainer
     {
         #region Private Fields
 
-        private readonly Dictionary<int, MMComSongData> songData;
+        private readonly Dictionary<int, (Song, string FilePath)> songData;
 
         #endregion Private Fields
 
         #region Public Constructors
 
-        public MMComPlaylistContainer(PlaylistMetaData metaData, IEnumerable<MMComSongData> songs)
+        public FilesPlaylistContainer(PlaylistMetaData metaData, IEnumerable<(Song Song, string)> songs)
         {
             songData = songs.ToDictionary(o => o.Song.ID);
             Playlist = new Playlist

@@ -2,7 +2,9 @@
 using OnTheGoPlayer.Models;
 using SQLite;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -43,9 +45,30 @@ namespace OnTheGoPlayer.Dal.MediaMonkeyDB
             }
         }
 
-        public Task<IPlaylistContainer> ExportPlaylist(int id, IProgress<(double?, string)> progress)
+        public async Task<IPlaylistContainer> ExportPlaylist(int id, IProgress<(double?, string)> progress)
         {
-            throw new NotImplementedException();
+            progress.Report((null, "Preparing..."));
+            var playlist = await connection.FindWithQueryAsync<MMDBPlaylist>("SELECT * FROM Playlists WHERE IDPlaylist=?;", id);
+            if (playlist == null)
+                throw new Exception($"Playlist with id {id} not found.");
+
+            if (playlist.IsAutoPlaylist)
+                throw new NotSupportedException($"Auto-Playlists are not supported yet.");
+
+            //var playlistSongs = await connection.QueryAsync<MMDBPlaylistSong>("SELECT * FROM PlaylistSongs WHER IDPlaylist=?;", id);
+            var mediaMap = new Dictionary<int, string>();
+            progress.Report((null, "Getting songs..."));
+            var songs = await connection.QueryAsync<MMDBSong>("SELECT Songs.* FROM PlaylistSongs LEFT JOIN Songs ON PlaylistSongs.IDSong = Songs.ID WHERE PlaylistSongs.IDPlaylist = ? ORDER BY PlaylistSongs.SongOrder;", id);
+            //var resultTasks = songs.Select(o => FindSong(o, mediaMap));
+            //var result = await Task.WhenAll(resultTasks);
+            progress.Report((null, "Mapping songs..."));
+            var result = songs.Select(o => FindSong(o, mediaMap)).ToList();
+
+            return new FilesPlaylistContainer(new PlaylistMetaData()
+            {
+                ID = id,
+                Title = playlist.PlaylistName,
+            }, result);
         }
 
         public async Task<IEnumerable<PlaylistMetaData>> ListPlaylists()
@@ -83,6 +106,47 @@ namespace OnTheGoPlayer.Dal.MediaMonkeyDB
                 await Open(openFileDialog.FileName);
 
             return result;
+        }
+
+        private (Song Song, string FullPath) Convert(MMDBSong song, Dictionary<int, string> mediaMap)
+        {
+            var fullPath = GetPath(song, mediaMap[song.IDMedia]);
+            var retSong = new Song()
+            {
+                ID = song.ID,
+                FileFormat = Path.GetExtension(fullPath).TrimStart('.'),
+                Title = song.SongTitle,
+                Artist = song.Artist,
+                Album = song.Album,
+            };
+            return (retSong, fullPath);
+        }
+
+        private (Song Song, string FullPath) FindSong(MMDBSong song, Dictionary<int, string> mediaMap)
+        {
+            if (mediaMap.ContainsKey(song.IDMedia))
+                return Convert(song, mediaMap);
+
+            //var media = await connection.FindWithQueryAsync<MMDBMedia>("SELECT * FROM Medias WHERE IDMedia=?;", song.IDMedia);
+            var drives = DriveInfo.GetDrives();
+            // TODO check media data first (DriveLetter, DriveLabel)
+            foreach (var drive in drives)
+            {
+                var path = GetPath(song, drive.Name);
+                if (File.Exists(path))
+                {
+                    mediaMap[song.IDMedia] = drive.Name;
+                    return Convert(song, mediaMap);
+                }
+            }
+
+            throw new FileNotFoundException($"Couldn't find song #{song.ID}.");
+        }
+
+        private string GetPath(MMDBSong song, string driveName)
+        {
+            var driveBaseName = driveName.Substring(0, driveName.LastIndexOf(':'));
+            return $"{driveBaseName}{song.SongPath}";
         }
 
         #endregion Public Methods

@@ -6,15 +6,17 @@ using System.Threading.Tasks;
 
 namespace OnTheGoPlayer.Dal.MediaMonkeyDB
 {
-    internal class MMDBPlaylist
+    internal class MMDBPlaylistSong
     {
         #region Public Properties
 
         public int IDPlaylist { get; set; }
 
-        public bool IsAutoPlaylist { get; set; }
+        public int IDPlaylistSong { get; set; }
 
-        public string PlaylistName { get; set; }
+        public int IDSong { get; set; }
+
+        public int SongOrder { get; set; }
 
         #endregion Public Properties
     }
