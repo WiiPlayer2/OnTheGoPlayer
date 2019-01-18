@@ -125,25 +125,34 @@ namespace OnTheGoPlayer.Bl
 
         public void Pause()
         {
-            soundOut.Pause();
-            CurrentState = PlayerState.Paused;
+            lock (this)
+            {
+                soundOut.Pause();
+                CurrentState = PlayerState.Paused;
+            }
         }
 
         public void Play()
         {
-            soundOut.Play();
-            CurrentState = PlayerState.Playing;
+            lock (this)
+            {
+                soundOut.Play();
+                CurrentState = PlayerState.Playing;
+            }
         }
 
-        public async void Play(Song song)
+        public void Play(Song song)
         {
-            Stop();
-            waveSource = await GetWaveSource(song);
-            soundOut.Initialize(waveSource);
-            soundOut.Volume = Volume;
-            Position = TimeSpan.Zero;
-            CurrentSong = song;
-            Play();
+            lock (this)
+            {
+                Stop();
+                waveSource = GetWaveSource(song).Result;
+                soundOut.Initialize(waveSource);
+                soundOut.Volume = Volume;
+                Position = TimeSpan.Zero;
+                CurrentSong = song;
+                Play();
+            }
         }
 
         public void Previous()
@@ -165,12 +174,15 @@ namespace OnTheGoPlayer.Bl
 
         public void Stop()
         {
-            lock (soundOut)
+            lock (this)
             {
-                soundOut.Stopped -= SoundOut_Stopped;
-                soundOut.Stop();
-                soundOut.Stopped += SoundOut_Stopped;
-                CurrentState = PlayerState.Stopped;
+                lock (soundOut)
+                {
+                    soundOut.Stopped -= SoundOut_Stopped;
+                    soundOut.Stop();
+                    soundOut.Stopped += SoundOut_Stopped;
+                    CurrentState = PlayerState.Stopped;
+                }
             }
         }
 

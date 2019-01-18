@@ -31,9 +31,9 @@ namespace OnTheGoPlayer.ViewModels
 
             PreviousCommand = new Command(Player.Previous, true);
             NextCommand = new Command(Player.Next, true);
-            PlayCommand = new Command(Player.Play, () => CurrentState != PlayerState.Playing, this);
-            PauseCommand = new Command(Player.Pause, () => CurrentState == PlayerState.Playing, this);
-            PlayPauseCommand = new Command(PlayPause);
+            PlayCommand = new Command(Player.Play, () => CurrentState != PlayerState.Playing, this, true);
+            PauseCommand = new Command(Player.Pause, () => CurrentState == PlayerState.Playing, this, true);
+            PlayPauseCommand = new Command(PlayPause, true);
             RepeatCycleCommand = new Command<ToggleButton>(RepeatCycle);
 
             timer = new DispatcherTimer(TimeSpan.FromMilliseconds(100), DispatcherPriority.DataBind, TimerElapsed, Dispatcher.CurrentDispatcher);
