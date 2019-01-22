@@ -111,7 +111,7 @@ namespace OnTheGoPlayer.ViewModels
             await Progress.Do(async () =>
             {
                 mainViewModel.LoadedPlaylist = await SelectedExporter.ExportPlaylist(metaData.ID, Progress);
-            });
+            }, false);
         }
 
         private void OnSelectedExporterChanged()

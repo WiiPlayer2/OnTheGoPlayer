@@ -14,9 +14,9 @@ namespace OnTheGoPlayer.Dal.MediaMonkeyDB
 
         public string Artist { get; set; }
 
-        public int ID { get; set; }
+        public long ID { get; set; }
 
-        public int IDMedia { get; set; }
+        public long IDMedia { get; set; }
 
         public string SongPath { get; set; }
 

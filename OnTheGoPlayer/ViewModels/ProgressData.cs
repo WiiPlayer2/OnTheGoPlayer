@@ -56,16 +56,16 @@ namespace OnTheGoPlayer.ViewModels
 
         #region Public Methods
 
-        public void Do(Action action)
+        public void Do(Action action, bool catchExceptions = true)
         {
             Do(() =>
             {
                 action();
                 return Task.CompletedTask;
-            }).Wait();
+            }, catchExceptions).Wait();
         }
 
-        public async Task Do(Func<Task> action)
+        public async Task Do(Func<Task> action, bool catchExceptions = true)
         {
             Start();
             try
@@ -76,6 +76,8 @@ namespace OnTheGoPlayer.ViewModels
             catch (Exception e)
             {
                 Error(e);
+                if (!catchExceptions)
+                    throw;
             }
         }
 
@@ -85,7 +87,7 @@ namespace OnTheGoPlayer.ViewModels
 
         public void Report((double? Progress, string Text) report)
         {
-            dispatcher.InvokeAsync(() =>
+            dispatcher.Invoke(() =>
             {
                 CurrentState = report.Progress.HasValue ? State.Progressing : State.Indeterminate;
                 Progress = report.Progress ?? 0;

@@ -10,13 +10,13 @@ namespace OnTheGoPlayer.Dal.MediaMonkeyDB
     {
         #region Public Properties
 
-        public int IDPlaylist { get; set; }
+        public long IDPlaylist { get; set; }
 
-        public int IDPlaylistSong { get; set; }
+        public long IDPlaylistSong { get; set; }
 
-        public int IDSong { get; set; }
+        public long IDSong { get; set; }
 
-        public int SongOrder { get; set; }
+        public long SongOrder { get; set; }
 
         #endregion Public Properties
     }

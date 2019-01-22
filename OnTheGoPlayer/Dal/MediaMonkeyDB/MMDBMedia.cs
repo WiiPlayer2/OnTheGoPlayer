@@ -19,11 +19,11 @@ namespace OnTheGoPlayer.Dal.MediaMonkeyDB
 
         #region Public Properties
 
-        public int DriveLetter { get; set; }
+        public long DriveLetter { get; set; }
 
         public MediaDriveType DriveType { get; set; }
 
-        public int IDMedia { get; set; }
+        public long IDMedia { get; set; }
 
         #endregion Public Properties
     }

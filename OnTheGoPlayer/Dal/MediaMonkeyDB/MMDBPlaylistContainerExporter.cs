@@ -1,4 +1,6 @@
 ﻿using Microsoft.Win32;
+using OnTheGoPlayer.Dal.MediaMonkeyDB.Collations;
+using OnTheGoPlayer.Dal.MediaMonkeyDB.Queries;
 using OnTheGoPlayer.Models;
 using SQLite;
 using System;
@@ -14,9 +16,18 @@ namespace OnTheGoPlayer.Dal.MediaMonkeyDB
 {
     public class MMDBPlaylistContainerExporter : IPlaylistContainerExporter
     {
+        #region Public Constructors
+
+        static MMDBPlaylistContainerExporter()
+        {
+            CollationsHelper.InitSQLiteFunctions();
+        }
+
+        #endregion Public Constructors
+
         #region Private Fields
 
-        private SQLiteAsyncConnection connection;
+        private System.Data.SQLite.SQLiteConnection connection;
 
         #endregion Private Fields
 
@@ -28,14 +39,14 @@ namespace OnTheGoPlayer.Dal.MediaMonkeyDB
 
         #region Public Methods
 
-        public async Task Close()
+        public Task Close()
         {
             if (!IsOpen)
-                return;
+                return Task.CompletedTask;
 
             try
             {
-                await connection.CloseAsync();
+                connection.Close();
             }
             // NullReferenceException is thrown when no connection has been opened yet.
             catch (NullReferenceException) { }
@@ -43,25 +54,25 @@ namespace OnTheGoPlayer.Dal.MediaMonkeyDB
             {
                 connection = null;
             }
+            return Task.CompletedTask;
         }
 
         public async Task<IPlaylistContainer> ExportPlaylist(int id, IProgress<(double?, string)> progress)
         {
             progress.Report((null, "Preparing..."));
-            var playlist = await connection.FindWithQueryAsync<MMDBPlaylist>("SELECT * FROM Playlists WHERE IDPlaylist=?;", id);
+            var playlist = await connection.Find<MMDBPlaylist>("SELECT * FROM Playlists WHERE IDPlaylist=?;", id);
             if (playlist == null)
                 throw new Exception($"Playlist with id {id} not found.");
 
-            if (playlist.IsAutoPlaylist)
-                throw new NotSupportedException($"Auto-Playlists are not supported yet.");
-
-            //var playlistSongs = await connection.QueryAsync<MMDBPlaylistSong>("SELECT * FROM PlaylistSongs WHER IDPlaylist=?;", id);
-            var mediaMap = new Dictionary<int, string>();
             progress.Report((null, "Getting songs..."));
-            var songs = await connection.QueryAsync<MMDBSong>("SELECT Songs.* FROM PlaylistSongs LEFT JOIN Songs ON PlaylistSongs.IDSong = Songs.ID WHERE PlaylistSongs.IDPlaylist = ? ORDER BY PlaylistSongs.SongOrder;", id);
-            //var resultTasks = songs.Select(o => FindSong(o, mediaMap));
-            //var result = await Task.WhenAll(resultTasks);
+            IEnumerable<MMDBSong> songs;
+            if (playlist.IsAutoPlaylist)
+                songs = await QueryPlaylistSongs(playlist);
+            else
+                songs = await GetPlaylistSongs(id);
+
             progress.Report((null, "Mapping songs..."));
+            var mediaMap = new Dictionary<int, string>();
             var result = songs.Select(o => FindSong(o, mediaMap)).ToList();
 
             return new FilesPlaylistContainer(new PlaylistMetaData()
@@ -73,10 +84,10 @@ namespace OnTheGoPlayer.Dal.MediaMonkeyDB
 
         public async Task<IEnumerable<PlaylistMetaData>> ListPlaylists()
         {
-            var dbPlaylists = await connection.QueryAsync<MMDBPlaylist>("SELECT IDPlaylist, PlaylistName FROM Playlists;");
+            var dbPlaylists = await connection.Query<MMDBPlaylist>("SELECT IDPlaylist, PlaylistName FROM Playlists;");
             return dbPlaylists.Select(o => new PlaylistMetaData
             {
-                ID = o.IDPlaylist,
+                ID = (int)o.IDPlaylist,
                 Title = o.PlaylistName,
             }).ToList();
         }
@@ -85,7 +96,9 @@ namespace OnTheGoPlayer.Dal.MediaMonkeyDB
         {
             await Close();
 
-            var newConnection = new SQLiteAsyncConnection(path, SQLiteOpenFlags.ReadOnly);
+            var newConnection = new System.Data.SQLite.SQLiteConnection($"Data Source={path};Version=3;Read Only=True;");
+            newConnection.Open();
+            newConnection.BindFunctions();
             // TODO check schema
             connection = newConnection;
         }
@@ -110,10 +123,10 @@ namespace OnTheGoPlayer.Dal.MediaMonkeyDB
 
         private (Song Song, string FullPath) Convert(MMDBSong song, Dictionary<int, string> mediaMap)
         {
-            var fullPath = GetPath(song, mediaMap[song.IDMedia]);
+            var fullPath = GetPath(song, mediaMap[(int)song.IDMedia]);
             var retSong = new Song()
             {
-                ID = song.ID,
+                ID = (int)song.ID,
                 FileFormat = Path.GetExtension(fullPath).TrimStart('.'),
                 Title = song.SongTitle,
                 Artist = song.Artist,
@@ -124,7 +137,7 @@ namespace OnTheGoPlayer.Dal.MediaMonkeyDB
 
         private (Song Song, string FullPath) FindSong(MMDBSong song, Dictionary<int, string> mediaMap)
         {
-            if (mediaMap.ContainsKey(song.IDMedia))
+            if (mediaMap.ContainsKey((int)song.IDMedia))
                 return Convert(song, mediaMap);
 
             //var media = await connection.FindWithQueryAsync<MMDBMedia>("SELECT * FROM Medias WHERE IDMedia=?;", song.IDMedia);
@@ -135,7 +148,7 @@ namespace OnTheGoPlayer.Dal.MediaMonkeyDB
                 var path = GetPath(song, drive.Name);
                 if (File.Exists(path))
                 {
-                    mediaMap[song.IDMedia] = drive.Name;
+                    mediaMap[(int)song.IDMedia] = drive.Name;
                     return Convert(song, mediaMap);
                 }
             }
@@ -147,6 +160,28 @@ namespace OnTheGoPlayer.Dal.MediaMonkeyDB
         {
             var driveBaseName = driveName.Substring(0, driveName.LastIndexOf(':'));
             return $"{driveBaseName}{song.SongPath}";
+        }
+
+        private async Task<IEnumerable<MMDBSong>> GetPlaylistSongs(int playlistId)
+        {
+            return await connection.Query<MMDBSong>(
+               "SELECT Songs.* FROM PlaylistSongs " +
+               "LEFT JOIN Songs ON PlaylistSongs.IDSong = Songs.ID " +
+               "WHERE PlaylistSongs.IDPlaylist = ? " +
+               "ORDER BY PlaylistSongs.SongOrder;",
+               playlistId);
+        }
+
+        private async Task<IEnumerable<MMDBSong>> QueryPlaylistSongs(MMDBPlaylist playlist)
+        {
+            var ini = new MadMilkman.Ini.IniFile();
+            using (var reader = new StringReader(playlist.QueryData))
+            {
+                ini.Load(reader);
+            }
+
+            var query = Query.FromIni(ini);
+            return await query.Execute(connection);
         }
 
         #endregion Public Methods
