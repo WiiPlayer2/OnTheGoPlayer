@@ -14,12 +14,12 @@
     d:DesignWidth="800"
     mc:Ignorable="d">
     <UserControl.Resources>
-        <Style TargetType="Button">
+        <Style BasedOn="{StaticResource {x:Type Button}}" TargetType="Button">
             <Setter Property="Margin" Value="5" />
             <Setter Property="Width" Value="50" />
             <Setter Property="Height" Value="50" />
         </Style>
-        <Style TargetType="ToggleButton">
+        <Style BasedOn="{StaticResource {x:Type ToggleButton}}" TargetType="ToggleButton">
             <Setter Property="Margin" Value="5" />
             <Setter Property="Width" Value="50" />
             <Setter Property="Height" Value="50" />

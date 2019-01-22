@@ -1,4 +1,5 @@
-﻿using OnTheGoPlayer.ViewModels;
+﻿using MahApps.Metro.Controls;
+using OnTheGoPlayer.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,13 +20,14 @@ namespace OnTheGoPlayer.Views
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : MetroWindow
     {
         #region Public Constructors
 
         public MainWindow()
         {
             InitializeComponent();
+            DataContext = new MainViewModel();
         }
 
         #endregion Public Constructors

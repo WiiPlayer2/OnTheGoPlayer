@@ -1,7 +1,8 @@
-﻿<Window
+﻿<controls:MetroWindow
     x:Class="OnTheGoPlayer.Views.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:ev="clr-namespace:Singulink.Windows.Data"
     xmlns:local="clr-namespace:OnTheGoPlayer.Views"
@@ -13,7 +14,6 @@
     d:DataContext="{d:DesignInstance Type=vm:MainViewModel}"
     Closed="{ev:MethodBinding {Binding PlayerViewModel},
                               DisposePlayer}"
-    DataContext="{StaticResource mainViewModel}"
     mc:Ignorable="d">
     <Window.InputBindings>
         <KeyBinding
@@ -47,4 +47,4 @@
             </TabItem>
         </TabControl>
     </DockPanel>
-</Window>
+</controls:MetroWindow>
