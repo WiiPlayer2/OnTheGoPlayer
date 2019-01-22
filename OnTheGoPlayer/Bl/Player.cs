@@ -18,6 +18,15 @@ using System.Threading.Tasks;
 
 namespace OnTheGoPlayer.Bl
 {
+    public enum RepeatMode
+    {
+        Off,
+
+        RepeatAll,
+
+        RepeatOne,
+    }
+
     internal enum PlayerState
     {
         Stopped,
@@ -25,15 +34,6 @@ namespace OnTheGoPlayer.Bl
         Playing,
 
         Paused,
-    }
-
-    internal enum RepeatMode
-    {
-        Off,
-
-        RepeatAll,
-
-        RepeatOne,
     }
 
     [Janitor.SkipWeaving]

@@ -1,5 +1,6 @@
 ﻿using OnTheGoPlayer.Bl;
 using OnTheGoPlayer.Models;
+using OnTheGoPlayer.Properties;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -36,6 +37,10 @@ namespace OnTheGoPlayer.ViewModels
             PlayPauseCommand = new Command(PlayPause, true);
             RepeatCycleCommand = new Command<ToggleButton>(RepeatCycle);
 
+            Volume = Settings.Default.Volume;
+            CurrentRepeatMode = Settings.Default.RepeatMode;
+            IsShuffleEnabled = Settings.Default.Shuffle;
+
             timer = new DispatcherTimer(TimeSpan.FromMilliseconds(100), DispatcherPriority.DataBind, TimerElapsed, Dispatcher.CurrentDispatcher);
             timer.Start();
         }
@@ -53,7 +58,12 @@ namespace OnTheGoPlayer.ViewModels
         public RepeatMode CurrentRepeatMode
         {
             get => Player.CurrentRepeatMode;
-            set => Player.CurrentRepeatMode = value;
+            set
+            {
+                Player.CurrentRepeatMode = value;
+                Settings.Default.RepeatMode = value;
+                Settings.Default.Save();
+            }
         }
 
         public Song CurrentSong => Player.CurrentSong;
@@ -63,7 +73,12 @@ namespace OnTheGoPlayer.ViewModels
         public bool IsShuffleEnabled
         {
             get => Player.IsShuffleEnabled;
-            set => Player.IsShuffleEnabled = value;
+            set
+            {
+                Player.IsShuffleEnabled = value;
+                Settings.Default.Shuffle = value;
+                Settings.Default.Save();
+            }
         }
 
         public TimeSpan Length => Player.Length;
@@ -91,7 +106,12 @@ namespace OnTheGoPlayer.ViewModels
         public float Volume
         {
             get => Player.Volume;
-            set => Player.Volume = value;
+            set
+            {
+                Player.Volume = value;
+                Settings.Default.Volume = value;
+                Settings.Default.Save();
+            }
         }
 
         #endregion Public Properties

@@ -34,5 +34,41 @@ namespace OnTheGoPlayer.Properties {
                 this["LastLoadedPlaylistContainerFile"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Off")]
+        public global::OnTheGoPlayer.Bl.RepeatMode RepeatMode {
+            get {
+                return ((global::OnTheGoPlayer.Bl.RepeatMode)(this["RepeatMode"]));
+            }
+            set {
+                this["RepeatMode"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool Shuffle {
+            get {
+                return ((bool)(this["Shuffle"]));
+            }
+            set {
+                this["Shuffle"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0.5")]
+        public float Volume {
+            get {
+                return ((float)(this["Volume"]));
+            }
+            set {
+                this["Volume"] = value;
+            }
+        }
     }
 }
