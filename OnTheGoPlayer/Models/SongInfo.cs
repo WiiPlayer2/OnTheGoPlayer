@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SQLite;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,6 +11,7 @@ namespace OnTheGoPlayer.Models
     {
         #region Public Properties
 
+        [PrimaryKey, AutoIncrement]
         public int ID { get; set; }
 
         public DateTime? LastPlayed { get; set; }

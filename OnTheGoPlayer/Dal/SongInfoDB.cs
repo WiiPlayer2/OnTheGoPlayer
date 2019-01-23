@@ -38,15 +38,19 @@ namespace OnTheGoPlayer.Dal
 
         public async void IncreaseCounter(Song song)
         {
+            var insert = false;
             var info = await connection.FindAsync<SongInfo>(o => o.SongID == song.ID);
             if (info == null)
+            {
+                insert = true;
                 info = new SongInfo();
+            }
 
             info.SongID = song.ID;
             info.PlayCount++;
             info.LastPlayed = DateTime.Now;
 
-            if (info.ID == 0)
+            if (insert)
                 await connection.InsertAsync(info);
             else
                 await connection.UpdateAsync(info);
