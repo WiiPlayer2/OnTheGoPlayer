@@ -144,6 +144,7 @@
     <Compile Include="Helpers\Converters\TimespanToDoubleConverter.cs" />
     <Compile Include="Helpers\Dialogs.cs" />
     <Compile Include="Helpers\StaticResourcePath.cs" />
+    <Compile Include="Models\FullSongInfo.cs" />
     <Compile Include="Models\SongInfo.cs" />
     <Compile Include="Helpers\BindingProxy.cs" />
     <Compile Include="ViewModels\MenuViewModel.cs" />

@@ -18,6 +18,8 @@ namespace OnTheGoPlayer.ViewModels
 
         private readonly Dispatcher dispatcher = Dispatcher.CurrentDispatcher;
 
+        private readonly SongInfoDB songInfoDB = new SongInfoDB();
+
         #endregion Private Fields
 
         #region Public Constructors
@@ -46,7 +48,9 @@ namespace OnTheGoPlayer.ViewModels
         public PlayerControlViewModel PlayerControlViewModel { get; } = new PlayerControlViewModel();
 
         [AllowNull]
-        public Song SelectedSong { get; set; }
+        public FullSongInfo SelectedSong { get; set; }
+
+        public IEnumerable<FullSongInfo> Songs { get; private set; }
 
         #endregion Public Properties
 
@@ -61,7 +65,7 @@ namespace OnTheGoPlayer.ViewModels
         public void PlaySelectedSong()
         {
             if (SelectedSong != null)
-                Task.Run(() => Player.Play(SelectedSong));
+                Task.Run(() => Player.Play(SelectedSong.Song));
         }
 
         #endregion Public Methods
@@ -83,14 +87,21 @@ namespace OnTheGoPlayer.ViewModels
                 InvokePropertyChanged(targetProp);
         }
 
-        private void OnLoadedPlaylistChanged()
+        private async void OnLoadedPlaylistChanged()
         {
             Player.SetPlaylistContainer(LoadedPlaylist);
+            Songs = await Task.WhenAll(LoadedPlaylist.Playlist.Songs.Select(async o => new FullSongInfo() { Song = o, SongInfo = await songInfoDB.Get(o.ID) }));
         }
 
-        private void PlayerControlViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        private async void PlayerControlViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             MapProperty(e, nameof(PlayerControlViewModel.CurrentSong), nameof(CurrentSong));
+
+            if (e.PropertyName == nameof(PlayerControlViewModel.CurrentSong))
+            {
+                // TODO urrrg
+                Songs = await Task.WhenAll(LoadedPlaylist.Playlist.Songs.Select(async o => new FullSongInfo() { Song = o, SongInfo = await songInfoDB.Get(o.ID) }));
+            }
         }
 
         #endregion Private Methods

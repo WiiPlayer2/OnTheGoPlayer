@@ -28,6 +28,14 @@ namespace OnTheGoPlayer.Dal
 
         #region Public Methods
 
+        public async Task<SongInfo> Get(int songId)
+        {
+            var info = await connection.FindAsync<SongInfo>(o => o.SongID == songId);
+            if (info == null)
+                info = new SongInfo();
+            return info;
+        }
+
         public async void IncreaseCounter(Song song)
         {
             var info = await connection.FindAsync<SongInfo>(o => o.SongID == song.ID);

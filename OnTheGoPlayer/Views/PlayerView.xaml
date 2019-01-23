@@ -8,6 +8,7 @@
     xmlns:ev="clr-namespace:Singulink.Windows.Data"
     xmlns:helpers="clr-namespace:OnTheGoPlayer.Helpers"
     xmlns:local="clr-namespace:OnTheGoPlayer.Views"
+    xmlns:m="clr-namespace:OnTheGoPlayer.Models"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="clr-namespace:OnTheGoPlayer.ViewModels"
     d:DataContext="{d:DesignInstance Type=vm:PlayerViewModel}"
@@ -24,7 +25,7 @@
                     <DataTrigger.Binding>
                         <MultiBinding Converter="{conv:AllEqualConverter}">
                             <Binding Path="DataContext.CurrentSong" RelativeSource="{RelativeSource AncestorType=ListView}" />
-                            <Binding />
+                            <Binding Path="Song" />
                         </MultiBinding>
                     </DataTrigger.Binding>
                     <Setter Property="Control.FontWeight" Value="Bold" />
@@ -35,14 +36,16 @@
     <DockPanel>
         <control:PlayerControl DataContext="{Binding PlayerControlViewModel}" DockPanel.Dock="Bottom" />
         <ListView
-            ItemsSource="{Binding LoadedPlaylist.Playlist.Songs}"
+            ItemsSource="{Binding Songs}"
             MouseDoubleClick="{ev:MethodBinding PlaySelectedSong}"
             SelectedItem="{Binding SelectedSong}">
             <ListView.View>
                 <GridView>
-                    <GridViewColumn DisplayMemberBinding="{Binding Title}" Header="Title" />
-                    <GridViewColumn DisplayMemberBinding="{Binding Artist}" Header="Artist" />
-                    <GridViewColumn DisplayMemberBinding="{Binding Album}" Header="Album" />
+                    <GridViewColumn DisplayMemberBinding="{Binding Song.Title}" Header="Title" />
+                    <GridViewColumn DisplayMemberBinding="{Binding Song.Artist}" Header="Artist" />
+                    <GridViewColumn DisplayMemberBinding="{Binding Song.Album}" Header="Album" />
+                    <GridViewColumn DisplayMemberBinding="{Binding SongInfo.PlayCount}" Header="Play Count" />
+                    <GridViewColumn DisplayMemberBinding="{Binding SongInfo.LastPlayed}" Header="Last Played" />
                 </GridView>
             </ListView.View>
         </ListView>
