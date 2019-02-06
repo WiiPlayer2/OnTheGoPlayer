@@ -16,17 +16,25 @@ namespace OnTheGoPlayer.Dal
 
         #endregion Private Fields
 
-        #region Public Constructors
+        #region Private Constructors
 
-        public SongInfoDB()
+        private SongInfoDB()
         {
             connection = new SQLiteAsyncConnection("./main.db");
             CreateSchema();
         }
 
-        #endregion Public Constructors
+        #endregion Private Constructors
+
+        #region Public Properties
+
+        public static SongInfoDB Instance { get; } = new SongInfoDB();
+
+        #endregion Public Properties
 
         #region Public Methods
+
+        public async Task CommitInformation() => await connection.ExecuteAsync("UPDATE SongInfo SET CommitedPlayCount = SongInfo.PlayCount;");
 
         public async Task<SongInfo> Get(int songId)
         {
@@ -35,6 +43,11 @@ namespace OnTheGoPlayer.Dal
                 info = new SongInfo();
             return info;
         }
+
+        public async Task<IReadOnlyList<SongInfo>> GetAll() => (await connection.QueryAsync<SongInfo>("SELECT * FROM SongInfo;")).ToList();
+
+        public async Task<IReadOnlyList<SongInfo>> GetAllChangedInformation()
+            => (await connection.QueryAsync<SongInfo>("SELECT * FROM SongInfo WHERE SongInfo.PlayCount > SongInfo.CommitedPlayCount;")).ToList();
 
         public async void IncreaseCounter(Song song)
         {

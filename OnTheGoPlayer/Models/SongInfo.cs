@@ -11,13 +11,18 @@ namespace OnTheGoPlayer.Models
     {
         #region Public Properties
 
+        [NotNull]
+        public int CommitedPlayCount { get; set; }
+
         [PrimaryKey, AutoIncrement]
         public int ID { get; set; }
 
         public DateTime? LastPlayed { get; set; }
 
+        [NotNull]
         public int PlayCount { get; set; }
 
+        [NotNull]
         public int SongID { get; set; }
 
         #endregion Public Properties

@@ -16,6 +16,7 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition />
                 <ColumnDefinition Width="100" />
+                <ColumnDefinition Width="100" />
             </Grid.ColumnDefinitions>
             <ComboBox
                 ItemsSource="{Binding Exporters}"
@@ -25,6 +26,10 @@
                 Grid.Column="1"
                 Command="{Binding ReloadCommand}"
                 Content="Reload" />
+            <Button
+                Grid.Column="2"
+                Command="{Binding ImportCommand}"
+                Content="Import Play Information" />
         </Grid>
         <controls:ProgressDataBar
             Height="20"

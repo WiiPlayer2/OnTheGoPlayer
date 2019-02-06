@@ -1,4 +1,5 @@
-﻿using OnTheGoPlayer.Dal.IO;
+﻿using OnTheGoPlayer.Dal;
+using OnTheGoPlayer.Dal.IO;
 using OnTheGoPlayer.Helpers;
 using OnTheGoPlayer.Properties;
 using System;
@@ -25,11 +26,17 @@ namespace OnTheGoPlayer.ViewModels
             this.mainViewModel = mainViewModel;
 
             LoadCommand = new Command(Load);
+            ExportCommand = new Command(Export);
+            CommitCommand = new Command(Commit);
         }
 
         #endregion Public Constructors
 
         #region Public Properties
+
+        public Command CommitCommand { get; }
+
+        public Command ExportCommand { get; }
 
         public Command LoadCommand { get; }
 
@@ -68,6 +75,20 @@ namespace OnTheGoPlayer.ViewModels
         #endregion Public Methods
 
         #region Private Methods
+
+        private async void Commit()
+        {
+            await SongInfoDB.Instance.CommitInformation();
+        }
+
+        private async void Export()
+        {
+            var (result, path) = Dialogs.ShowExportSongInfo();
+            if (!result)
+                return;
+
+            await SongInfoWriter.Write(path, await SongInfoDB.Instance.GetAllChangedInformation());
+        }
 
         private async void Load()
         {

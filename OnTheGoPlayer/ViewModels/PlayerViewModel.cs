@@ -18,8 +18,6 @@ namespace OnTheGoPlayer.ViewModels
 
         private readonly Dispatcher dispatcher = Dispatcher.CurrentDispatcher;
 
-        private readonly SongInfoDB songInfoDB = new SongInfoDB();
-
         #endregion Private Fields
 
         #region Public Constructors
@@ -90,7 +88,7 @@ namespace OnTheGoPlayer.ViewModels
         private async void OnLoadedPlaylistChanged()
         {
             Player.SetPlaylistContainer(LoadedPlaylist);
-            Songs = await Task.WhenAll(LoadedPlaylist.Playlist.Songs.Select(async o => new FullSongInfo() { Song = o, SongInfo = await songInfoDB.Get(o.ID) }));
+            Songs = await Task.WhenAll(LoadedPlaylist.Playlist.Songs.Select(async o => new FullSongInfo() { Song = o, SongInfo = await SongInfoDB.Instance.Get(o.ID) }));
         }
 
         private async void PlayerControlViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -100,7 +98,7 @@ namespace OnTheGoPlayer.ViewModels
             if (e.PropertyName == nameof(PlayerControlViewModel.CurrentSong))
             {
                 // TODO urrrg
-                Songs = await Task.WhenAll(LoadedPlaylist.Playlist.Songs.Select(async o => new FullSongInfo() { Song = o, SongInfo = await songInfoDB.Get(o.ID) }));
+                Songs = await Task.WhenAll(LoadedPlaylist.Playlist.Songs.Select(async o => new FullSongInfo() { Song = o, SongInfo = await SongInfoDB.Instance.Get(o.ID) }));
             }
         }
 

@@ -12,6 +12,36 @@ namespace OnTheGoPlayer.Helpers
     {
         #region Public Methods
 
+        public static (bool Result, string Path) ShowExportSongInfo()
+        {
+            var saveFileDialog = new SaveFileDialog()
+            {
+                AddExtension = true,
+                CheckPathExists = true,
+                DefaultExt = "songinfo",
+                Filter = "Song Info Collection (*.songinfo)|*.songinfo",
+            };
+            var result = saveFileDialog.ShowDialog(Application.Current.MainWindow) ?? false;
+
+            return (result, saveFileDialog.FileName);
+        }
+
+        public static (bool Result, string Path) ShowImportSongInfo()
+        {
+            var openFileDialog = new OpenFileDialog()
+            {
+                AddExtension = true,
+                CheckFileExists = true,
+                CheckPathExists = true,
+                DefaultExt = "songinfo",
+                Filter = "Song Info Collection (*.songinfo)|*.songinfo",
+                Multiselect = false,
+            };
+            var result = openFileDialog.ShowDialog(Application.Current.MainWindow) ?? false;
+
+            return (result, openFileDialog.FileName);
+        }
+
         public static (bool Result, string Path) ShowLoadContainer()
         {
             var openFileDialog = new OpenFileDialog()

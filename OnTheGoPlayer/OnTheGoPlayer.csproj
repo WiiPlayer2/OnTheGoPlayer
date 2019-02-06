@@ -130,6 +130,8 @@
     </ApplicationDefinition>
     <Compile Include="Bl\NullWaveSource.cs" />
     <Compile Include="Bl\Player.cs" />
+    <Compile Include="Dal\IO\SongInfoReader.cs" />
+    <Compile Include="Dal\IO\SongInfoWriter.cs" />
     <Compile Include="Dal\MediaMonkeyDB\Collations\CollationsHelper.cs" />
     <Compile Include="Dal\MediaMonkeyDB\Collations\IUnicodeCollation.cs" />
     <Compile Include="Dal\MediaMonkeyDB\Collations\NumericStringCollation.cs" />

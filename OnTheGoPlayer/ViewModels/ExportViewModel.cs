@@ -39,10 +39,12 @@ namespace OnTheGoPlayer.ViewModels
             ReloadCommand = new Command(Reload, () => !Progress.IsWorking);
             ExportCommand = new Command<PlaylistMetaData>(Export, _ => !Progress.IsWorking);
             LoadCommand = new Command<PlaylistMetaData>(Load, _ => !Progress.IsWorking);
+            ImportCommand = new Command(Import, () => !Progress.IsWorking);
 
             Progress.PropertyChanged += (_, __) =>
             {
                 ReloadCommand.Refresh();
+                ImportCommand.Refresh();
                 ExportCommand.Refresh(null);
                 LoadCommand.Refresh(null);
             };
@@ -65,6 +67,8 @@ namespace OnTheGoPlayer.ViewModels
             new MMDBPlaylistContainerExporter(),
             new MMComPlaylistContainerExporter(),
         };
+
+        public Command ImportCommand { get; }
 
         public Command<PlaylistMetaData> LoadCommand { get; }
 
@@ -103,6 +107,15 @@ namespace OnTheGoPlayer.ViewModels
             {
                 Progress.Error(e);
             }
+        }
+
+        [ConfigureAwait(true)]
+        private async void Import()
+        {
+            await Progress.Do(() =>
+            {
+                throw new NotImplementedException();
+            });
         }
 
         [ConfigureAwait(true)]

@@ -34,8 +34,12 @@
             DataContext="{Binding MenuViewModel}"
             DockPanel.Dock="Top"
             Loaded="{ev:MethodBinding TryLoadLastFile}">
-            <MenuItem Header="_File">
+            <MenuItem Header="_Container">
                 <MenuItem Command="{Binding LoadCommand}" Header="_Load Container" />
+            </MenuItem>
+            <MenuItem Header="_Database">
+                <MenuItem Command="{Binding ExportCommand}" Header="_Export Play Information" />
+                <MenuItem Command="{Binding CommitCommand}" Header="_Commit Play Information" />
             </MenuItem>
         </Menu>
         <TabControl>

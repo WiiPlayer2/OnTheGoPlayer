@@ -43,8 +43,6 @@ namespace OnTheGoPlayer.Bl
 
         private static Random random = new Random();
 
-        private SongInfoDB db = new SongInfoDB();
-
         private IPlaylistContainer playlistContainer;
 
         private ISoundOut soundOut;
@@ -216,7 +214,7 @@ namespace OnTheGoPlayer.Bl
         private void SoundOut_Stopped(object sender, PlaybackStoppedEventArgs e)
         {
             if (CurrentSong != null)
-                db.IncreaseCounter(CurrentSong);
+                SongInfoDB.Instance.IncreaseCounter(CurrentSong);
 
             if (CurrentRepeatMode == RepeatMode.RepeatOne)
                 Play(CurrentSong);
