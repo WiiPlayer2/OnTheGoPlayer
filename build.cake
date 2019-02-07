@@ -27,7 +27,13 @@ Teardown(ctx =>
 // TASKS
 ///////////////////////////////////////////////////////////////////////////////
 
+Task("Restore")
+.Does(() => {
+    NuGetRestore("./OnTheGoPlayer.sln");
+});
+
 Task("Build")
+.IsDependentOn("Restore")
 .Does(() => {
     MSBuild("./OnTheGoPlayer.sln", config =>
         config.SetConfiguration(configuration)
