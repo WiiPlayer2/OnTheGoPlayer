@@ -5,7 +5,9 @@ pipeline {
 
     stages {
         stage('Cleanup') {
-            fileOperations([fileDeleteOperation(includes: './*.zip')])
+            steps {
+                fileOperations([fileDeleteOperation(includes: './*.zip')])
+            }
         }
 
         stage('Build') {
