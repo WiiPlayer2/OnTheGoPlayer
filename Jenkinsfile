@@ -14,6 +14,7 @@ pipeline {
         stage('Archive') {
             steps {
                 archiveArtifacts '/*.zip'
+                fileOperations([fileDeleteOperation(includes: '/*.zip')])
             }
         }
     }
