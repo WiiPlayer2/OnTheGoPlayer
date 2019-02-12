@@ -4,6 +4,10 @@ pipeline {
     }
 
     stages {
+        stage('Cleanup') {
+            fileOperations([fileDeleteOperation(includes: './*.zip')])
+        }
+
         stage('Build') {
             steps {
                 checkout scm
@@ -14,7 +18,6 @@ pipeline {
         stage('Archive') {
             steps {
                 archiveArtifacts '/*.zip'
-                fileOperations([fileDeleteOperation(includes: '/*.zip')])
             }
         }
     }
