@@ -12,7 +12,7 @@ using SongsDB;
 
 namespace OnTheGoPlayer.Dal.MediaMonkeyCOM
 {
-    internal class MMComPlaylistContainerExporter : IPlaylistContainerExporter
+    internal class MMComPlaylistContainerExporter : IMediaDatabase
     {
         #region Private Fields
 
@@ -51,6 +51,23 @@ namespace OnTheGoPlayer.Dal.MediaMonkeyCOM
 
                 return new FilesPlaylistContainer(metaData, songs);
             });
+        }
+
+        public Task ImportSongInfo(IEnumerable<SongInfo> songInfos)
+        {
+            foreach (var songInfo in songInfos)
+            {
+                var iterator = (SDBSongIterator)application.Database.QuerySongs($"ID = {songInfo.SongID}");
+                if (iterator.EOF)
+                    continue;
+
+                var song = iterator.Item;
+                song.PlayCounter += songInfo.PlayCount - songInfo.CommitedPlayCount;
+                if (songInfo.LastPlayed.HasValue && songInfo.LastPlayed > song.LastPlayed)
+                    song.LastPlayed = songInfo.LastPlayed.Value;
+                song.UpdateDB();
+            }
+            return Task.CompletedTask;
         }
 
         public Task<IEnumerable<PlaylistMetaData>> ListPlaylists()

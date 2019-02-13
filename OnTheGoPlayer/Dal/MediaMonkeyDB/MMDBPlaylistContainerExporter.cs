@@ -14,8 +14,14 @@ using System.Windows;
 
 namespace OnTheGoPlayer.Dal.MediaMonkeyDB
 {
-    public class MMDBPlaylistContainerExporter : IPlaylistContainerExporter
+    public class MMDBPlaylistContainerExporter : IMediaDatabase
     {
+        #region Private Fields
+
+        private System.Data.SQLite.SQLiteConnection connection;
+
+        #endregion Private Fields
+
         #region Public Constructors
 
         static MMDBPlaylistContainerExporter()
@@ -24,12 +30,6 @@ namespace OnTheGoPlayer.Dal.MediaMonkeyDB
         }
 
         #endregion Public Constructors
-
-        #region Private Fields
-
-        private System.Data.SQLite.SQLiteConnection connection;
-
-        #endregion Private Fields
 
         #region Public Properties
 
@@ -82,6 +82,11 @@ namespace OnTheGoPlayer.Dal.MediaMonkeyDB
             }, result);
         }
 
+        public Task ImportSongInfo(IEnumerable<SongInfo> songInfos)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<IEnumerable<PlaylistMetaData>> ListPlaylists()
         {
             var dbPlaylists = await connection.Query<MMDBPlaylist>("SELECT IDPlaylist, PlaylistName FROM Playlists;");
@@ -120,6 +125,10 @@ namespace OnTheGoPlayer.Dal.MediaMonkeyDB
 
             return result;
         }
+
+        #endregion Public Methods
+
+        #region Private Methods
 
         private (Song Song, string FullPath) Convert(MMDBSong song, Dictionary<int, string> mediaMap)
         {
@@ -184,6 +193,6 @@ namespace OnTheGoPlayer.Dal.MediaMonkeyDB
             return await query.Execute(connection);
         }
 
-        #endregion Public Methods
+        #endregion Private Methods
     }
 }

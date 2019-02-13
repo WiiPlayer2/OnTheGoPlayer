@@ -8,7 +8,7 @@ using System.Windows;
 
 namespace OnTheGoPlayer.Dal
 {
-    internal interface IPlaylistContainerExporter
+    internal interface IMediaDatabase
     {
         #region Public Properties
 
@@ -21,6 +21,8 @@ namespace OnTheGoPlayer.Dal
         Task Close();
 
         Task<IPlaylistContainer> ExportPlaylist(int id, IProgress<(double?, string)> progress);
+
+        Task ImportSongInfo(IEnumerable<SongInfo> songInfos);
 
         Task<IEnumerable<PlaylistMetaData>> ListPlaylists();
 

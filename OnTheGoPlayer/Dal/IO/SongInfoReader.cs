@@ -53,7 +53,9 @@ namespace OnTheGoPlayer.Dal.IO
 
         public Task<SongInfo> ReadSongInfo()
         {
+#pragma warning disable IDE0017 // Simplify object initialization
             var songInfo = new SongInfo();
+#pragma warning restore IDE0017 // Simplify object initialization
             songInfo.ID = reader.ReadInt32();
             songInfo.SongID = reader.ReadInt32();
             songInfo.PlayCount = reader.ReadInt32();

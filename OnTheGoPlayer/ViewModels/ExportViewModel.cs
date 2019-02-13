@@ -62,7 +62,7 @@ namespace OnTheGoPlayer.ViewModels
 
         public Command<PlaylistMetaData> ExportCommand { get; }
 
-        public IEnumerable<IPlaylistContainerExporter> Exporters { get; } = new IPlaylistContainerExporter[]
+        public IEnumerable<IMediaDatabase> Exporters { get; } = new IMediaDatabase[]
         {
             new MMDBPlaylistContainerExporter(),
             new MMComPlaylistContainerExporter(),
@@ -78,7 +78,7 @@ namespace OnTheGoPlayer.ViewModels
 
         public Command ReloadCommand { get; }
 
-        public IPlaylistContainerExporter SelectedExporter { get; set; }
+        public IMediaDatabase SelectedExporter { get; set; }
 
         #endregion Public Properties
 
@@ -112,9 +112,15 @@ namespace OnTheGoPlayer.ViewModels
         [ConfigureAwait(true)]
         private async void Import()
         {
-            await Progress.Do(() =>
+            await Progress.Do(async () =>
             {
-                throw new NotImplementedException();
+                var (result, path) = Dialogs.ShowImportSongInfo();
+
+                if (!result)
+                    return;
+
+                var songInfos = await SongInfoReader.Read(path);
+                await SelectedExporter.ImportSongInfo(songInfos);
             });
         }
 

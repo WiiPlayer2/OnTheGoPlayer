@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace OnTheGoPlayer.Models
 {
-    internal class SongInfo
+    public class SongInfo
     {
         #region Public Properties
 
