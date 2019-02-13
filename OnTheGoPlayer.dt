@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="utf-16"?>
+<DevTrackerData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" SolutionTotalEditTime="PT21.0682462S" SolutionTotalViewTime="PT8M12.7689519S" SolutionTotalDebugTime="PT2M13.8151171S">
+  <FileVersion>
+    <Major>1</Major>
+    <Minor>0</Minor>
+  </FileVersion>
+  <SolutionFolder>C:\Users\waldemar.tomme\source\repos\OnTheGoPlayer</SolutionFolder>
+  <SessionTimeList />
+  <LastSessionTimeList>
+    <DevTrackerDataItem ViewActiveTime="PT43.8344552S" EditActiveTime="PT0S">
+      <ModifiedDate>0001-01-01T00:00:00</ModifiedDate>
+      <EditedCount>0</EditedCount>
+      <ViewedCount>1</ViewedCount>
+      <Item>Debug Mode</Item>
+      <ItemType>DebugModeItem</ItemType>
+      <ProjectName />
+      <CreatedDate>2019-02-07T10:42:47.8560459+01:00</CreatedDate>
+      <ViewedBy>waldemar.tomme</ViewedBy>
+    </DevTrackerDataItem>
+    <DevTrackerDataItem ViewActiveTime="PT21.9894244S" EditActiveTime="PT0S">
+      <ModifiedDate>0001-01-01T00:00:00</ModifiedDate>
+      <EditedCount>0</EditedCount>
+      <ViewedCount>1</ViewedCount>
+      <Item>C:\Users\waldemar.tomme\source\repos\OnTheGoPlayer\OnTheGoPlayer\Views\Controls\PlayerControl.xaml</Item>
+      <ItemType>ProjectItem</ItemType>
+      <ProjectName>C:\Users\waldemar.tomme\source\repos\OnTheGoPlayer\OnTheGoPlayer\OnTheGoPlayer.csproj</ProjectName>
+      <CreatedDate>2019-02-07T10:42:20.5065362+01:00</CreatedDate>
+      <ViewedBy>waldemar.tomme</ViewedBy>
+    </DevTrackerDataItem>
+    <DevTrackerDataItem ViewActiveTime="PT53.3092216S" EditActiveTime="PT5.3906936S">
+      <ModifiedDate>2019-02-07T10:44:26.2477788+01:00</ModifiedDate>
+      <ModifiedBy>waldemar.tomme</ModifiedBy>
+      <EditedCount>1</EditedCount>
+      <ViewedCount>1</ViewedCount>
+      <Item>C:\Users\waldemar.tomme\source\repos\OnTheGoPlayer\OnTheGoPlayer\Models\SongInfo.cs</Item>
+      <ItemType>ProjectItem</ItemType>
+      <ProjectName>C:\Users\waldemar.tomme\source\repos\OnTheGoPlayer\OnTheGoPlayer\OnTheGoPlayer.csproj</ProjectName>
+      <CreatedDate>2019-02-07T10:42:20.0876414+01:00</CreatedDate>
+      <ViewedBy>waldemar.tomme</ViewedBy>
+    </DevTrackerDataItem>
+  </LastSessionTimeList>
+  <TotalTimeList>
+    <DevTrackerDataItem ViewActiveTime="PT2M13.8151171S" EditActiveTime="PT0S">
+      <ModifiedDate>0001-01-01T00:00:00</ModifiedDate>
+      <EditedCount>0</EditedCount>
+      <ViewedCount>2</ViewedCount>
+      <Item>Debug Mode</Item>
+      <ItemType>DebugModeItem</ItemType>
+      <ProjectName />
+      <CreatedDate>2019-02-07T10:35:44.1489341+01:00</CreatedDate>
+      <ViewedBy>waldemar.tomme</ViewedBy>
+    </DevTrackerDataItem>
+    <DevTrackerDataItem ViewActiveTime="PT6M2.7598567S" EditActiveTime="PT0S">
+      <ModifiedDate>0001-01-01T00:00:00</ModifiedDate>
+      <EditedCount>0</EditedCount>
+      <ViewedCount>9</ViewedCount>
+      <Item>C:\Users\waldemar.tomme\source\repos\OnTheGoPlayer\OnTheGoPlayer\Views\Controls\PlayerControl.xaml</Item>
+      <ItemType>ProjectItem</ItemType>
+      <ProjectName>C:\Users\waldemar.tomme\source\repos\OnTheGoPlayer\OnTheGoPlayer\OnTheGoPlayer.csproj</ProjectName>
+      <CreatedDate>2019-01-16T09:57:25.4396299+01:00</CreatedDate>
+      <ViewedBy>waldemar.tomme</ViewedBy>
+    </DevTrackerDataItem>
+    <DevTrackerDataItem ViewActiveTime="PT1M57.8655511S" EditActiveTime="PT21.0682462S">
+      <ModifiedDate>2019-02-07T10:44:26.2477788+01:00</ModifiedDate>
+      <ModifiedBy>waldemar.tomme</ModifiedBy>
+      <EditedCount>2</EditedCount>
+      <ViewedCount>2</ViewedCount>
+      <Item>C:\Users\waldemar.tomme\source\repos\OnTheGoPlayer\OnTheGoPlayer\Models\SongInfo.cs</Item>
+      <ItemType>ProjectItem</ItemType>
+      <ProjectName>C:\Users\waldemar.tomme\source\repos\OnTheGoPlayer\OnTheGoPlayer\OnTheGoPlayer.csproj</ProjectName>
+      <CreatedDate>2019-02-07T10:37:48.6755366+01:00</CreatedDate>
+      <ViewedBy>waldemar.tomme</ViewedBy>
+    </DevTrackerDataItem>
+    <DevTrackerDataItem ViewActiveTime="PT12.1445422S" EditActiveTime="PT0S">
+      <ModifiedDate>0001-01-01T00:00:00</ModifiedDate>
+      <EditedCount>0</EditedCount>
+      <ViewedCount>1</ViewedCount>
+      <Item>C:\Users\waldemar.tomme\source\repos\OnTheGoPlayer\OnTheGoPlayer\Dal\SongInfoDB.cs</Item>
+      <ItemType>ProjectItem</ItemType>
+      <ProjectName>C:\Users\waldemar.tomme\source\repos\OnTheGoPlayer\OnTheGoPlayer\OnTheGoPlayer.csproj</ProjectName>
+      <CreatedDate>2019-02-07T10:37:34.3063203+01:00</CreatedDate>
+      <ViewedBy>waldemar.tomme</ViewedBy>
+    </DevTrackerDataItem>
+  </TotalTimeList>
+  <HistoryTimeList>
+    <DevTrackerDataItem ViewActiveTime="PT43.8344552S" EditActiveTime="PT0S">
+      <ModifiedDate>0001-01-01T00:00:00</ModifiedDate>
+      <EditedCount>0</EditedCount>
+      <ViewedCount>1</ViewedCount>
+      <Item>Debug Mode</Item>
+      <ItemType>DebugModeItem</ItemType>
+      <ProjectName />
+      <CreatedDate>2019-02-07T10:42:47.8560459+01:00</CreatedDate>
+      <ViewedBy>waldemar.tomme</ViewedBy>
+    </DevTrackerDataItem>
+    <DevTrackerDataItem ViewActiveTime="PT21.9894244S" EditActiveTime="PT0S">
+      <ModifiedDate>0001-01-01T00:00:00</ModifiedDate>
+      <EditedCount>0</EditedCount>
+      <ViewedCount>1</ViewedCount>
+      <Item>C:\Users\waldemar.tomme\source\repos\OnTheGoPlayer\OnTheGoPlayer\Views\Controls\PlayerControl.xaml</Item>
+      <ItemType>ProjectItem</ItemType>
+      <ProjectName>C:\Users\waldemar.tomme\source\repos\OnTheGoPlayer\OnTheGoPlayer\OnTheGoPlayer.csproj</ProjectName>
+      <CreatedDate>2019-02-07T10:42:20.5065362+01:00</CreatedDate>
+      <ViewedBy>waldemar.tomme</ViewedBy>
+    </DevTrackerDataItem>
+    <DevTrackerDataItem ViewActiveTime="PT53.3092216S" EditActiveTime="PT5.3906936S">
+      <ModifiedDate>2019-02-07T10:44:26.2477788+01:00</ModifiedDate>
+      <ModifiedBy>waldemar.tomme</ModifiedBy>
+      <EditedCount>1</EditedCount>
+      <ViewedCount>1</ViewedCount>
+      <Item>C:\Users\waldemar.tomme\source\repos\OnTheGoPlayer\OnTheGoPlayer\Models\SongInfo.cs</Item>
+      <ItemType>ProjectItem</ItemType>
+      <ProjectName>C:\Users\waldemar.tomme\source\repos\OnTheGoPlayer\OnTheGoPlayer\OnTheGoPlayer.csproj</ProjectName>
+      <CreatedDate>2019-02-07T10:42:20.0876414+01:00</CreatedDate>
+      <ViewedBy>waldemar.tomme</ViewedBy>
+    </DevTrackerDataItem>
+    <DevTrackerDataItem ViewActiveTime="PT1M4.5563295S" EditActiveTime="PT15.6775526S">
+      <ModifiedDate>2019-02-07T10:38:50.5819217+01:00</ModifiedDate>
+      <ModifiedBy>waldemar.tomme</ModifiedBy>
+      <EditedCount>1</EditedCount>
+      <ViewedCount>1</ViewedCount>
+      <Item>C:\Users\waldemar.tomme\source\repos\OnTheGoPlayer\OnTheGoPlayer\Models\SongInfo.cs</Item>
+      <ItemType>ProjectItem</ItemType>
+      <ProjectName>C:\Users\waldemar.tomme\source\repos\OnTheGoPlayer\OnTheGoPlayer\OnTheGoPlayer.csproj</ProjectName>
+      <CreatedDate>2019-02-07T10:37:48.6755366+01:00</CreatedDate>
+      <ViewedBy>waldemar.tomme</ViewedBy>
+    </DevTrackerDataItem>
+    <DevTrackerDataItem ViewActiveTime="PT12.1445422S" EditActiveTime="PT0S">
+      <ModifiedDate>0001-01-01T00:00:00</ModifiedDate>
+      <EditedCount>0</EditedCount>
+      <ViewedCount>1</ViewedCount>
+      <Item>C:\Users\waldemar.tomme\source\repos\OnTheGoPlayer\OnTheGoPlayer\Dal\SongInfoDB.cs</Item>
+      <ItemType>ProjectItem</ItemType>
+      <ProjectName>C:\Users\waldemar.tomme\source\repos\OnTheGoPlayer\OnTheGoPlayer\OnTheGoPlayer.csproj</ProjectName>
+      <CreatedDate>2019-02-07T10:37:34.3063203+01:00</CreatedDate>
+      <ViewedBy>waldemar.tomme</ViewedBy>
+    </DevTrackerDataItem>
+    <DevTrackerDataItem ViewActiveTime="PT1M29.9806619S" EditActiveTime="PT0S">
+      <ModifiedDate>0001-01-01T00:00:00</ModifiedDate>
+      <EditedCount>0</EditedCount>
+      <ViewedCount>1</ViewedCount>
+      <Item>Debug Mode</Item>
+      <ItemType>DebugModeItem</ItemType>
+      <ProjectName />
+      <CreatedDate>2019-02-07T10:35:44.1489341+01:00</CreatedDate>
+      <ViewedBy>waldemar.tomme</ViewedBy>
+    </DevTrackerDataItem>
+    <DevTrackerDataItem ViewActiveTime="PT50.9907024S" EditActiveTime="PT0S">
+      <ModifiedDate>0001-01-01T00:00:00</ModifiedDate>
+      <EditedCount>0</EditedCount>
+      <ViewedCount>1</ViewedCount>
+      <Item>C:\Users\waldemar.tomme\source\repos\OnTheGoPlayer\OnTheGoPlayer\Views\Controls\PlayerControl.xaml</Item>
+      <ItemType>ProjectItem</ItemType>
+      <ProjectName>C:\Users\waldemar.tomme\source\repos\OnTheGoPlayer\OnTheGoPlayer\OnTheGoPlayer.csproj</ProjectName>
+      <CreatedDate>2019-02-07T10:35:03.7693356+01:00</CreatedDate>
+      <ViewedBy>waldemar.tomme</ViewedBy>
+    </DevTrackerDataItem>
+    <DevTrackerDataItem ViewActiveTime="PT13.2311205S" EditActiveTime="PT0S">
+      <ModifiedDate>0001-01-01T00:00:00</ModifiedDate>
+      <EditedCount>0</EditedCount>
+      <ViewedCount>1</ViewedCount>
+      <Item>C:\Users\waldemar.tomme\source\repos\OnTheGoPlayer\OnTheGoPlayer\Views\Controls\PlayerControl.xaml</Item>
+      <ItemType>ProjectItem</ItemType>
+      <ProjectName>C:\Users\waldemar.tomme\source\repos\OnTheGoPlayer\OnTheGoPlayer\OnTheGoPlayer.csproj</ProjectName>
+      <CreatedDate>2019-02-07T10:17:03.5869219+01:00</CreatedDate>
+      <ViewedBy>waldemar.tomme</ViewedBy>
+    </DevTrackerDataItem>
+    <DevTrackerDataItem ViewActiveTime="PT22.5087053S" EditActiveTime="PT0S">
+      <ModifiedDate>0001-01-01T00:00:00</ModifiedDate>
+      <EditedCount>0</EditedCount>
+      <ViewedCount>1</ViewedCount>
+      <Item>C:\Users\waldemar.tomme\source\repos\OnTheGoPlayer\OnTheGoPlayer\Views\Controls\PlayerControl.xaml</Item>
+      <ItemType>ProjectItem</ItemType>
+      <ProjectName>C:\Users\waldemar.tomme\source\repos\OnTheGoPlayer\OnTheGoPlayer\OnTheGoPlayer.csproj</ProjectName>
+      <CreatedDate>2019-02-07T10:16:38.8557552+01:00</CreatedDate>
+      <ViewedBy>waldemar.tomme</ViewedBy>
+    </DevTrackerDataItem>
+    <DevTrackerDataItem ViewActiveTime="PT32.3244003S" EditActiveTime="PT0S">
+      <ModifiedDate>0001-01-01T00:00:00</ModifiedDate>
+      <EditedCount>0</EditedCount>
+      <ViewedCount>1</ViewedCount>
+      <Item>C:\Users\waldemar.tomme\source\repos\OnTheGoPlayer\OnTheGoPlayer\Views\Controls\PlayerControl.xaml</Item>
+      <ItemType>ProjectItem</ItemType>
+      <ProjectName>C:\Users\waldemar.tomme\source\repos\OnTheGoPlayer\OnTheGoPlayer\OnTheGoPlayer.csproj</ProjectName>
+      <CreatedDate>2019-01-24T09:23:49.4325172+01:00</CreatedDate>
+      <ViewedBy>waldemar.tomme</ViewedBy>
+    </DevTrackerDataItem>
+    <DevTrackerDataItem ViewActiveTime="PT30.7919081S" EditActiveTime="PT0S">
+      <ModifiedDate>0001-01-01T00:00:00</ModifiedDate>
+      <EditedCount>0</EditedCount>
+      <ViewedCount>1</ViewedCount>
+      <Item>C:\Users\waldemar.tomme\source\repos\OnTheGoPlayer\OnTheGoPlayer\Views\Controls\PlayerControl.xaml</Item>
+      <ItemType>ProjectItem</ItemType>
+      <ProjectName>C:\Users\waldemar.tomme\source\repos\OnTheGoPlayer\OnTheGoPlayer\OnTheGoPlayer.csproj</ProjectName>
+      <CreatedDate>2019-01-23T08:46:49.8060844+01:00</CreatedDate>
+      <ViewedBy>waldemar.tomme</ViewedBy>
+    </DevTrackerDataItem>
+    <DevTrackerDataItem ViewActiveTime="PT37.4185572S" EditActiveTime="PT0S">
+      <ModifiedDate>0001-01-01T00:00:00</ModifiedDate>
+      <EditedCount>0</EditedCount>
+      <ViewedCount>0</ViewedCount>
+      <Item>C:\Users\waldemar.tomme\source\repos\OnTheGoPlayer\OnTheGoPlayer\Views\Controls\PlayerControl.xaml</Item>
+      <ItemType>ProjectItem</ItemType>
+      <ProjectName>C:\Users\waldemar.tomme\source\repos\OnTheGoPlayer\OnTheGoPlayer\OnTheGoPlayer.csproj</ProjectName>
+      <CreatedDate>2019-01-23T08:46:07.2089669+01:00</CreatedDate>
+      <ViewedBy>waldemar.tomme</ViewedBy>
+    </DevTrackerDataItem>
+    <DevTrackerDataItem ViewActiveTime="PT1M23.7602858S" EditActiveTime="PT0S">
+      <ModifiedDate>0001-01-01T00:00:00</ModifiedDate>
+      <EditedCount>0</EditedCount>
+      <ViewedCount>1</ViewedCount>
+      <Item>C:\Users\waldemar.tomme\source\repos\OnTheGoPlayer\OnTheGoPlayer\Views\Controls\PlayerControl.xaml</Item>
+      <ItemType>ProjectItem</ItemType>
+      <ProjectName>C:\Users\waldemar.tomme\source\repos\OnTheGoPlayer\OnTheGoPlayer\OnTheGoPlayer.csproj</ProjectName>
+      <CreatedDate>2019-01-21T09:29:39.1638071+01:00</CreatedDate>
+      <ViewedBy>waldemar.tomme</ViewedBy>
+    </DevTrackerDataItem>
+    <DevTrackerDataItem ViewActiveTime="PT40.9523075S" EditActiveTime="PT0S">
+      <ModifiedDate>0001-01-01T00:00:00</ModifiedDate>
+      <EditedCount>0</EditedCount>
+      <ViewedCount>1</ViewedCount>
+      <Item>C:\Users\waldemar.tomme\source\repos\OnTheGoPlayer\OnTheGoPlayer\Views\Controls\PlayerControl.xaml</Item>
+      <ItemType>ProjectItem</ItemType>
+      <ProjectName>C:\Users\waldemar.tomme\source\repos\OnTheGoPlayer\OnTheGoPlayer\OnTheGoPlayer.csproj</ProjectName>
+      <CreatedDate>2019-01-21T09:28:47.0985282+01:00</CreatedDate>
+      <ViewedBy>waldemar.tomme</ViewedBy>
+    </DevTrackerDataItem>
+    <DevTrackerDataItem ViewActiveTime="PT28.7944388S" EditActiveTime="PT0S">
+      <ModifiedDate>0001-01-01T00:00:00</ModifiedDate>
+      <EditedCount>0</EditedCount>
+      <ViewedCount>1</ViewedCount>
+      <Item>C:\Users\waldemar.tomme\source\repos\OnTheGoPlayer\OnTheGoPlayer\Views\Controls\PlayerControl.xaml</Item>
+      <ItemType>ProjectItem</ItemType>
+      <ProjectName>C:\Users\waldemar.tomme\source\repos\OnTheGoPlayer\OnTheGoPlayer\OnTheGoPlayer.csproj</ProjectName>
+      <CreatedDate>2019-01-16T09:57:25.4396299+01:00</CreatedDate>
+      <ViewedBy>waldemar.tomme</ViewedBy>
+    </DevTrackerDataItem>
+  </HistoryTimeList>
+</DevTrackerData>

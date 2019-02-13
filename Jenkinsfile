@@ -4,6 +4,12 @@ pipeline {
     }
 
     stages {
+        stage('Cleanup') {
+            steps {
+                fileOperations([fileDeleteOperation(includes: '*.zip')])
+            }
+        }
+
         stage('Build') {
             steps {
                 checkout scm
