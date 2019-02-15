@@ -55,6 +55,7 @@ namespace OnTheGoPlayer.Dal.MediaMonkeyCOM
 
         public Task ImportSongInfo(IEnumerable<SongInfo> songInfos)
         {
+            var songList = application.NewSongList;
             foreach (var songInfo in songInfos)
             {
                 var iterator = (SDBSongIterator)application.Database.QuerySongs($"ID = {songInfo.SongID}");
@@ -65,8 +66,11 @@ namespace OnTheGoPlayer.Dal.MediaMonkeyCOM
                 song.PlayCounter += songInfo.PlayCount - songInfo.CommitedPlayCount;
                 if (songInfo.LastPlayed.HasValue && songInfo.LastPlayed > song.LastPlayed)
                     song.LastPlayed = songInfo.LastPlayed.Value;
-                song.UpdateDB();
+                songList.Add(song);
+                iterator = null;
             }
+            GC.Collect(GC.MaxGeneration, GCCollectionMode.Default, true);
+            songList.UpdateAll();
             return Task.CompletedTask;
         }
 

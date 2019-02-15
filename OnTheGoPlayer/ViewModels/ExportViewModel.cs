@@ -36,10 +36,10 @@ namespace OnTheGoPlayer.ViewModels
             this.mainViewModel = mainViewModel;
 
             Progress = new ProgressData();
-            ReloadCommand = new Command(Reload, () => !Progress.IsWorking);
+            ReloadCommand = new Command(Reload, () => !Progress.IsWorking && SelectedExporter != null);
             ExportCommand = new Command<PlaylistMetaData>(Export, _ => !Progress.IsWorking);
             LoadCommand = new Command<PlaylistMetaData>(Load, _ => !Progress.IsWorking);
-            ImportCommand = new Command(Import, () => !Progress.IsWorking);
+            ImportCommand = new Command(Import, () => !Progress.IsWorking && SelectedExporter != null);
 
             Progress.PropertyChanged += (_, __) =>
             {
@@ -120,7 +120,7 @@ namespace OnTheGoPlayer.ViewModels
                     return;
 
                 var songInfos = await SongInfoReader.Read(path);
-                await SelectedExporter.ImportSongInfo(songInfos);
+                await Task.Run(() => SelectedExporter.ImportSongInfo(songInfos));
             });
         }
 
