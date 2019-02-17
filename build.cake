@@ -50,7 +50,6 @@ Task("Test")
         new NUnit3Settings
         {
             WorkingDirectory = $"./OnTheGoPlayer.Test/bin/{configuration}",
-            NoResults = false,
         });
 });
 
