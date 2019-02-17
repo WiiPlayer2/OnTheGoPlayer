@@ -15,7 +15,7 @@ pipeline {
                 checkout scm
                 powershell './build.ps1 -Target Pack -Configuration Debug'
                 powershell './build.ps1 -Target Pack -Configuration Release'
-                xunit([NUnit3(deleteOutputFiles: true, failIfNotNew: true, pattern: 'OnTheGoPlayer.Test/bin/*/TestResult.xml', skipNoTestFiles: false, stopProcessingIfError: true)])
+                xunit([NUnit3(deleteOutputFiles: true, failIfNotNew: true, pattern: 'OnTheGoPlayer.Test/bin/Release/TestResult.xml', skipNoTestFiles: false, stopProcessingIfError: true)])
             }
         }
 
