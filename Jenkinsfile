@@ -14,7 +14,7 @@ pipeline {
             steps {
                 checkout scm
                 powershell './build.ps1 -Target Pack -Configuration Release'
-                nunit testResultsPattern: './OnTheGoPlayer.Test/bin/**/TestResult.xml'
+                nunit testResultsPattern: 'OnTheGoPlayer.Test/bin/Debug/TestResult.xml'
             }
         }
 
