@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace OnTheGoPlayer.Test.Dal.MediaMonkeyDB
 {
-    [TestFixture, Ignore("postponed", Until = "2019-03-01")]
+    [TestFixture]
     public class MMDBPlaylistContainerExporterTest
     {
         #region Private Fields
