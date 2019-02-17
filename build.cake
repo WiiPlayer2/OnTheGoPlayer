@@ -1,11 +1,12 @@
 #addin nuget:?package=Cake.Git&version=0.19.0
+#tool nuget:?package=NUnit.ConsoleRunner&version=3.9.0
 
 ///////////////////////////////////////////////////////////////////////////////
 // ARGUMENTS
 ///////////////////////////////////////////////////////////////////////////////
 
 var target = Argument("target", "Build");
-var configuration = Argument("configuration", "Release");
+var configuration = Argument("configuration", "Debug");
 
 ///////////////////////////////////////////////////////////////////////////////
 // SETUP / TEARDOWN
@@ -41,8 +42,20 @@ Task("Build")
             .SetPlatformTarget(PlatformTarget.MSIL));
 });
 
-Task("Pack")
+Task("Test")
 .IsDependentOn("Build")
+.Does(() =>
+{
+    NUnit3($"./OnTheGoPlayer.Test/bin/{configuration}/OnTheGoPlayer.Test.dll",
+        new NUnit3Settings
+        {
+            WorkingDirectory = $"./OnTheGoPlayer.Test/bin/{configuration}",
+            NoResults = false,
+        });
+});
+
+Task("Pack")
+.IsDependentOn("Test")
 .Does(() => {
     var lastCommit = GitLogTip("./");
     Zip($"./OnTheGoPlayer/bin/{configuration}", $"./{configuration}-{lastCommit.Sha}.zip");
