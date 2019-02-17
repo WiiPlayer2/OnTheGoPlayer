@@ -1,5 +1,5 @@
 ﻿using FluentAssertions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using OnTheGoPlayer.Dal.MediaMonkeyDB;
 using OnTheGoPlayer.Models;
 using Resourcer;
@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace OnTheGoPlayer.Test.Dal.MediaMonkeyDB
 {
-    [TestClass]
+    [TestFixture, Ignore("postponed", Until = "2019-03-01")]
     public class MMDBPlaylistContainerExporterTest
     {
         #region Private Fields
@@ -23,14 +23,14 @@ namespace OnTheGoPlayer.Test.Dal.MediaMonkeyDB
 
         #region Public Methods
 
-        [ClassCleanup]
+        [OneTimeTearDown]
         public static void Cleanup()
         {
             File.Delete(dbFilepath);
         }
 
-        [ClassInitialize]
-        public static void Initialize(TestContext ctx)
+        [OneTimeSetUp]
+        public static void Initialize()
         {
             dbFilepath = Path.GetTempFileName();
             using (var resStream = Resource.AsStream("mm-test.db"))
@@ -43,7 +43,7 @@ namespace OnTheGoPlayer.Test.Dal.MediaMonkeyDB
             }
         }
 
-        [TestMethod]
+        [Test]
         public async Task IsOpen_AfterClose_ReturnsFalse()
         {
             var exporter = new MMDBPlaylistContainerExporter();
@@ -54,7 +54,7 @@ namespace OnTheGoPlayer.Test.Dal.MediaMonkeyDB
             exporter.IsOpen.Should().BeFalse();
         }
 
-        [TestMethod]
+        [Test]
         public async Task IsOpen_AfterOpenWithTestDatabase_ReturnsTrue()
         {
             var exporter = new MMDBPlaylistContainerExporter();
@@ -64,7 +64,7 @@ namespace OnTheGoPlayer.Test.Dal.MediaMonkeyDB
             exporter.IsOpen.Should().BeTrue();
         }
 
-        [TestMethod]
+        [Test]
         public void IsOpen_BeforeOpen_ReturnsFalse()
         {
             var exporter = new MMDBPlaylistContainerExporter();
@@ -72,7 +72,7 @@ namespace OnTheGoPlayer.Test.Dal.MediaMonkeyDB
             exporter.IsOpen.Should().BeFalse();
         }
 
-        [TestMethod]
+        [Test]
         public async Task ListPlaylists_WithTestDatabase_ReturnsCorrectEntries()
         {
             var exporter = new MMDBPlaylistContainerExporter();
@@ -90,7 +90,7 @@ namespace OnTheGoPlayer.Test.Dal.MediaMonkeyDB
             entries.Should().BeEquivalentTo(shouldBeEntries);
         }
 
-        [TestMethod]
+        [Test]
         public void Open_WithTestDatabase_DoesNotThrowException()
         {
             var exporter = new MMDBPlaylistContainerExporter();

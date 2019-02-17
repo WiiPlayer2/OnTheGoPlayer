@@ -1,5 +1,4 @@
 ﻿using FluentAssertions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using OnTheGoPlayer.Dal.IO;
 using OnTheGoPlayer.Test.Helpers.Extensions;
@@ -7,15 +6,16 @@ using Resourcer;
 using System;
 using System.IO;
 using System.Threading.Tasks;
+using NUnit.Framework;
 
 namespace OnTheGoPlayer.Test.Dal.IO
 {
-    [TestClass]
+    [TestFixture]
     public class PlaylistContainerWriterTest
     {
         #region Public Methods
 
-        [TestMethod]
+        [Test]
         public async Task Write_WithTestData()
         {
             var memStream = new MemoryStream();
@@ -28,7 +28,7 @@ namespace OnTheGoPlayer.Test.Dal.IO
             memStream.Should().Equal(Resource.AsStream("test.container"));
         }
 
-        //[TestMethod]
+        //[Test]
         public async Task WriteTestData()
         {
             Console.WriteLine(Environment.CurrentDirectory);
