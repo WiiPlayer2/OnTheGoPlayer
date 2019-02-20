@@ -73,11 +73,11 @@ namespace OnTheGoPlayer.Dal.MediaMonkeyDB
             var mediaMap = new Dictionary<int, string>();
             var result = songs.Select(o => FindSong(o, mediaMap)).ToList();
 
-            return new FilesPlaylistContainer(new PlaylistMetaData()
+            return new StreamPlaylistContainer(new PlaylistMetaData()
             {
                 ID = id,
                 Title = playlist.PlaylistName,
-            }, result);
+            }, result, GetStream);
         }
 
         public Task ImportSongInfo(IEnumerable<SongInfo> songInfos)
@@ -109,6 +109,12 @@ namespace OnTheGoPlayer.Dal.MediaMonkeyDB
         public abstract Task<bool> TryOpen(Window ownerWindow);
 
         #endregion Public Methods
+
+        #region Protected Methods
+
+        protected abstract Task<Stream> GetStream(string path);
+
+        #endregion Protected Methods
 
         #region Private Methods
 
