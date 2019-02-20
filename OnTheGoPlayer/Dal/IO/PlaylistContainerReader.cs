@@ -1,10 +1,10 @@
-﻿using OnTheGoPlayer.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using OnTheGoPlayer.Models;
 
 namespace OnTheGoPlayer.Dal.IO
 {
@@ -87,8 +87,6 @@ namespace OnTheGoPlayer.Dal.IO
         {
             var song = new FilePlaylistContainer.SongDataEntry();
             song.Song.ID = reader.ReadInt32();
-            song.DataOffset = reader.ReadInt64();
-            song.DataLength = reader.ReadInt64();
             song.Song.FileFormat = reader.ReadString();
             song.Song.Title = reader.ReadString();
             song.Song.Artist = reader.ReadString();
@@ -99,7 +97,24 @@ namespace OnTheGoPlayer.Dal.IO
         private IEnumerable<FilePlaylistContainer.SongDataEntry> ReadSongsTable()
         {
             var count = reader.ReadInt32();
-            return Enumerable.Range(0, count).Select(_ => ReadSongDataEntry()).ToList();
+            var entries = Enumerable.Range(0, count).Select(_ => ReadSongDataEntry()).ToList();
+            var groups = entries.GroupBy(o => o.ID).ToDictionary(o => o.Key);
+
+            count = reader.ReadInt32();
+            for (var i = 0; i < count; i++)
+            {
+                var id = reader.ReadInt32();
+                var length = reader.ReadInt64();
+
+                foreach (var entry in groups[id])
+                {
+                    entry.DataOffset = reader.BaseStream.Position;
+                    entry.DataLength = length;
+                }
+
+                reader.BaseStream.Seek(length, SeekOrigin.Current);
+            }
+            return entries;
         }
 
         #endregion Private Methods
