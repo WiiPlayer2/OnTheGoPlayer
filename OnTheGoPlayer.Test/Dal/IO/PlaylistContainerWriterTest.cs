@@ -1,12 +1,12 @@
-﻿using FluentAssertions;
+﻿using System;
+using System.IO;
+using System.Threading.Tasks;
+using FluentAssertions;
 using NSubstitute;
+using NUnit.Framework;
 using OnTheGoPlayer.Dal.IO;
 using OnTheGoPlayer.Test.Helpers.Extensions;
 using Resourcer;
-using System;
-using System.IO;
-using System.Threading.Tasks;
-using NUnit.Framework;
 
 namespace OnTheGoPlayer.Test.Dal.IO
 {
@@ -33,7 +33,9 @@ namespace OnTheGoPlayer.Test.Dal.IO
         {
             Console.WriteLine(Environment.CurrentDirectory);
             var progress = Substitute.For<IProgress<(double?, string)>>();
-            using (var writer = new PlaylistContainerWriter("../../Dal/IO/test.container"))
+            var fullPath = Path.GetFullPath(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), "test.container"));
+            Console.WriteLine($"Writing test container to {fullPath}");
+            using (var writer = new PlaylistContainerWriter(fullPath))
             {
                 await writer.Write(PlaylistContainerTestData.Data, progress);
                 await writer.Flush();
