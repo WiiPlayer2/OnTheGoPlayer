@@ -12,7 +12,11 @@ namespace OnTheGoPlayer.Dal.MediaMonkeyDropboxDB
 
     internal class MMDropboxDBMediaDatabase : BaseDBMediaDatabase
     {
+        #region Private Fields
+
         private DropboxClient client;
+
+        #endregion Private Fields
 
         #region Public Methods
 
@@ -33,13 +37,9 @@ namespace OnTheGoPlayer.Dal.MediaMonkeyDropboxDB
             return IsOpen;
         }
 
-        protected override async Task<Stream> GetStream(string path)
-        {
-            var downloadResponse = await TaskHelper.Retry(() => client.Files.DownloadAsync(path), TimeSpan.FromSeconds(1));
-            var downloadStream = await downloadResponse.GetContentAsStreamAsync();
-            var bufferStream = new BufferStream(downloadStream, (int)downloadResponse.Response.Size);
-            return bufferStream;
-        }
+        #endregion Public Methods
+
+        #region Protected Methods
 
         protected override async Task<string> FindMap(MMDBSong song)
         {
@@ -62,6 +62,19 @@ namespace OnTheGoPlayer.Dal.MediaMonkeyDropboxDB
             return song.SongPath.Remove(0, mappedMediaName.Length).Replace('\\', '/');
         }
 
-        #endregion Public Methods
+        protected override async Task<Stream> GetStream(string path)
+        {
+            var downloadResponse = await TaskHelper.Retry(() => client.Files.DownloadAsync(path), TimeSpan.FromSeconds(1));
+            //var downloadStream = await downloadResponse.GetContentAsStreamAsync();
+            //var bufferStream = new BufferStream(downloadStream, (int)downloadResponse.Response.Size);
+            //return bufferStream;
+            var downloadData = await downloadResponse.GetContentAsByteArrayAsync();
+            return new MemoryStream(downloadData)
+            {
+                Position = 0
+            };
+        }
+
+        #endregion Protected Methods
     }
 }
