@@ -28,7 +28,14 @@ Teardown(ctx =>
 // TASKS
 ///////////////////////////////////////////////////////////////////////////////
 
+Task("Cleanup")
+.Does(() => {
+    DeleteFiles("./OnTheGoPlayer.Test/bin/*/TestResult.xml");
+    DeleteFiles("./*-*.zip");
+});
+
 Task("Restore")
+.IsDependentOn("Cleanup")
 .Does(() => {
     NuGetRestore("./OnTheGoPlayer.sln");
 });
