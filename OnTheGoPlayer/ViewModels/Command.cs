@@ -9,8 +9,30 @@ using System.Windows.Input;
 
 namespace OnTheGoPlayer.ViewModels
 {
-    internal class Command<T> : ICommand
-        where T : class
+    public class Command : Command<object>
+    {
+        #region Public Constructors
+
+        public Command(Action action, bool async = false)
+            : this(action, () => true, async) { }
+
+        public Command(Action action, Func<bool> canExecute, bool async = false)
+            : this(action, canExecute, null, async) { }
+
+        public Command(Action action, Func<bool> canExecute, [AllowNull]INotifyPropertyChanged notifyingObject, bool async = false)
+            : base(_ => action(), _ => canExecute(), notifyingObject, async) { }
+
+        #endregion Public Constructors
+
+        #region Public Methods
+
+        public void Refresh() => Refresh(null);
+
+        #endregion Public Methods
+    }
+
+    public class Command<T> : ICommand
+            where T : class
     {
         #region Private Fields
 
@@ -30,7 +52,7 @@ namespace OnTheGoPlayer.ViewModels
         public Command(Action<T> action, Func<T, bool> canExecute, bool async = false)
             : this(action, canExecute, null, async) { }
 
-        public Command(Action<T> action, Func<T, bool> canExecute, INotifyPropertyChanged notifyingObject, bool async = false)
+        public Command(Action<T> action, Func<T, bool> canExecute, [AllowNull]INotifyPropertyChanged notifyingObject, bool async = false)
         {
             if (async)
                 this.action = o => Task.Run(() => action(o));
@@ -77,28 +99,6 @@ namespace OnTheGoPlayer.ViewModels
                 CanExecuteChanged?.Invoke(this, EventArgs.Empty);
             }
         }
-
-        #endregion Public Methods
-    }
-
-    internal class Command : Command<object>
-    {
-        #region Public Constructors
-
-        public Command(Action action, bool async = false)
-            : this(action, () => true, async) { }
-
-        public Command(Action action, Func<bool> canExecute, bool async = false)
-            : this(action, canExecute, null, async) { }
-
-        public Command(Action action, Func<bool> canExecute, INotifyPropertyChanged notifyingObject, bool async = false)
-            : base(_ => action(), _ => canExecute(), notifyingObject, async) { }
-
-        #endregion Public Constructors
-
-        #region Public Methods
-
-        public void Refresh() => Refresh(null);
 
         #endregion Public Methods
     }

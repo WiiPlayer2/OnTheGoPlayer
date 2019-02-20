@@ -1,0 +1,22 @@
+﻿<controls:MetroWindow
+    x:Class="OnTheGoPlayer.Dal.MediaMonkeyDropboxDB.DropboxAuthDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:ev="clr-namespace:Singulink.Windows.Data"
+    xmlns:helper="clr-namespace:OnTheGoPlayer.Helpers"
+    xmlns:local="clr-namespace:OnTheGoPlayer.Dal.MediaMonkeyDropboxDB"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    x:Name="root"
+    Title="DropboxAuthDialog"
+    Width="800"
+    Height="600"
+    ShowMaxRestoreButton="False"
+    ShowMinButton="False"
+    WindowStartupLocation="CenterScreen"
+    mc:Ignorable="d">
+    <Grid>
+        <WebBrowser helper:WebBrowserBehaviors.BindableSource="{Binding AuthorizeUri, ElementName=root}" Navigated="WebBrowser_Navigated" />
+    </Grid>
+</controls:MetroWindow>

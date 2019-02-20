@@ -3,6 +3,7 @@
 
 // Licensed under the Code Project Open License: http://www.codeproject.com/info/cpol10.aspx
 
+using NullGuard;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -81,6 +82,7 @@ namespace Singulink.Windows.Data
 
         public Type ConverterTargetType { get; set; }
 
+        [AllowNull]
         public PropertyPath Path { get; set; }
 
         #endregion Public Properties

@@ -4,6 +4,7 @@ using OnTheGoPlayer.Dal;
 using OnTheGoPlayer.Dal.IO;
 using OnTheGoPlayer.Dal.MediaMonkeyCOM;
 using OnTheGoPlayer.Dal.MediaMonkeyDB;
+using OnTheGoPlayer.Dal.MediaMonkeyDropboxDB;
 using OnTheGoPlayer.Helpers;
 using OnTheGoPlayer.Models;
 using System;
@@ -64,8 +65,9 @@ namespace OnTheGoPlayer.ViewModels
 
         public IEnumerable<IMediaDatabase> Exporters { get; } = new IMediaDatabase[]
         {
-            new MMDBPlaylistContainerExporter(),
             new MMComPlaylistContainerExporter(),
+            new MMDBPlaylistContainerExporter(),
+            new MMDropboxDBMediaDatabase(),
         };
 
         public Command ImportCommand { get; }
