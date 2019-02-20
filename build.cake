@@ -30,8 +30,8 @@ Teardown(ctx =>
 
 Task("Cleanup")
 .Does(() => {
-    DeleteFiles("./OnTheGoPlayer.Test/bin/*/TestResult.xml");
-    DeleteFiles("./*-*.zip");
+    DeleteFiles($"./OnTheGoPlayer.Test/bin/{configuration}/TestResult.xml");
+    DeleteFiles($"./{configuration}-*.zip");
 });
 
 Task("Restore")
