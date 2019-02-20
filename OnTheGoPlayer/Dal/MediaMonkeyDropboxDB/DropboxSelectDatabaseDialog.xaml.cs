@@ -1,30 +1,18 @@
-﻿using Dropbox.Api;
-using Dropbox.Api.Files;
-using Fody;
+﻿using System;
+using System.ComponentModel;
+using System.IO;
+using System.Windows;
+using Dropbox.Api;
 using MahApps.Metro.Controls;
 using NullGuard;
 using OnTheGoPlayer.Dal.MediaMonkeyDB;
 using OnTheGoPlayer.ViewModels;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-
 using IOPath = System.IO.Path;
 
 namespace OnTheGoPlayer.Dal.MediaMonkeyDropboxDB
 {
+    using Dropbox.Api.Files;
+
     public enum ProgressState
     {
         Progressing,
@@ -75,6 +63,8 @@ namespace OnTheGoPlayer.Dal.MediaMonkeyDropboxDB
         public ProgressState CurrentState { get; private set; } = ProgressState.Progressing;
 
         public MMDBPlaylistContainerExporter MediaDatabase { get; private set; }
+
+        public string LocalDatabasePath { get; private set; }
 
         [AllowNull]
         public SearchResult SearchResult { get; private set; }
@@ -144,6 +134,8 @@ namespace OnTheGoPlayer.Dal.MediaMonkeyDropboxDB
                 {
                     var database = new MMDBPlaylistContainerExporter();
                     await database.Open(tmpPath);
+                    await database.Close();
+                    LocalDatabasePath = tmpPath;
                     MediaDatabase = database;
 
                     Dispatcher.Invoke(() =>

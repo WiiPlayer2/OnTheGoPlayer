@@ -1,5 +1,11 @@
-﻿using Fody;
-using Microsoft.Win32;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Threading;
+using Fody;
 using OnTheGoPlayer.Dal;
 using OnTheGoPlayer.Dal.IO;
 using OnTheGoPlayer.Dal.MediaMonkeyCOM;
@@ -7,16 +13,6 @@ using OnTheGoPlayer.Dal.MediaMonkeyDB;
 using OnTheGoPlayer.Dal.MediaMonkeyDropboxDB;
 using OnTheGoPlayer.Helpers;
 using OnTheGoPlayer.Models;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Input;
-using System.Windows.Threading;
 
 namespace OnTheGoPlayer.ViewModels
 {
@@ -132,7 +128,7 @@ namespace OnTheGoPlayer.ViewModels
             await Progress.Do(async () =>
             {
                 mainViewModel.LoadedPlaylist = await SelectedExporter.ExportPlaylist(metaData.ID, Progress);
-            }, false);
+            });
         }
 
         private void OnSelectedExporterChanged()

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Data.SQLite;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using OnTheGoPlayer.Dal.MediaMonkeyDB.Collations;
@@ -31,7 +30,7 @@ namespace OnTheGoPlayer.Dal.MediaMonkeyDB
 
         #region Public Properties
 
-        public bool IsOpen => throw new NotImplementedException();
+        public bool IsOpen => connection != null;
 
         #endregion Public Properties
 
@@ -71,7 +70,7 @@ namespace OnTheGoPlayer.Dal.MediaMonkeyDB
 
             progress.Report((null, "Mapping songs..."));
             var mediaMap = new Dictionary<int, string>();
-            var result = songs.Select(o => FindSong(o, mediaMap)).ToList();
+            var result = await Task.WhenAll(songs.Select(o => FindSong(o, mediaMap)));
 
             return new StreamPlaylistContainer(new PlaylistMetaData()
             {
@@ -118,10 +117,33 @@ namespace OnTheGoPlayer.Dal.MediaMonkeyDB
 
         #region Private Methods
 
-        private (Song Song, string FullPath) FindSong(MMDBSong song, Dictionary<int, string> mediaMap)
+        private (Song Song, string FullPath) Convert(MMDBSong song, Dictionary<int, string> mediaMap)
         {
-            throw new NotImplementedException();
+            var fullPath = GetPath(song, mediaMap[(int)song.IDMedia]);
+            var retSong = new Song()
+            {
+                ID = (int)song.ID,
+                FileFormat = Path.GetExtension(fullPath).TrimStart('.'),
+                Title = song.SongTitle,
+                Artist = song.Artist,
+                Album = song.Album,
+            };
+            return (retSong, fullPath);
         }
+
+        protected abstract Task<string> FindMap(MMDBSong song);
+
+        private async Task<(Song Song, string FullPath)> FindSong(MMDBSong song, Dictionary<int, string> mediaMap)
+        {
+            if (mediaMap.ContainsKey((int)song.IDMedia))
+                return Convert(song, mediaMap);
+
+            var map = await FindMap(song);
+            mediaMap[(int)song.IDMedia] = map;
+            return Convert(song, mediaMap);
+        }
+
+        protected abstract string GetPath(MMDBSong song, string mappedMediaName);
 
         private async Task<IEnumerable<MMDBSong>> GetPlaylistSongs(int playlistId)
         {

@@ -1,66 +1,61 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using System.Windows;
-using Dropbox.Api;
 using OnTheGoPlayer.Dal.MediaMonkeyDB;
-using OnTheGoPlayer.Models;
 
 namespace OnTheGoPlayer.Dal.MediaMonkeyDropboxDB
 {
-    internal class MMDropboxDBMediaDatabase : IMediaDatabase
+    using System.IO;
+    using Dropbox.Api;
+
+    internal class MMDropboxDBMediaDatabase : BaseDBMediaDatabase
     {
-        #region Private Fields
-
-        private MMDBPlaylistContainerExporter database;
-
-        #endregion Private Fields
-
-        #region Public Properties
-
-        public bool IsOpen { get; private set; }
-
-        #endregion Public Properties
+        private DropboxClient client;
 
         #region Public Methods
 
-        public async Task Close()
-        {
-            await database.Close();
-            IsOpen = false;
-            database = null;
-        }
-
-        public Task<IPlaylistContainer> ExportPlaylist(int id, IProgress<(double?, string)> progress) => database.ExportPlaylist(id, progress);
-
-        public Task ImportSongInfo(IEnumerable<SongInfo> songInfos)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<IEnumerable<PlaylistMetaData>> ListPlaylists() => database.ListPlaylists();
-
-        public Task Open(string data)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<bool> TryOpen(Window ownerWindow)
+        public override async Task<bool> TryOpen(Window ownerWindow)
         {
             var authDialog = new DropboxAuthDialog();
             if (!authDialog.ShowDialog() ?? false)
-                return Task.FromResult(false);
+                return false;
 
-            var client = new DropboxClient(authDialog.Response.AccessToken);
+            client = new DropboxClient(authDialog.Response.AccessToken);
             var selectDialog = new DropboxSelectDatabaseDialog(client);
             if (!selectDialog.ShowDialog() ?? false)
-                return Task.FromResult(false);
+                return false;
 
-            database = selectDialog.MediaDatabase;
-            IsOpen = true;
-            return Task.FromResult(true);
+            await Open(selectDialog.LocalDatabasePath);
+            return IsOpen;
+        }
+
+        protected override async Task<Stream> GetStream(string path)
+        {
+            var downloadResponse = await client.Files.DownloadAsync(path);
+            var downloadData = await downloadResponse.GetContentAsByteArrayAsync();
+            var tmpMemStream = new MemoryStream(downloadData);
+            tmpMemStream.Position = 0;
+            return tmpMemStream;
+        }
+
+        protected override async Task<string> FindMap(MMDBSong song)
+        {
+            if (!song.SongPath.ToLower().Contains("dropbox"))
+                throw new FileNotFoundException($"Dropbox folder not found in song path of song #{song.ID}");
+
+            var pathStartIndex = song.SongPath.ToLower().IndexOf("dropbox") + 7;
+            var mappedName = song.SongPath.ToLower().Substring(0, pathStartIndex);
+            var dropboxPath = GetPath(song, mappedName);
+            var metadata = await client.Files.GetMetadataAsync(dropboxPath);
+
+            return mappedName;
+        }
+
+        protected override string GetPath(MMDBSong song, string mappedMediaName)
+        {
+            if (!song.SongPath.ToLower().StartsWith(mappedMediaName))
+                throw new FileNotFoundException($"Could not find song #{song.ID}");
+
+            return song.SongPath.Remove(0, mappedMediaName.Length).Replace('\\', '/');
         }
 
         #endregion Public Methods
