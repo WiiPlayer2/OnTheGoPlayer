@@ -11,6 +11,8 @@ using OnTheGoPlayer.Models;
 
 namespace OnTheGoPlayer.Dal.MediaMonkeyDB
 {
+    using System.Threading;
+
     internal abstract class BaseDBMediaDatabase : IMediaDatabase
     {
         #region Private Fields
@@ -70,7 +72,8 @@ namespace OnTheGoPlayer.Dal.MediaMonkeyDB
 
             progress.Report((null, "Mapping songs..."));
             var mediaMap = new Dictionary<int, string>();
-            var result = await Task.WhenAll(songs.Select(o => FindSong(o, mediaMap)));
+            var mapSemaphore = new SemaphoreSlim(1, 1);
+            var result = await Task.WhenAll(songs.Select(o => FindSong(o, mediaMap, mapSemaphore)));
 
             return new StreamPlaylistContainer(new PlaylistMetaData()
             {
@@ -133,14 +136,23 @@ namespace OnTheGoPlayer.Dal.MediaMonkeyDB
 
         protected abstract Task<string> FindMap(MMDBSong song);
 
-        private async Task<(Song Song, string FullPath)> FindSong(MMDBSong song, Dictionary<int, string> mediaMap)
+        private async Task<(Song Song, string FullPath)> FindSong(MMDBSong song, Dictionary<int, string> mediaMap, SemaphoreSlim mapSemaphore)
         {
-            if (mediaMap.ContainsKey((int)song.IDMedia))
-                return Convert(song, mediaMap);
+            // TODO optimize
+            await mapSemaphore.WaitAsync();
+            try
+            {
+                if (mediaMap.ContainsKey((int)song.IDMedia))
+                    return Convert(song, mediaMap);
 
-            var map = await FindMap(song);
-            mediaMap[(int)song.IDMedia] = map;
-            return Convert(song, mediaMap);
+                var map = await FindMap(song);
+                mediaMap[(int)song.IDMedia] = map;
+                return Convert(song, mediaMap);
+            }
+            finally
+            {
+                mapSemaphore.Release();
+            }
         }
 
         protected abstract string GetPath(MMDBSong song, string mappedMediaName);

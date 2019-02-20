@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using OnTheGoPlayer.Models;
 
@@ -22,7 +21,9 @@ namespace OnTheGoPlayer.Dal
 
         public StreamPlaylistContainer(PlaylistMetaData metaData, IEnumerable<(Song Song, string)> songs, Func<string, Task<Stream>> getStreamFunc)
         {
-            songData = songs.ToDictionary(o => o.Song.ID);
+            songData = songs
+                .GroupBy(o => o.Song.ID)
+                .ToDictionary(o => o.Key, o => o.First());
             Playlist = new Playlist
             {
                 MetaData = metaData,
