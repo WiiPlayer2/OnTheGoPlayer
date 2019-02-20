@@ -6,6 +6,7 @@ namespace OnTheGoPlayer.Dal.MediaMonkeyDropboxDB
 {
     using System.IO;
     using Dropbox.Api;
+    using OnTheGoPlayer.Helpers;
 
     internal class MMDropboxDBMediaDatabase : BaseDBMediaDatabase
     {
@@ -31,10 +32,9 @@ namespace OnTheGoPlayer.Dal.MediaMonkeyDropboxDB
         protected override async Task<Stream> GetStream(string path)
         {
             var downloadResponse = await client.Files.DownloadAsync(path);
-            var downloadData = await downloadResponse.GetContentAsByteArrayAsync();
-            var tmpMemStream = new MemoryStream(downloadData);
-            tmpMemStream.Position = 0;
-            return tmpMemStream;
+            var downloadStream = await downloadResponse.GetContentAsStreamAsync();
+            var bufferStream = new BufferStream(downloadStream, (int)downloadResponse.Response.Size);
+            return bufferStream;
         }
 
         protected override async Task<string> FindMap(MMDBSong song)

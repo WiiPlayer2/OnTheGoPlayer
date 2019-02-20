@@ -160,6 +160,7 @@
     <Compile Include="Dal\MediaMonkeyDropboxDB\MMDropboxDBMediaDatabase.cs" />
     <Compile Include="Dal\SongInfoDB.cs" />
     <Compile Include="Dal\StreamPlaylistContainer.cs" />
+    <Compile Include="Helpers\BufferStream.cs" />
     <Compile Include="Helpers\Converters\AllEqualConverter.cs" />
     <Compile Include="Helpers\Converters\TimespanToDoubleConverter.cs" />
     <Compile Include="Helpers\Dialogs.cs" />
