@@ -1,10 +1,7 @@
-﻿using OnTheGoPlayer.Models;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+using OnTheGoPlayer.Models;
 
 namespace OnTheGoPlayer.Dal.IO
 {
@@ -35,6 +32,7 @@ namespace OnTheGoPlayer.Dal.IO
             using (var writer = new PlaylistContainerWriter(filePath))
             {
                 await writer.Write(playlistContainer, progress);
+                await writer.Flush();
             }
         }
 
@@ -54,7 +52,7 @@ namespace OnTheGoPlayer.Dal.IO
             {
                 writer.Write(Constants.CONTAINER_VERSION);
                 WriteMetaData(playlistContainer.Playlist.MetaData);
-                await WriteSongsTable(playlistContainer);
+                WriteSongsTable(playlistContainer);
                 await WriteSongData(playlistContainer, progress);
             });
         }
@@ -68,11 +66,9 @@ namespace OnTheGoPlayer.Dal.IO
             writer.Write(metaData.Title);
         }
 
-        private void WriteSong(Song song, long offset, long length)
+        private void WriteSong(Song song)
         {
             writer.Write(song.ID);
-            writer.Write(offset);
-            writer.Write(length);
             writer.Write(song.FileFormat);
             writer.Write(song.Title);
             writer.Write(song.Artist);
@@ -83,10 +79,13 @@ namespace OnTheGoPlayer.Dal.IO
         {
             var i = 0;
             var count = playlistContainer.Playlist.Songs.Count;
+            writer.Write(count);
             foreach (var song in playlistContainer.Playlist.Songs)
             {
                 progress.Report((((double)i) / count, $"Writing song {song.Artist} - {song.Title} ({i + 1}/{count})..."));
                 var stream = await playlistContainer.GetSongStream(song);
+                writer.Write(song.ID);
+                writer.Write(stream.Length);
                 await stream.CopyToAsync(writer.BaseStream);
 
                 i++;
@@ -94,15 +93,12 @@ namespace OnTheGoPlayer.Dal.IO
             progress.Report((1, string.Empty));
         }
 
-        private async Task WriteSongsTable(IPlaylistContainer playlistContainer)
+        private void WriteSongsTable(IPlaylistContainer playlistContainer)
         {
             writer.Write(playlistContainer.Playlist.Songs.Count);
-            var currentOffset = 0L;
             foreach (var song in playlistContainer.Playlist.Songs)
             {
-                var stream = await playlistContainer.GetSongStream(song);
-                WriteSong(song, currentOffset, stream.Length);
-                currentOffset += stream.Length;
+                WriteSong(song);
             }
         }
 
