@@ -28,18 +28,6 @@ namespace OnTheGoPlayer.Dal.MediaMonkeyDB
 
         #endregion Public Constructors
 
-        #region Private Methods
-
-        private static void Register<TIn, TOut>(Func<TIn, TOut> convertFunc)
-        {
-            if (!typeConverters.ContainsKey(typeof(TIn)))
-                typeConverters[typeof(TIn)] = new Dictionary<Type, Func<object, object>>();
-            var subDict = typeConverters[typeof(TIn)];
-            subDict[typeof(TOut)] = o => convertFunc((TIn)o);
-        }
-
-        #endregion Private Methods
-
         #region Public Methods
 
         public static async Task<T> Find<T>(this SQLiteConnection connection, string query, params object[] args)
@@ -75,6 +63,10 @@ namespace OnTheGoPlayer.Dal.MediaMonkeyDB
             return rows.Select(o => Convert<T>(names, o));
         }
 
+        #endregion Public Methods
+
+        #region Private Methods
+
         private static T Convert<T>(string[] names, object[] row)
             where T : new()
         {
@@ -98,6 +90,10 @@ namespace OnTheGoPlayer.Dal.MediaMonkeyDB
                         var converter = typeConverters[valType][prop.PropertyType];
                         prop.SetValue(ret, converter(value));
                     }
+                    else if (value is DBNull)
+                    {
+                        prop.SetValue(ret, null);
+                    }
                     else
                     {
                         Debug.Fail($"Cannot convert {valType} to {prop.PropertyType}.");
@@ -119,6 +115,14 @@ namespace OnTheGoPlayer.Dal.MediaMonkeyDB
             return command;
         }
 
-        #endregion Public Methods
+        private static void Register<TIn, TOut>(Func<TIn, TOut> convertFunc)
+        {
+            if (!typeConverters.ContainsKey(typeof(TIn)))
+                typeConverters[typeof(TIn)] = new Dictionary<Type, Func<object, object>>();
+            var subDict = typeConverters[typeof(TIn)];
+            subDict[typeof(TOut)] = o => convertFunc((TIn)o);
+        }
+
+        #endregion Private Methods
     }
 }

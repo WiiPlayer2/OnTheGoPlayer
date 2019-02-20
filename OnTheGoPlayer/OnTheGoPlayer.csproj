@@ -138,6 +138,7 @@
     <Compile Include="Bl\Player.cs" />
     <Compile Include="Dal\IO\SongInfoReader.cs" />
     <Compile Include="Dal\IO\SongInfoWriter.cs" />
+    <Compile Include="Dal\MediaMonkeyDB\BaseDBMediaDatabase.cs" />
     <Compile Include="Dal\MediaMonkeyDB\Collations\CollationsHelper.cs" />
     <Compile Include="Dal\MediaMonkeyDB\Collations\IUnicodeCollation.cs" />
     <Compile Include="Dal\MediaMonkeyDB\Collations\NumericStringCollation.cs" />
@@ -158,6 +159,7 @@
     </Compile>
     <Compile Include="Dal\MediaMonkeyDropboxDB\MMDropboxDBMediaDatabase.cs" />
     <Compile Include="Dal\SongInfoDB.cs" />
+    <Compile Include="Dal\StreamPlaylistContainer.cs" />
     <Compile Include="Helpers\Converters\AllEqualConverter.cs" />
     <Compile Include="Helpers\Converters\TimespanToDoubleConverter.cs" />
     <Compile Include="Helpers\Dialogs.cs" />
