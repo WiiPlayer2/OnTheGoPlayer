@@ -12,17 +12,14 @@ namespace OnTheGoPlayer.Dal.IO
     {
         #region Protected Fields
 
-        protected readonly long offset;
-
         protected readonly Dictionary<int, SongDataEntry> songDataEntries;
 
         #endregion Protected Fields
 
         #region Protected Constructors
 
-        protected IOPlaylistContainer(long offset, PlaylistMetaData metaData, IEnumerable<SongDataEntry> songDataEntries)
+        protected IOPlaylistContainer(PlaylistMetaData metaData, IEnumerable<SongDataEntry> songDataEntries)
         {
-            this.offset = offset;
             Playlist = new Playlist
             {
                 MetaData = metaData,

@@ -18,8 +18,8 @@ namespace OnTheGoPlayer.Dal.IO
 
         #region Public Constructors
 
-        public FilePlaylistContainer(string filePath, long offset, PlaylistMetaData metaData, IEnumerable<SongDataEntry> songDataEntries)
-            : base(offset, metaData, songDataEntries)
+        public FilePlaylistContainer(string filePath, PlaylistMetaData metaData, IEnumerable<SongDataEntry> songDataEntries)
+            : base(metaData, songDataEntries)
         {
             this.filePath = filePath;
         }
@@ -32,7 +32,7 @@ namespace OnTheGoPlayer.Dal.IO
         {
             var entry = songDataEntries[song.ID];
             var fstream = File.Open(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
-            return Task.FromResult<Stream>(new SubStream(fstream, entry.DataOffset + offset, entry.DataLength, false));
+            return Task.FromResult<Stream>(new SubStream(fstream, entry.DataOffset, entry.DataLength, false));
         }
 
         public override void Save()

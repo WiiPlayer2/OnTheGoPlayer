@@ -64,11 +64,10 @@ namespace OnTheGoPlayer.Dal.IO
 
                 var metaData = ReadPlaylistMetaData();
                 var songEntries = ReadSongsTable();
-                var offset = reader.BaseStream.Position;
 
                 if (filePath == null)
-                    return new StreamPlaylistContainer(reader.BaseStream, offset, metaData, songEntries);
-                return new FilePlaylistContainer(filePath, offset, metaData, songEntries);
+                    return new StreamPlaylistContainer(reader.BaseStream, metaData, songEntries);
+                return new FilePlaylistContainer(filePath, metaData, songEntries);
             });
         }
 

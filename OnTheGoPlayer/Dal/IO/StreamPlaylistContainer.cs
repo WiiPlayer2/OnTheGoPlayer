@@ -18,8 +18,8 @@ namespace OnTheGoPlayer.Dal.IO
 
         #region Public Constructors
 
-        public StreamPlaylistContainer(Stream baseStream, long offset, PlaylistMetaData metaData, IEnumerable<SongDataEntry> songDataEntries)
-            : base(offset, metaData, songDataEntries)
+        public StreamPlaylistContainer(Stream baseStream, PlaylistMetaData metaData, IEnumerable<SongDataEntry> songDataEntries)
+            : base(metaData, songDataEntries)
         {
             stream = baseStream;
         }
@@ -31,7 +31,7 @@ namespace OnTheGoPlayer.Dal.IO
         public override Task<Stream> GetSongStream(Song song)
         {
             var entry = songDataEntries[song.ID];
-            return Task.FromResult<Stream>(new SubStream(stream, entry.DataOffset + offset, entry.DataLength, true));
+            return Task.FromResult<Stream>(new SubStream(stream, entry.DataOffset, entry.DataLength, true));
         }
 
         public override void Save()
