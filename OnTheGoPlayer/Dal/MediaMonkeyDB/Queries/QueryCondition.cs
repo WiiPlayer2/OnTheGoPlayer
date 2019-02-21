@@ -41,11 +41,27 @@ namespace OnTheGoPlayer.Dal.MediaMonkeyDB.Queries
 
         public enum ConditionType
         {
+            _201 = 201,
+
+            _10601 = 10601,
+
+            _40 = 40,
+
+            _32 = 32,
+
+            _33 = 33,
+
+            _31 = 31,
+
+            _400 = 400,
+
             DaysAgo = 401,
 
             DoesContain = 501,
 
             DoesNotContain = 502,
+
+            IsInPlaylist = 601,
         }
 
         public enum DataType
