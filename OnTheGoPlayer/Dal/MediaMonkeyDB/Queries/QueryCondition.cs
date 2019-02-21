@@ -1,10 +1,7 @@
-﻿using MadMilkman.Ini;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using MadMilkman.Ini;
 
 namespace OnTheGoPlayer.Dal.MediaMonkeyDB.Queries
 {
@@ -46,7 +43,9 @@ namespace OnTheGoPlayer.Dal.MediaMonkeyDB.Queries
         {
             DaysAgo = 401,
 
-            DoesntContain = 502,
+            DoesContain = 501,
+
+            DoesNotContain = 502,
         }
 
         public enum DataType
@@ -92,11 +91,11 @@ namespace OnTheGoPlayer.Dal.MediaMonkeyDB.Queries
                 case ConditionType.DaysAgo:
                     return (DataType.Integer, () => $"{TableColumn} >= {DateTime.Now.AddDays(GetValue<int>() * -1).ToOADate()}");
 
-                case ConditionType.DoesntContain:
+                case ConditionType.DoesNotContain:
                     return (DataType.String, () => $"NOT ({TableColumn} like '%{GetValue<string>()}%')");
 
                 default:
-                    throw new NotImplementedException();
+                    throw new NotImplementedException($"Condition type {conditionType} is not implemented yet.");
             }
         }
 
