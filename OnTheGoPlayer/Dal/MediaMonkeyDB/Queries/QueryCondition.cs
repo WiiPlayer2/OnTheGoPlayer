@@ -91,6 +91,9 @@ namespace OnTheGoPlayer.Dal.MediaMonkeyDB.Queries
                 case ConditionType.DaysAgo:
                     return (DataType.Integer, () => $"{TableColumn} >= {DateTime.Now.AddDays(GetValue<int>() * -1).ToOADate()}");
 
+                case ConditionType.DoesContain:
+                    return (DataType.String, () => $"{TableColumn} like '%{GetValue<string>()}%'");
+
                 case ConditionType.DoesNotContain:
                     return (DataType.String, () => $"NOT ({TableColumn} like '%{GetValue<string>()}%')");
 
