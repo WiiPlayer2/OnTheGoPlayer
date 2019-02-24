@@ -51,7 +51,6 @@ Task("Build")
 
 Task("Test")
 .IsDependentOn("Build")
-.ContinueOnError()
 .Does(() =>
 {
     NUnit3($"./OnTheGoPlayer.Test/bin/{configuration}/OnTheGoPlayer.Test.dll",
