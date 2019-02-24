@@ -23,11 +23,11 @@ pipeline {
                 archiveArtifacts '/*.zip'
             }
         }
+    }
 
-        post {
-            always {
-                xunit thresholds: [failed(failureNewThreshold: '0', failureThreshold: '0', unstableNewThreshold: '0', unstableThreshold: '0')], tools: [NUnit3(deleteOutputFiles: true, failIfNotNew: true, pattern: 'OnTheGoPlayer.Test/bin/Release/TestResult.xml', skipNoTestFiles: false, stopProcessingIfError: true)]
-            }
+    post {
+        always {
+            xunit thresholds: [failed(failureNewThreshold: '0', failureThreshold: '0', unstableNewThreshold: '0', unstableThreshold: '0')], tools: [NUnit3(deleteOutputFiles: true, failIfNotNew: true, pattern: 'OnTheGoPlayer.Test/bin/Release/TestResult.xml', skipNoTestFiles: false, stopProcessingIfError: true)]
         }
     }
 }
