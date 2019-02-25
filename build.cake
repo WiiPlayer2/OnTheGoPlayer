@@ -46,7 +46,8 @@ Task("Build")
     MSBuild("./OnTheGoPlayer.sln", config =>
         config.SetConfiguration(configuration)
             .SetVerbosity(Verbosity.Minimal)
-            .SetPlatformTarget(PlatformTarget.MSIL));
+            .SetPlatformTarget(PlatformTarget.MSIL)
+            .WithTarget("publish"));
 });
 
 Task("Test")

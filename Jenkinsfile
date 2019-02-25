@@ -23,6 +23,12 @@ pipeline {
                 archiveArtifacts '/*.zip'
             }
         }
+
+        stage('Publish') {
+            steps {
+                ftpPublisher alwaysPublishFromMaster: false, continueOnError: false, failOnError: false, publishers: [[configName: 'Webspace', transfers: [[asciiMode: false, cleanRemote: false, excludes: '', flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+', remoteDirectory: '/apps/deploy/OnTheGoPlayer', remoteDirectorySDF: false, removePrefix: 'OnTheGoPlayer/OnTheGoPlayer/bin/Release/app.publish', sourceFiles: 'OnTheGoPlayer/OnTheGoPlayer/bin/Release/app.publish/*']], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: false]]
+            }
+        }
     }
 
     post {
