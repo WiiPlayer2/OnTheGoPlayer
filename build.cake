@@ -12,10 +12,16 @@ var configuration = Argument("configuration", "Debug");
 // SETUP / TEARDOWN
 ///////////////////////////////////////////////////////////////////////////////
 
+var appVersion = new Version(0, 1);
+
 Setup(ctx =>
 {
-   // Executed BEFORE the first task.
-   Information("Running tasks...");
+    // Executed BEFORE the first task.
+    Information("Running tasks...");
+
+    var now = DateTimeOffset.UtcNow;
+    appVersion = new Version(appVersion.Major, appVersion.Minor, (now.Year * 10000) + (now.Month * 100) + now.Day, (int)now.TimeOfDay.TotalSeconds);
+    Information($"Building version {appVersion}...");
 });
 
 Teardown(ctx =>
@@ -30,6 +36,7 @@ Teardown(ctx =>
 
 Task("Cleanup")
 .Does(() => {
+    CleanDirectory($"./OnTheGoPlayer/bin/{configuration}");
     DeleteFiles($"./OnTheGoPlayer.Test/bin/{configuration}/TestResult.xml");
     DeleteFiles($"./{configuration}-*.zip");
 });
@@ -47,7 +54,8 @@ Task("Build")
         config.SetConfiguration(configuration)
             .SetVerbosity(Verbosity.Minimal)
             .SetPlatformTarget(PlatformTarget.MSIL)
-            .WithTarget("publish"));
+            .WithTarget("publish")
+            .WithProperty("ApplicationVersion", appVersion.ToString(4)));
 });
 
 Task("Test")
