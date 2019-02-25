@@ -26,7 +26,7 @@ pipeline {
 
         stage('Publish') {
             steps {
-                ftpPublisher alwaysPublishFromMaster: false, continueOnError: false, failOnError: false, masterNodeName: 'master', paramPublish: [parameterName: ''], publishers: [[configName: 'Webspace', transfers: [[asciiMode: false, cleanRemote: false, excludes: '', flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+', remoteDirectory: 'apps/deploy/OnTheGoPlayer', remoteDirectorySDF: false, removePrefix: '', sourceFiles: 'OnTheGoPlayer/bin/Release/app.publish/*']], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: false ]]
+                ftpPublisher alwaysPublishFromMaster: false, continueOnError: false, failOnError: false, masterNodeName: 'master', paramPublish: [parameterName: ''], publishers: [[configName: 'Webspace', transfers: [[asciiMode: false, cleanRemote: false, excludes: '', flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+', remoteDirectory: 'apps/deploy/OnTheGoPlayer', remoteDirectorySDF: false, removePrefix: 'OnTheGoPlayer/bin/Release/app.publish', sourceFiles: 'OnTheGoPlayer/bin/Release/app.publish/*']], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: false ]]
             }
         }
     }
