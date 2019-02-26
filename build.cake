@@ -41,6 +41,7 @@ Teardown(ctx =>
 Task("Cleanup")
 .Does(() => {
     CleanDirectory($"./OnTheGoPlayer/bin/{configuration}");
+    CleanDirectory($"./OnTheGoPlayer/obj/{configuration}");
     DeleteFiles($"./OnTheGoPlayer.Test/bin/{configuration}/TestResult.xml");
     DeleteFiles($"./{configuration}-*.zip");
 });
