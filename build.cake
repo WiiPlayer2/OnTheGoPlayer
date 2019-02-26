@@ -20,7 +20,11 @@ Setup(ctx =>
     Information("Running tasks...");
 
     var now = DateTimeOffset.UtcNow;
-    appVersion = new Version(appVersion.Major, appVersion.Minor, (now.Year * 10000) + (now.Month * 100) + now.Day, (int)now.TimeOfDay.TotalSeconds);
+    var epochStart = new DateTimeOffset(2019, 1, 1, 0, 0, 0, TimeSpan.Zero);
+    var timeSinceEpochStart = now - epochStart;
+    var daysSinceEpochStart = (int)timeSinceEpochStart.TotalDays;
+    var minutesSinceMidnight = (int)timeSinceEpochStart.Subtract(TimeSpan.FromDays(daysSinceEpochStart)).TotalMinutes;
+    appVersion = new Version(appVersion.Major, appVersion.Minor, daysSinceEpochStart, minutesSinceMidnight);
     Information($"Building version {appVersion}...");
 });
 
