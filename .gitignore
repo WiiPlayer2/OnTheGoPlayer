@@ -273,3 +273,9 @@ __pycache__/
 *.pyc
 .gitignore
 .gitignore
+
+#-------------------
+# Excludes
+#-------------------
+!/OnTheGoPlayer/x86/
+!/OnTheGoPlayer/x64/
