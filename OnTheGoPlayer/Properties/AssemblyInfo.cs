@@ -1,9 +1,8 @@
-﻿using Fody;
-using System.Reflection;
-using System.Resources;
+﻿using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Windows;
+using Fody;
 
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
@@ -11,7 +10,7 @@ using System.Windows;
 [assembly: AssemblyTitle("OnTheGoPlayer")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("DarkLink")]
 [assembly: AssemblyProduct("OnTheGoPlayer")]
 [assembly: AssemblyCopyright("Copyright © DarkLink 2019")]
 [assembly: AssemblyTrademark("")]

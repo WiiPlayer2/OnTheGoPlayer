@@ -1,10 +1,12 @@
-﻿using OnTheGoPlayer.Models;
-using SQLite;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using System.Text;
+using System.Reflection;
 using System.Threading.Tasks;
+using OnTheGoPlayer.Helpers;
+using OnTheGoPlayer.Models;
+using SQLite;
 
 namespace OnTheGoPlayer.Dal
 {
@@ -20,7 +22,14 @@ namespace OnTheGoPlayer.Dal
 
         private SongInfoDB()
         {
-            connection = new SQLiteAsyncConnection("./main.db");
+            var assembly = Assembly.GetEntryAssembly();
+            var company = assembly.GetValue((AssemblyCompanyAttribute o) => o.Company);
+            var product = assembly.GetValue((AssemblyProductAttribute o) => o.Product);
+            var dataFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), company, product);
+            var dbPath = Path.Combine(dataFolder, "main.db");
+            Directory.CreateDirectory(dataFolder);
+
+            connection = new SQLiteAsyncConnection(dbPath);
             CreateSchema();
         }
 
