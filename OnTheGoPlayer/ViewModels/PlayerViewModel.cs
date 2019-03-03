@@ -17,6 +17,7 @@ namespace OnTheGoPlayer.ViewModels
         #region Private Fields
 
         private readonly Dispatcher dispatcher = Dispatcher.CurrentDispatcher;
+        private FullSongInfo lastSongInfo = null;
 
         #endregion Private Fields
 
@@ -97,8 +98,12 @@ namespace OnTheGoPlayer.ViewModels
 
             if (e.PropertyName == nameof(PlayerControlViewModel.CurrentSong))
             {
-                // TODO urrrg
-                Songs = await Task.WhenAll(LoadedPlaylist.Playlist.Songs.Select(async o => new FullSongInfo() { Song = o, SongInfo = await SongInfoDB.Instance.Get(o.ID) }));
+                if (lastSongInfo != null)
+                {
+                    lastSongInfo.SongInfo = await SongInfoDB.Instance.Get(lastSongInfo.Song.ID);
+                }
+
+                lastSongInfo = CurrentSong != null ? Songs.Single(o => o.Song == CurrentSong) : null;
             }
         }
 
