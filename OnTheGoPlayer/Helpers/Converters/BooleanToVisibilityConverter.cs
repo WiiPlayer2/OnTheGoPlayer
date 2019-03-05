@@ -1,8 +1,8 @@
-﻿using NullGuard;
-using System;
+﻿using System;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
+using NullGuard;
 
 namespace OnTheGoPlayer.Helpers.Converters
 {
@@ -21,8 +21,8 @@ namespace OnTheGoPlayer.Helpers.Converters
 
         public override object Convert(object value, Type targetType, [AllowNull]object parameter, CultureInfo culture)
             => value is bool booleanValue && booleanValue
-                ? Visibility.Visible
-                : Visibility.Collapsed;
+                ? TrueValue
+                : FalseValue;
 
         public override object ConvertBack(object value, Type targetType, [AllowNull]object parameter, CultureInfo culture)
         {

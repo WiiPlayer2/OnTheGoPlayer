@@ -1,14 +1,13 @@
-﻿using NullGuard;
+﻿using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Windows.Threading;
+using NullGuard;
 using OnTheGoPlayer.Bl;
 using OnTheGoPlayer.Dal;
 using OnTheGoPlayer.Models;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Threading;
 
 namespace OnTheGoPlayer.ViewModels
 {
@@ -18,6 +17,9 @@ namespace OnTheGoPlayer.ViewModels
 
         private readonly Dispatcher dispatcher = Dispatcher.CurrentDispatcher;
         private FullSongInfo lastSongInfo = null;
+        private IEnumerable<FullSongInfo> songs;
+        private Task filterTask;
+        private CancellationTokenSource filterTaskCancellationTokenSource;
 
         #endregion Private Fields
 
@@ -46,10 +48,42 @@ namespace OnTheGoPlayer.ViewModels
 
         public PlayerControlViewModel PlayerControlViewModel { get; } = new PlayerControlViewModel();
 
+        public bool IsFiltering => filterTask != null && !filterTask.IsCompleted;
+
+        public string SearchText { get; set; }
+
+        private void OnSearchTextChanged()
+        {
+            filterTaskCancellationTokenSource?.Cancel();
+            var txt = SearchText.ToLower();
+            if (string.IsNullOrWhiteSpace(txt))
+            {
+                FilteredSongs = songs;
+                return;
+            }
+
+            filterTaskCancellationTokenSource = new CancellationTokenSource();
+            filterTask = Task.Run(() =>
+                {
+                    var filteredSongs = songs.AsParallel().Where(o =>
+                            o.Song.Title.ToLower().Contains(txt) || o.Song.Artist.ToLower().Contains(txt) ||
+                            o.Song.Album.ToLower().Contains(txt))
+                        .WithCancellation(filterTaskCancellationTokenSource.Token)
+                        .ToList();
+                    filterTaskCancellationTokenSource.Token.ThrowIfCancellationRequested();
+                    return filteredSongs;
+                }, filterTaskCancellationTokenSource.Token)
+                .ContinueWith(task => dispatcher.Invoke(() => FilteredSongs = task.Result),
+                    TaskContinuationOptions.OnlyOnRanToCompletion);
+
+            InvokePropertyChanged(nameof(IsFiltering));
+            filterTask.ContinueWith(_ => dispatcher.Invoke(() => InvokePropertyChanged(nameof(IsFiltering))));
+        }
+
         [AllowNull]
         public FullSongInfo SelectedSong { get; set; }
 
-        public IEnumerable<FullSongInfo> Songs { get; private set; }
+        public IEnumerable<FullSongInfo> FilteredSongs { get; private set; }
 
         #endregion Public Properties
 
@@ -89,7 +123,8 @@ namespace OnTheGoPlayer.ViewModels
         private async void OnLoadedPlaylistChanged()
         {
             Player.SetPlaylistContainer(LoadedPlaylist);
-            Songs = await Task.WhenAll(LoadedPlaylist.Playlist.Songs.Select(async o => new FullSongInfo() { Song = o, SongInfo = await SongInfoDB.Instance.Get(o.ID) }));
+            songs = await Task.WhenAll(LoadedPlaylist.Playlist.Songs.Select(async o => new FullSongInfo() { Song = o, SongInfo = await SongInfoDB.Instance.Get(o.ID) }));
+            FilteredSongs = songs;
         }
 
         private async void PlayerControlViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -103,7 +138,7 @@ namespace OnTheGoPlayer.ViewModels
                     lastSongInfo.SongInfo = await SongInfoDB.Instance.Get(lastSongInfo.Song.ID);
                 }
 
-                lastSongInfo = CurrentSong != null ? Songs.Single(o => o.Song == CurrentSong) : null;
+                lastSongInfo = CurrentSong != null ? songs.Single(o => o.Song == CurrentSong) : null;
             }
         }
 
