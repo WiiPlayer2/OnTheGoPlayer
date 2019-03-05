@@ -6,7 +6,6 @@ namespace OnTheGoPlayer.Dal.MediaMonkeyDropboxDB
 {
     using System;
     using System.IO;
-    using System.Net.Http;
     using Dropbox.Api;
     using OnTheGoPlayer.Helpers;
 
@@ -26,9 +25,10 @@ namespace OnTheGoPlayer.Dal.MediaMonkeyDropboxDB
             if (!authDialog.ShowDialog() ?? false)
                 return false;
 
-            client = new DropboxClient(
-                authDialog.Response.AccessToken,
-                new DropboxClientConfig { HttpClient = new HttpClient { Timeout = TimeSpan.FromSeconds(10), } });
+            //client = new DropboxClient(
+            //    authDialog.Response.AccessToken,
+            //    new DropboxClientConfig { HttpClient = new HttpClient { Timeout = TimeSpan.FromSeconds(10), } });
+            client = new DropboxClient(authDialog.Response.AccessToken);
             var selectDialog = new DropboxSelectDatabaseDialog(client);
             if (!selectDialog.ShowDialog() ?? false)
                 return false;
