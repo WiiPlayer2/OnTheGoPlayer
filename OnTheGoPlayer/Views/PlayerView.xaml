@@ -45,7 +45,7 @@
                  Visibility="{Binding ElementName=_searchBox, Path=Text.IsEmpty, Converter={conv:BooleanToVisibilityConverter}}" />
       <TextBox Name="_searchBox"
                Background="Transparent"
-               Text="{Binding SearchText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+               Text="{Binding SearchText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Delay=1000}" />
     </Grid>
 
     <Grid>
