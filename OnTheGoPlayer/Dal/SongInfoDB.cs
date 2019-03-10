@@ -22,13 +22,7 @@ namespace OnTheGoPlayer.Dal
 
         private SongInfoDB()
         {
-            var assembly = Assembly.GetEntryAssembly();
-            var company = assembly.GetValue((AssemblyCompanyAttribute o) => o.Company);
-            var product = assembly.GetValue((AssemblyProductAttribute o) => o.Product);
-            var dataFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), company, product);
-            var dbPath = Path.Combine(dataFolder, "main.db");
-            Directory.CreateDirectory(dataFolder);
-
+            var dbPath = Constants.GetDataPath("main.db");
             connection = new SQLiteAsyncConnection(dbPath);
             CreateSchema();
         }
