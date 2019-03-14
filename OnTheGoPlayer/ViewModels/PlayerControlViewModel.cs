@@ -1,4 +1,6 @@
 ﻿using OnTheGoPlayer.Bl;
+using OnTheGoPlayer.Dal;
+using OnTheGoPlayer.Helpers;
 using OnTheGoPlayer.Models;
 using OnTheGoPlayer.Properties;
 using System;
