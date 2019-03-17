@@ -89,9 +89,9 @@ namespace OnTheGoPlayer.Helpers
         {
             #region Private Fields
 
-            private const int BATCH_SIZE = 100;
+            private const int BATCH_SIZE = 25;
 
-            private const int DELAY_LENGTH = 1000;
+            private const int DELAY_LENGTH = 50;
 
             private readonly IEnumerator<T> enumerator;
 
@@ -139,7 +139,7 @@ namespace OnTheGoPlayer.Helpers
 
                 cancellationTokenSource.Cancel();
                 try { await loopTask; }
-                catch (TaskCanceledException) { }
+                catch (OperationCanceledException) { }
                 loopTask = null;
             }
 
