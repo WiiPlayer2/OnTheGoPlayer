@@ -84,6 +84,8 @@ namespace OnTheGoPlayer.Bl
 
         public PlayerState CurrentState { get; private set; }
 
+        public bool IsLoading { get; private set; }
+
         public bool IsShuffleEnabled { get; set; }
 
         public TimeSpan Length => waveSource?.GetLength() ?? TimeSpan.Zero;
@@ -143,13 +145,15 @@ namespace OnTheGoPlayer.Bl
         {
             lock (this)
             {
+                IsLoading = true;
+                CurrentSong = song;
                 Stop();
                 waveSource = GetWaveSource(song).Result;
                 soundOut.Initialize(waveSource);
                 soundOut.Volume = Volume;
                 Position = TimeSpan.Zero;
-                CurrentSong = song;
                 Play();
+                IsLoading = false;
             }
         }
 
