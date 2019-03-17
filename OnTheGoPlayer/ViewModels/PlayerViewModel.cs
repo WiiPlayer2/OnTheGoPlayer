@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Threading;
 using NullGuard;
 using OnTheGoPlayer.Bl;
@@ -34,6 +35,8 @@ namespace OnTheGoPlayer.ViewModels
         {
             PlayerControlViewModel.PropertyChanged += PlayerControlViewModel_PropertyChanged;
             FilteredSongsLoader.PropertyChanged += FilteredSongsLoader_PropertyChanged;
+
+            OnIsVisibleCommand = new Command<UIElement>(OnIsVisibleChanged);
         }
 
         #endregion Public Constructors
@@ -55,6 +58,8 @@ namespace OnTheGoPlayer.ViewModels
         public bool IsLoading => IsFiltering || FilteredSongsLoader.IsLoading;
 
         public IPlaylistContainer LoadedPlaylist { get; set; }
+
+        public Command<UIElement> OnIsVisibleCommand { get; }
 
         public Player Player => PlayerControlViewModel.Player;
 
@@ -104,6 +109,8 @@ namespace OnTheGoPlayer.ViewModels
             if (eventArgs.PropertyName == sourceProp)
                 InvokePropertyChanged(targetProp);
         }
+
+        private void OnIsVisibleChanged(UIElement obj) => FilteredSongsLoader.IsEnabled = obj.IsVisible;
 
         private async void OnLoadedPlaylistChanged()
         {

@@ -29,7 +29,6 @@ namespace OnTheGoPlayer.Helpers
         public CollectionLoader()
         {
             dispatcher = Dispatcher.CurrentDispatcher;
-            OnIsVisibleCommand = new Command<UIElement>(OnIsVisibleChanged);
         }
 
         #endregion Public Constructors
@@ -50,8 +49,6 @@ namespace OnTheGoPlayer.Helpers
 
         public IEnumerable<T> Items { get; set; }
 
-        public Command<UIElement> OnIsVisibleCommand { get; }
-
         #endregion Public Properties
 
         #region Private Methods
@@ -64,9 +61,6 @@ namespace OnTheGoPlayer.Helpers
                 await currentLoadTask.SetEnabled(isEnabled);
             loadSemaphore.Release();
         }
-
-        // TODO remove this (should be in viewmodel)
-        private void OnIsVisibleChanged(UIElement obj) => IsEnabled = obj.IsVisible;
 
         private async void OnItemsChanged()
         {
