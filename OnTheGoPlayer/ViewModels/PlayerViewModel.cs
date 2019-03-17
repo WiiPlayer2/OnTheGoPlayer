@@ -50,7 +50,6 @@ namespace OnTheGoPlayer.ViewModels
 
         public CollectionLoader<FullSongInfo> FilteredSongsLoader { get; } = new CollectionLoader<FullSongInfo>();
 
-        //public IEnumerable<FullSongInfo> FilteredSongs { get; private set; }
         public bool IsFiltering => filterTask != null && !filterTask.IsCompleted;
 
         public bool IsLoading => IsFiltering || FilteredSongsLoader.IsLoading;
