@@ -7,6 +7,7 @@ using System.Windows.Threading;
 using NullGuard;
 using OnTheGoPlayer.Bl;
 using OnTheGoPlayer.Dal;
+using OnTheGoPlayer.Helpers;
 using OnTheGoPlayer.Models;
 
 namespace OnTheGoPlayer.ViewModels
@@ -16,10 +17,14 @@ namespace OnTheGoPlayer.ViewModels
         #region Private Fields
 
         private readonly Dispatcher dispatcher = Dispatcher.CurrentDispatcher;
-        private FullSongInfo lastSongInfo = null;
-        private IEnumerable<FullSongInfo> songs;
+
         private Task filterTask;
+
         private CancellationTokenSource filterTaskCancellationTokenSource;
+
+        private FullSongInfo lastSongInfo = null;
+
+        private IEnumerable<FullSongInfo> songs;
 
         #endregion Private Fields
 
@@ -28,6 +33,7 @@ namespace OnTheGoPlayer.ViewModels
         public PlayerViewModel()
         {
             PlayerControlViewModel.PropertyChanged += PlayerControlViewModel_PropertyChanged;
+            FilteredSongsLoader.PropertyChanged += FilteredSongsLoader_PropertyChanged;
         }
 
         #endregion Public Constructors
@@ -42,48 +48,23 @@ namespace OnTheGoPlayer.ViewModels
 
         public Song CurrentSong => PlayerControlViewModel.CurrentSong;
 
+        public CollectionLoader<FullSongInfo> FilteredSongsLoader { get; } = new CollectionLoader<FullSongInfo>();
+
+        //public IEnumerable<FullSongInfo> FilteredSongs { get; private set; }
+        public bool IsFiltering => filterTask != null && !filterTask.IsCompleted;
+
+        public bool IsLoading => IsFiltering || FilteredSongsLoader.IsLoading;
+
         public IPlaylistContainer LoadedPlaylist { get; set; }
 
         public Player Player => PlayerControlViewModel.Player;
 
         public PlayerControlViewModel PlayerControlViewModel { get; } = new PlayerControlViewModel();
 
-        public bool IsFiltering => filterTask != null && !filterTask.IsCompleted;
-
         public string SearchText { get; set; }
-
-        private void OnSearchTextChanged()
-        {
-            filterTaskCancellationTokenSource?.Cancel();
-            var txt = SearchText.ToLower();
-            if (string.IsNullOrWhiteSpace(txt))
-            {
-                FilteredSongs = songs;
-                return;
-            }
-
-            filterTaskCancellationTokenSource = new CancellationTokenSource();
-            filterTask = Task.Run(() =>
-                {
-                    var filteredSongs = songs.AsParallel().Where(o =>
-                            o.Song.Title.ToLower().Contains(txt) || o.Song.Artist.ToLower().Contains(txt) ||
-                            o.Song.Album.ToLower().Contains(txt))
-                        .WithCancellation(filterTaskCancellationTokenSource.Token)
-                        .ToList();
-                    filterTaskCancellationTokenSource.Token.ThrowIfCancellationRequested();
-                    return filteredSongs;
-                }, filterTaskCancellationTokenSource.Token)
-                .ContinueWith(task => dispatcher.Invoke(() => FilteredSongs = task.Result),
-                    TaskContinuationOptions.OnlyOnRanToCompletion);
-
-            InvokePropertyChanged(nameof(IsFiltering));
-            filterTask.ContinueWith(_ => dispatcher.Invoke(() => InvokePropertyChanged(nameof(IsFiltering))));
-        }
 
         [AllowNull]
         public FullSongInfo SelectedSong { get; set; }
-
-        public IEnumerable<FullSongInfo> FilteredSongs { get; private set; }
 
         #endregion Public Properties
 
@@ -105,6 +86,11 @@ namespace OnTheGoPlayer.ViewModels
 
         #region Private Methods
 
+        private void FilteredSongsLoader_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            MapProperty(e, nameof(CollectionLoader<FullSongInfo>.IsLoading), nameof(IsLoading));
+        }
+
         private void InvokePropertyChanged(string name)
         {
             //Debug.WriteLine($"InvokePropertyChanged({name})");
@@ -124,7 +110,35 @@ namespace OnTheGoPlayer.ViewModels
         {
             Player.SetPlaylistContainer(LoadedPlaylist);
             songs = await Task.WhenAll(LoadedPlaylist.Playlist.Songs.Select(async o => new FullSongInfo() { Song = o, SongInfo = await SongInfoDB.Instance.Get(o.ID) }));
-            FilteredSongs = songs;
+            FilteredSongsLoader.Items = songs;
+        }
+
+        private void OnSearchTextChanged()
+        {
+            filterTaskCancellationTokenSource?.Cancel();
+            var txt = SearchText.ToLower();
+            if (string.IsNullOrWhiteSpace(txt))
+            {
+                FilteredSongsLoader.Items = songs;
+                return;
+            }
+
+            filterTaskCancellationTokenSource = new CancellationTokenSource();
+            filterTask = Task.Run(() =>
+                {
+                    var filteredSongs = songs.AsParallel().Where(o =>
+                            o.Song.Title.ToLower().Contains(txt) || o.Song.Artist.ToLower().Contains(txt) ||
+                            o.Song.Album.ToLower().Contains(txt))
+                        .WithCancellation(filterTaskCancellationTokenSource.Token)
+                        .ToList();
+                    filterTaskCancellationTokenSource.Token.ThrowIfCancellationRequested();
+                    return filteredSongs;
+                }, filterTaskCancellationTokenSource.Token)
+                .ContinueWith(task => dispatcher.Invoke(() => FilteredSongsLoader.Items = task.Result),
+                    TaskContinuationOptions.OnlyOnRanToCompletion);
+
+            InvokePropertyChanged(nameof(IsFiltering));
+            filterTask.ContinueWith(_ => dispatcher.Invoke(() => InvokePropertyChanged(nameof(IsFiltering))));
         }
 
         private async void PlayerControlViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
