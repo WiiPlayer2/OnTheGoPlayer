@@ -146,7 +146,7 @@ namespace OnTheGoPlayer.ViewModels
                 if (!SelectedExporter.IsOpen)
                 {
                     Progress.Report((null, "Opening exporter..."));
-                    if (!await SelectedExporter.TryOpen(Application.Current.MainWindow))
+                    if (!await SelectedExporter.TryOpen())
                     {
                         Progress.Error("Exporter wasn't opened.");
                         return;

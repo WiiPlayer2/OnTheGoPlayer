@@ -108,7 +108,7 @@ namespace OnTheGoPlayer.Dal.MediaMonkeyDB
             connection = newConnection;
         }
 
-        public async Task<bool> TryOpen(Window ownerWindow)
+        public async Task<bool> TryOpen()
         {
             var openFileDialog = new OpenFileDialog()
             {
@@ -118,7 +118,7 @@ namespace OnTheGoPlayer.Dal.MediaMonkeyDB
                 Filter = "MediaMonkey Database Files (*.db)|*.db",
                 Multiselect = false,
             };
-            var result = openFileDialog.ShowDialog(ownerWindow) ?? false;
+            var result = openFileDialog.ShowDialog() ?? false;
 
             if (result)
                 await Open(openFileDialog.FileName);

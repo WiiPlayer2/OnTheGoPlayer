@@ -28,7 +28,7 @@ namespace OnTheGoPlayer.Dal
 
         Task Open(string data);
 
-        Task<bool> TryOpen(Window ownerWindow);
+        Task<bool> TryOpen();
 
         #endregion Public Methods
     }

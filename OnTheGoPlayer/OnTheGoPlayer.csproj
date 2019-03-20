@@ -49,6 +49,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <LangVersion>7.1</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -58,6 +59,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <LangVersion>7.1</LangVersion>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>appicon.ico</ApplicationIcon>
@@ -193,6 +195,7 @@
     <Compile Include="Helpers\CultureScope.cs" />
     <Compile Include="Helpers\CollectionLoader.cs" />
     <Compile Include="Helpers\ListViewBehaviors.cs" />
+    <Compile Include="Helpers\Option.cs" />
     <Compile Include="Helpers\ReadOnlyBind.cs" />
     <Compile Include="Helpers\Settings.cs" />
     <Compile Include="Dal\SongInfoDB.cs" />
@@ -252,7 +255,7 @@
     <Compile Include="Dal\IO\StreamPlaylistContainer.cs" />
     <Compile Include="Dal\IO\SubStream.cs" />
     <Compile Include="Dal\IPlaylistContainer.cs" />
-    <Compile Include="Dal\IPlaylistContainerExporter.cs" />
+    <Compile Include="Dal\IMediaDatabase.cs" />
     <Compile Include="Dal\FilesPlaylistContainer.cs" />
     <Compile Include="Dal\MediaMonkeyCOM\MMComPlaylistContainerExporter.cs" />
     <Compile Include="Dal\MediaMonkeyCOM\MMComSongData.cs" />

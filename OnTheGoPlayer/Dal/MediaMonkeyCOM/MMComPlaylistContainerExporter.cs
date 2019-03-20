@@ -82,9 +82,9 @@ namespace OnTheGoPlayer.Dal.MediaMonkeyCOM
             });
         }
 
-        public Task Open(string data) => TryOpen(null);
+        public Task Open(string data) => TryOpen();
 
-        public Task<bool> TryOpen(Window ownerWindow)
+        public Task<bool> TryOpen()
         {
             return Task.Run(() =>
             {

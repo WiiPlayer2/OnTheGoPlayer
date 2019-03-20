@@ -19,7 +19,7 @@ namespace OnTheGoPlayer.Dal.MediaMonkeyDropboxDB
 
         #region Public Methods
 
-        public override async Task<bool> TryOpen(Window ownerWindow)
+        public override async Task<bool> TryOpen()
         {
             var authDialog = new DropboxAuthDialog();
             if (!authDialog.ShowDialog() ?? false)

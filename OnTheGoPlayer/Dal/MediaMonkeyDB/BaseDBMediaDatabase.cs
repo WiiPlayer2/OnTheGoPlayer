@@ -108,7 +108,7 @@ namespace OnTheGoPlayer.Dal.MediaMonkeyDB
             connection = newConnection;
         }
 
-        public abstract Task<bool> TryOpen(Window ownerWindow);
+        public abstract Task<bool> TryOpen();
 
         #endregion Public Methods
 
