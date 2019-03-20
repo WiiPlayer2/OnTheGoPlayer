@@ -87,21 +87,41 @@ namespace OnTheGoPlayer.Test.Helpers
         }
 
         [Test]
-        public void Map_WithoutValue_ReturnsOnNoneResult()
+        public void Map_WithoutValue_ReturnsNone()
         {
             var option = Option<string>.None;
 
-            var result = option.Map(_ => true, () => false);
+            var result = option.Map(_ => true);
+
+            result.IsNone.Should().BeTrue();
+        }
+
+        [Test]
+        public void Map_WithValue_ReturnsSome()
+        {
+            var option = "testing".ToOption();
+
+            var result = option.Map(_ => true);
+
+            result.IsSome.Should().BeTrue();
+        }
+
+        [Test]
+        public void Match_WithoutValue_ReturnsOnNoneResult()
+        {
+            var option = Option<string>.None;
+
+            var result = option.Match(_ => true, () => false);
 
             result.Should().BeFalse();
         }
 
         [Test]
-        public void Map_WithValue_ReturnsOnSomeResult()
+        public void Match_WithValue_ReturnsOnSomeResult()
         {
             var option = "testing".ToOption();
 
-            var result = option.Map(_ => true, () => false);
+            var result = option.Match(_ => true, () => false);
 
             result.Should().BeTrue();
         }

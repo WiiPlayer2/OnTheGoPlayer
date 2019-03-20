@@ -42,11 +42,14 @@ namespace OnTheGoPlayer.Helpers
         public T GetValueOrThrow()
             => IsSome ? value : throw new InvalidOperationException();
 
-        public S Map<S>(Func<T, S> onSome, Func<S> onNone)
+        public Option<S> Map<S>(Func<T, S> map)
+            => IsSome ? new Option<S>(map(value)) : Option<S>.None;
+
+        public S Match<S>(Func<T, S> onSome, Func<S> onNone)
             => IsSome ? onSome(value) : onNone();
 
         public void Match(Action<T> onSome, Action onNone)
-            => Map<object>(
+            => Match<object>(
                 v => { onSome(v); return null; },
                 () => { onNone(); return null; });
 
