@@ -33,10 +33,11 @@ namespace OnTheGoPlayer.ViewModels
             this.mainViewModel = mainViewModel;
 
             Progress = new ProgressData();
-            ReloadCommand = new Command(Reload, () => !Progress.IsWorking && SelectedExporter != null);
+            ReloadCommand = new Command(Reload, () => !Progress.IsWorking && Database != null);
             ExportCommand = new Command<PlaylistMetaData>(Export, _ => !Progress.IsWorking);
             LoadCommand = new Command<PlaylistMetaData>(Load, _ => !Progress.IsWorking);
-            ImportCommand = new Command(Import, () => !Progress.IsWorking && SelectedExporter != null);
+            ImportCommand = new Command(Import, () => !Progress.IsWorking && Database != null);
+            OnIsVisibleCommand = new Command<UIElement>(OnIsVisibleChanged);
 
             Progress.PropertyChanged += (_, __) =>
             {
@@ -57,14 +58,9 @@ namespace OnTheGoPlayer.ViewModels
 
         #region Public Properties
 
-        public Command<PlaylistMetaData> ExportCommand { get; }
+        public IMediaDatabase Database => mainViewModel.Database;
 
-        public IEnumerable<IMediaDatabase> Exporters { get; } = new IMediaDatabase[]
-        {
-            new MMComPlaylistContainerExporter(),
-            new MMDBPlaylistContainerExporter(),
-            new MMDropboxDBMediaDatabase(),
-        };
+        public Command<PlaylistMetaData> ExportCommand { get; }
 
         public Command ImportCommand { get; }
 
@@ -72,11 +68,11 @@ namespace OnTheGoPlayer.ViewModels
 
         public IEnumerable<PlaylistMetaData> LoadedPlaylists { get; private set; }
 
+        public Command<UIElement> OnIsVisibleCommand { get; }
+
         public ProgressData Progress { get; }
 
         public Command ReloadCommand { get; }
-
-        public IMediaDatabase SelectedExporter { get; set; }
 
         #endregion Public Properties
 
@@ -96,7 +92,7 @@ namespace OnTheGoPlayer.ViewModels
                     return;
                 }
 
-                var container = await SelectedExporter.ExportPlaylist(metaData.ID, Progress);
+                var container = await Database.ExportPlaylist(metaData.ID, Progress);
                 await PlaylistContainerWriter.Write(path, container, Progress);
 
                 Progress.Stop();
@@ -118,7 +114,7 @@ namespace OnTheGoPlayer.ViewModels
                     return;
 
                 var songInfos = await SongInfoReader.Read(path);
-                await Task.Run(() => SelectedExporter.ImportSongInfo(songInfos));
+                await Task.Run(() => Database.ImportSongInfo(songInfos));
             });
         }
 
@@ -127,14 +123,16 @@ namespace OnTheGoPlayer.ViewModels
         {
             await Progress.Do(async () =>
             {
-                mainViewModel.LoadedPlaylist = await SelectedExporter.ExportPlaylist(metaData.ID, Progress);
+                mainViewModel.LoadedPlaylist = await Database.ExportPlaylist(metaData.ID, Progress);
             });
         }
 
-        private void OnSelectedExporterChanged()
+        private void OnIsVisibleChanged(UIElement obj)
         {
-            LoadedPlaylists = Enumerable.Empty<PlaylistMetaData>();
-            Reload();
+            if (obj.IsVisible && LoadedPlaylists == null)
+            {
+                ReloadCommand.Execute(null);
+            }
         }
 
         [ConfigureAwait(true)]
@@ -142,15 +140,7 @@ namespace OnTheGoPlayer.ViewModels
         {
             await Progress.Do(async () =>
             {
-                if (!SelectedExporter.IsOpen)
-                {
-                    Progress.Report((null, "Opening exporter..."));
-                    var profileOption = await SelectedExporter.TryRegister();
-                    var profile = profileOption.GetValueOrThrow();
-                    await SelectedExporter.Open(profile.ProfileData);
-                }
-
-                LoadedPlaylists = (await SelectedExporter.ListPlaylists()).OrderBy(o => o.Title).ToList();
+                LoadedPlaylists = (await Database.ListPlaylists()).OrderBy(o => o.Title).ToList();
             });
         }
 
