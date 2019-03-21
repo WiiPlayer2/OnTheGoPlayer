@@ -91,8 +91,8 @@ namespace OnTheGoPlayer.ViewModels
 
         private void RemoveProfile()
         {
-            Profiles.Remove(SelectedProfile);
             ProfileRepository.Instance.Remove(SelectedProfile);
+            Profiles.Remove(SelectedProfile);
         }
 
         private async void SelectProfile(Window window)
