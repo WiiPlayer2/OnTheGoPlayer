@@ -2,12 +2,14 @@
 using NullGuard;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace OnTheGoPlayer.Dal
 {
+    [DebuggerDisplay("{GetHashCode()}")]
     public class Profile
     {
         #region Public Properties
@@ -22,6 +24,26 @@ namespace OnTheGoPlayer.Dal
         public string Title { get; set; } = string.Empty;
 
         #endregion Public Properties
+
+        #region Public Methods
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(this, obj))
+                return true;
+            if (!(obj is Profile profile))
+                return false;
+
+            return InterfaceID == profile.InterfaceID
+                && JToken.DeepEquals(ProfileData ?? JValue.CreateNull(), profile.ProfileData ?? JValue.CreateNull());
+        }
+
+        public override int GetHashCode()
+        {
+            return InterfaceID.GetHashCode() ^ (ProfileData?.GetHashCode() ?? 0);
+        }
+
+        #endregion Public Methods
     }
 
     internal class Profile<TProfileData> : Profile

@@ -83,9 +83,11 @@ namespace OnTheGoPlayer.ViewModels
                 await dispatcher.InvokeAsync(() =>
                 {
                     var actualProfile = profile.GetValueOrDefault();
-                    Profiles.Add(actualProfile);
-                    ProfileRepository.Instance.Add(actualProfile);
-                    SelectedProfile = actualProfile;
+                    if (ProfileRepository.Instance.Add(actualProfile))
+                    {
+                        Profiles.Add(actualProfile);
+                        SelectedProfile = actualProfile;
+                    }
                 });
         }
 

@@ -27,7 +27,10 @@ namespace OnTheGoPlayer.Dal
         private ProfileRepository()
         {
             if (File.Exists(profileFile))
-                profiles = JToken.Parse(File.ReadAllText(profileFile)).ToObject<List<Profile>>();
+                profiles = JToken.Parse(File.ReadAllText(profileFile))
+                    .ToObject<IEnumerable<Profile>>()
+                    .Distinct()
+                    .ToList();
             else
                 profiles = new List<Profile>();
         }
@@ -42,10 +45,14 @@ namespace OnTheGoPlayer.Dal
 
         #region Public Methods
 
-        public void Add(Profile profile)
+        public bool Add(Profile profile)
         {
+            if (profiles.Contains(profile))
+                return false;
+
             profiles.Add(profile);
             Commit();
+            return true;
         }
 
         public IEnumerable<Profile> GetAll() => profiles;
