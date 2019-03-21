@@ -140,27 +140,18 @@ namespace OnTheGoPlayer.ViewModels
         [ConfigureAwait(true)]
         private async void Reload()
         {
-            Progress.Start();
-            try
+            await Progress.Do(async () =>
             {
                 if (!SelectedExporter.IsOpen)
                 {
                     Progress.Report((null, "Opening exporter..."));
-                    if (!await SelectedExporter.TryOpen())
-                    {
-                        Progress.Error("Exporter wasn't opened.");
-                        return;
-                    }
+                    var profileOption = await SelectedExporter.TryRegister();
+                    var profile = profileOption.GetValueOrThrow();
+                    await SelectedExporter.Open(profile.ProfileData);
                 }
 
                 LoadedPlaylists = (await SelectedExporter.ListPlaylists()).OrderBy(o => o.Title).ToList();
-
-                Progress.Stop();
-            }
-            catch (Exception e)
-            {
-                Progress.Error(e);
-            }
+            });
         }
 
         #endregion Private Methods

@@ -1,4 +1,6 @@
-﻿using OnTheGoPlayer.Models;
+﻿using Newtonsoft.Json.Linq;
+using OnTheGoPlayer.Helpers;
+using OnTheGoPlayer.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +13,8 @@ namespace OnTheGoPlayer.Dal
     internal interface IMediaDatabase
     {
         #region Public Properties
+
+        Guid ID { get; }
 
         bool IsOpen { get; }
 
@@ -26,9 +30,20 @@ namespace OnTheGoPlayer.Dal
 
         Task<IEnumerable<PlaylistMetaData>> ListPlaylists();
 
-        Task Open(string data);
+        Task Open(JToken profileData);
 
-        Task<bool> TryOpen();
+        Task<Option<Profile>> TryRegister();
+
+        #endregion Public Methods
+    }
+
+    internal interface IMediaDatabase<TProfileData> : IMediaDatabase
+    {
+        #region Public Methods
+
+        Task Open(TProfileData profileData);
+
+        new Task<Option<Profile<TProfileData>>> TryRegister();
 
         #endregion Public Methods
     }

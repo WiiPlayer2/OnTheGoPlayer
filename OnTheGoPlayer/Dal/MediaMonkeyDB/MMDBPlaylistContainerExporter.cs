@@ -1,6 +1,7 @@
 ﻿using Microsoft.Win32;
 using OnTheGoPlayer.Dal.MediaMonkeyDB.Collations;
 using OnTheGoPlayer.Dal.MediaMonkeyDB.Queries;
+using OnTheGoPlayer.Helpers;
 using OnTheGoPlayer.Models;
 using SQLite;
 using System;
@@ -14,7 +15,7 @@ using System.Windows;
 
 namespace OnTheGoPlayer.Dal.MediaMonkeyDB
 {
-    public class MMDBPlaylistContainerExporter : IMediaDatabase
+    internal class MMDBPlaylistContainerExporter : BaseDBMediaDatabase<string>
     {
         #region Private Fields
 
@@ -33,82 +34,15 @@ namespace OnTheGoPlayer.Dal.MediaMonkeyDB
 
         #region Public Properties
 
-        public bool IsOpen => connection != null;
+        public override Guid ID => new Guid("49881597-f38a-4ed9-9aa2-d350b22b59fa");
 
         #endregion Public Properties
 
         #region Public Methods
 
-        public Task Close()
-        {
-            if (!IsOpen)
-                return Task.CompletedTask;
+        public override Task Open(string profileData) => OpenDatabase(profileData);
 
-            try
-            {
-                connection.Close();
-            }
-            // NullReferenceException is thrown when no connection has been opened yet.
-            catch (NullReferenceException) { }
-            finally
-            {
-                connection = null;
-            }
-            return Task.CompletedTask;
-        }
-
-        public async Task<IPlaylistContainer> ExportPlaylist(int id, IProgress<(double?, string)> progress)
-        {
-            progress.Report((null, "Preparing..."));
-            var playlist = await connection.Find<MMDBPlaylist>("SELECT * FROM Playlists WHERE IDPlaylist=?;", id);
-            if (playlist == null)
-                throw new Exception($"Playlist with id {id} not found.");
-
-            progress.Report((null, "Getting songs..."));
-            IEnumerable<MMDBSong> songs;
-            if (playlist.IsAutoPlaylist)
-                songs = await QueryPlaylistSongs(playlist);
-            else
-                songs = await GetPlaylistSongs(id);
-
-            progress.Report((null, "Mapping songs..."));
-            var mediaMap = new Dictionary<int, string>();
-            var result = songs.Select(o => FindSong(o, mediaMap)).ToList();
-
-            return new FilesPlaylistContainer(new PlaylistMetaData()
-            {
-                ID = id,
-                Title = playlist.PlaylistName,
-            }, result);
-        }
-
-        public Task ImportSongInfo(IEnumerable<SongInfo> songInfos)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task<IEnumerable<PlaylistMetaData>> ListPlaylists()
-        {
-            var dbPlaylists = await connection.Query<MMDBPlaylist>("SELECT IDPlaylist, PlaylistName FROM Playlists;");
-            return dbPlaylists.Select(o => new PlaylistMetaData
-            {
-                ID = (int)o.IDPlaylist,
-                Title = o.PlaylistName,
-            }).ToList();
-        }
-
-        public async Task Open(string path)
-        {
-            await Close();
-
-            var newConnection = new System.Data.SQLite.SQLiteConnection($"Data Source={path};Version=3;Read Only=True;");
-            newConnection.Open();
-            newConnection.BindFunctions();
-            // TODO check schema
-            connection = newConnection;
-        }
-
-        public async Task<bool> TryOpen()
+        public override Task<Option<Profile<string>>> TryRegister()
         {
             var openFileDialog = new OpenFileDialog()
             {
@@ -119,37 +53,24 @@ namespace OnTheGoPlayer.Dal.MediaMonkeyDB
                 Multiselect = false,
             };
             var result = openFileDialog.ShowDialog() ?? false;
+            if (!result)
+                return Task.FromResult(Option<Profile<string>>.None);
 
-            if (result)
-                await Open(openFileDialog.FileName);
-
-            return result;
+            return Task.FromResult(new Profile<string>
+            {
+                InterfaceID = ID,
+                Title = "Local MediaMonkey Database",
+                SubTitle = openFileDialog.FileName,
+                ProfileData = openFileDialog.FileName,
+            }.ToOption());
         }
 
         #endregion Public Methods
 
-        #region Private Methods
+        #region Protected Methods
 
-        private (Song Song, string FullPath) Convert(MMDBSong song, Dictionary<int, string> mediaMap)
+        protected override Task<string> FindMap(MMDBSong song)
         {
-            var fullPath = GetPath(song, mediaMap[(int)song.IDMedia]);
-            var retSong = new Song()
-            {
-                ID = (int)song.ID,
-                FileFormat = Path.GetExtension(fullPath).TrimStart('.'),
-                Title = song.SongTitle,
-                Artist = song.Artist,
-                Album = song.Album,
-            };
-            return (retSong, fullPath);
-        }
-
-        private (Song Song, string FullPath) FindSong(MMDBSong song, Dictionary<int, string> mediaMap)
-        {
-            if (mediaMap.ContainsKey((int)song.IDMedia))
-                return Convert(song, mediaMap);
-
-            //var media = await connection.FindWithQueryAsync<MMDBMedia>("SELECT * FROM Medias WHERE IDMedia=?;", song.IDMedia);
             var drives = DriveInfo.GetDrives();
             // TODO check media data first (DriveLetter, DriveLabel)
             foreach (var drive in drives)
@@ -157,42 +78,23 @@ namespace OnTheGoPlayer.Dal.MediaMonkeyDB
                 var path = GetPath(song, drive.Name);
                 if (File.Exists(path))
                 {
-                    mediaMap[(int)song.IDMedia] = drive.Name;
-                    return Convert(song, mediaMap);
+                    return Task.FromResult(drive.Name);
                 }
             }
-
-            throw new FileNotFoundException($"Couldn't find song #{song.ID}.");
+            throw new NotImplementedException();
         }
 
-        private string GetPath(MMDBSong song, string driveName)
+        protected override string GetPath(MMDBSong song, string mappedMediaName)
         {
-            var driveBaseName = driveName.Substring(0, driveName.LastIndexOf(':'));
+            var driveBaseName = mappedMediaName.Substring(0, mappedMediaName.LastIndexOf(':'));
             return $"{driveBaseName}{song.SongPath}";
         }
 
-        private async Task<IEnumerable<MMDBSong>> GetPlaylistSongs(int playlistId)
+        protected override Task<Stream> GetStream(string path)
         {
-            return await connection.Query<MMDBSong>(
-               "SELECT Songs.* FROM PlaylistSongs " +
-               "LEFT JOIN Songs ON PlaylistSongs.IDSong = Songs.ID " +
-               "WHERE PlaylistSongs.IDPlaylist = ? " +
-               "ORDER BY PlaylistSongs.SongOrder;",
-               playlistId);
+            return Task.FromResult<Stream>(File.Open(path, FileMode.Open, FileAccess.Read, FileShare.Read));
         }
 
-        private async Task<IEnumerable<MMDBSong>> QueryPlaylistSongs(MMDBPlaylist playlist)
-        {
-            var ini = new MadMilkman.Ini.IniFile();
-            using (var reader = new StringReader(playlist.QueryData))
-            {
-                ini.Load(reader);
-            }
-
-            var query = Query.FromIni(ini);
-            return await query.Execute(connection);
-        }
-
-        #endregion Private Methods
+        #endregion Protected Methods
     }
 }

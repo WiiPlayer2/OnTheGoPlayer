@@ -62,9 +62,7 @@ namespace OnTheGoPlayer.Dal.MediaMonkeyDropboxDB
 
         public ProgressState CurrentState { get; private set; } = ProgressState.Progressing;
 
-        public MMDBPlaylistContainerExporter MediaDatabase { get; private set; }
-
-        public string LocalDatabasePath { get; private set; }
+        public string DatabasePath { get; private set; }
 
         [AllowNull]
         public SearchResult SearchResult { get; private set; }
@@ -135,8 +133,7 @@ namespace OnTheGoPlayer.Dal.MediaMonkeyDropboxDB
                     var database = new MMDBPlaylistContainerExporter();
                     await database.Open(tmpPath);
                     await database.Close();
-                    LocalDatabasePath = tmpPath;
-                    MediaDatabase = database;
+                    DatabasePath = metadata.PathLower;
 
                     Dispatcher.Invoke(() =>
                     {

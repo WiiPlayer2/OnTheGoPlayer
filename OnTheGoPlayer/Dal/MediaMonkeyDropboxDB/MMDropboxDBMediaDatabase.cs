@@ -9,7 +9,7 @@ namespace OnTheGoPlayer.Dal.MediaMonkeyDropboxDB
     using Dropbox.Api;
     using OnTheGoPlayer.Helpers;
 
-    internal class MMDropboxDBMediaDatabase : BaseDBMediaDatabase
+    internal class MMDropboxDBMediaDatabase : BaseDBMediaDatabase<DropboxProfileData>
     {
         #region Private Fields
 
@@ -17,24 +17,53 @@ namespace OnTheGoPlayer.Dal.MediaMonkeyDropboxDB
 
         #endregion Private Fields
 
+        #region Public Properties
+
+        public override Guid ID { get; } = new Guid("922c1a45-92fb-455c-90ba-55504bf9be17");
+
+        #endregion Public Properties
+
         #region Public Methods
 
-        public override async Task<bool> TryOpen()
+        public override async Task Open(DropboxProfileData profileData)
+        {
+            client = new DropboxClient(profileData.AccessToken);
+
+            var downloadResponse = await client.Files.DownloadAsync(profileData.DatabasePath);
+            var stream = await downloadResponse.GetContentAsStreamAsync();
+            var tmpPath = Path.GetTempFileName();
+
+            using (var fileStream = File.OpenWrite(tmpPath))
+            {
+                await stream.CopyToAsync(fileStream);
+                await fileStream.FlushAsync();
+            }
+
+            await OpenDatabase(tmpPath);
+        }
+
+        public override async Task<Option<Profile<DropboxProfileData>>> TryRegister()
         {
             var authDialog = new DropboxAuthDialog();
             if (!authDialog.ShowDialog() ?? false)
-                return false;
+                return Option<Profile<DropboxProfileData>>.None;
 
-            //client = new DropboxClient(
-            //    authDialog.Response.AccessToken,
-            //    new DropboxClientConfig { HttpClient = new HttpClient { Timeout = TimeSpan.FromSeconds(10), } });
-            client = new DropboxClient(authDialog.Response.AccessToken);
+            var client = new DropboxClient(authDialog.Response.AccessToken);
             var selectDialog = new DropboxSelectDatabaseDialog(client);
             if (!selectDialog.ShowDialog() ?? false)
-                return false;
+                return Option<Profile<DropboxProfileData>>.None;
 
-            await Open(selectDialog.LocalDatabasePath);
-            return IsOpen;
+            var account = await client.Users.GetCurrentAccountAsync();
+            return new Profile<DropboxProfileData>
+            {
+                InterfaceID = ID,
+                Title = account.Name.DisplayName,
+                ProfileData = new DropboxProfileData
+                {
+                    AccessToken = authDialog.Response.AccessToken,
+                    DatabasePath = selectDialog.DatabasePath,
+                },
+            };
         }
 
         #endregion Public Methods

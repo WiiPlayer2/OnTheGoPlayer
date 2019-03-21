@@ -187,10 +187,12 @@
     <Compile Include="Dal\MediaMonkeyDropboxDB\DropboxAuthDialog.xaml.cs">
       <DependentUpon>DropboxAuthDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Dal\MediaMonkeyDropboxDB\DropboxProfileData.cs" />
     <Compile Include="Dal\MediaMonkeyDropboxDB\DropboxSelectDatabaseDialog.xaml.cs">
       <DependentUpon>DropboxSelectDatabaseDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Dal\MediaMonkeyDropboxDB\MMDropboxDBMediaDatabase.cs" />
+    <Compile Include="Dal\Profile.cs" />
     <Compile Include="Helpers\Constants.cs" />
     <Compile Include="Helpers\CultureScope.cs" />
     <Compile Include="Helpers\CollectionLoader.cs" />

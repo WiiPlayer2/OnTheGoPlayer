@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using Newtonsoft.Json.Linq;
 using OnTheGoPlayer.Helpers;
 using OnTheGoPlayer.Models;
 using SongsDB;
@@ -22,6 +23,8 @@ namespace OnTheGoPlayer.Dal.MediaMonkeyCOM
 
         #region Public Properties
 
+        public Guid ID => new Guid("8cbbf702-c526-4bb7-9dce-5533c4004a36");
+
         public bool IsOpen => application != null;
 
         #endregion Public Properties
@@ -30,7 +33,8 @@ namespace OnTheGoPlayer.Dal.MediaMonkeyCOM
 
         public Task Close()
         {
-            throw new NotImplementedException();
+            application = null;
+            return Task.CompletedTask;
         }
 
         public Task<IPlaylistContainer> ExportPlaylist(int id, IProgress<(double?, string)> progress)
@@ -82,25 +86,32 @@ namespace OnTheGoPlayer.Dal.MediaMonkeyCOM
             });
         }
 
-        public Task Open(string data) => TryOpen();
-
-        public Task<bool> TryOpen()
+        public Task Open(JToken profileData)
         {
             return Task.Run(() =>
             {
                 var processes = Process.GetProcesses();
                 if (!Process.GetProcessesByName("MediaMonkey").Any())
-                    return false;
+                    throw new InvalidOperationException($"MediaMonkey is not running.");
 
-                try
+                application = new SDBApplication();
+                application.ShutdownAfterDisconnect = false;
+            });
+        }
+
+        public Task<Option<Profile>> TryRegister()
+        {
+            return Task.Run(() =>
+            {
+                var app = new SDBApplication();
+                app.ShutdownAfterDisconnect = false;
+                app = null;
+                GC.Collect();
+                return new Profile
                 {
-                    application = new SDBApplication();
-                    return true;
-                }
-                catch (Exception)
-                {
-                    return false;
-                }
+                    InterfaceID = ID,
+                    Title = "Local MediaMonkey Instance",
+                }.ToOption();
             });
         }
 
@@ -109,11 +120,11 @@ namespace OnTheGoPlayer.Dal.MediaMonkeyCOM
         #region Private Methods
 
         private static PlaylistMetaData ToPlaylistMetaData(SDBPlaylist playlist)
-            => new PlaylistMetaData
-            {
-                ID = playlist.ID,
-                Title = playlist.Title,
-            };
+                    => new PlaylistMetaData
+                    {
+                        ID = playlist.ID,
+                        Title = playlist.Title,
+                    };
 
         private static Song ToSong(SDBSongData song)
             => new Song

@@ -36,8 +36,10 @@ namespace OnTheGoPlayer.Helpers
 
         #region Public Methods
 
+        public static implicit operator Option<T>(T value) => new Option<T>(value);
+
         public T GetValueOrDefault()
-            => IsSome ? value : default;
+                    => IsSome ? value : default;
 
         public T GetValueOrThrow()
             => IsSome ? value : throw new InvalidOperationException();
