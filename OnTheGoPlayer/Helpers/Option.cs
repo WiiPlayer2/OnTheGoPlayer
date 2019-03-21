@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NullGuard;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace OnTheGoPlayer.Helpers
 {
-    internal struct Option<T>
+    public struct Option<T>
     {
         #region Private Fields
 
@@ -38,6 +39,7 @@ namespace OnTheGoPlayer.Helpers
 
         public static implicit operator Option<T>(T value) => new Option<T>(value);
 
+        [return: AllowNull]
         public T GetValueOrDefault()
                     => IsSome ? value : default;
 
@@ -47,6 +49,7 @@ namespace OnTheGoPlayer.Helpers
         public Option<S> Map<S>(Func<T, S> map)
             => IsSome ? new Option<S>(map(value)) : Option<S>.None;
 
+        [return: AllowNull]
         public S Match<S>(Func<T, S> onSome, Func<S> onNone)
             => IsSome ? onSome(value) : onNone();
 

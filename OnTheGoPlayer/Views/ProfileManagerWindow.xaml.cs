@@ -1,5 +1,4 @@
 ﻿using MahApps.Metro.Controls;
-using OnTheGoPlayer.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,19 +11,18 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace OnTheGoPlayer.Views
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for ProfileManagerWindow.xaml
     /// </summary>
-    public partial class MainWindow : MetroWindow
+    public partial class ProfileManagerWindow : MetroWindow
     {
         #region Public Constructors
 
-        public MainWindow()
+        public ProfileManagerWindow()
         {
             InitializeComponent();
         }

@@ -57,7 +57,8 @@ namespace OnTheGoPlayer.Dal.MediaMonkeyDropboxDB
             return new Profile<DropboxProfileData>
             {
                 InterfaceID = ID,
-                Title = account.Name.DisplayName,
+                Title = $"Dropbox: {account.Name.DisplayName}",
+                SubTitle = selectDialog.DatabasePath,
                 ProfileData = new DropboxProfileData
                 {
                     AccessToken = authDialog.Response.AccessToken,

@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using Newtonsoft.Json.Linq;
+using NullGuard;
 using OnTheGoPlayer.Helpers;
 using OnTheGoPlayer.Models;
 using SongsDB;
@@ -86,7 +87,7 @@ namespace OnTheGoPlayer.Dal.MediaMonkeyCOM
             });
         }
 
-        public Task Open(JToken profileData)
+        public Task Open([AllowNull]JToken profileData)
         {
             return Task.Run(() =>
             {
@@ -111,6 +112,7 @@ namespace OnTheGoPlayer.Dal.MediaMonkeyCOM
                 {
                     InterfaceID = ID,
                     Title = "Local MediaMonkey Instance",
+                    SubTitle = "(MediaMonkey COM Interface)"
                 }.ToOption();
             });
         }

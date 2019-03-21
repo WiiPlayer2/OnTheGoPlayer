@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json.Linq;
+using NullGuard;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,13 +8,14 @@ using System.Threading.Tasks;
 
 namespace OnTheGoPlayer.Dal
 {
-    internal class Profile
+    public class Profile
     {
         #region Public Properties
 
         public Guid InterfaceID { get; set; }
 
-        public virtual JToken ProfileData { get; set; }
+        [AllowNull]
+        public JToken ProfileData { get; set; }
 
         public string SubTitle { get; set; } = string.Empty;
 
@@ -32,6 +34,7 @@ namespace OnTheGoPlayer.Dal
 
         #region Public Properties
 
+        [AllowNull]
         public new TProfileData ProfileData
         {
             get => profileData;

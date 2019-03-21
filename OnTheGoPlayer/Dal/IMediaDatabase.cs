@@ -10,7 +10,7 @@ using System.Windows;
 
 namespace OnTheGoPlayer.Dal
 {
-    internal interface IMediaDatabase
+    public interface IMediaDatabase
     {
         #region Public Properties
 

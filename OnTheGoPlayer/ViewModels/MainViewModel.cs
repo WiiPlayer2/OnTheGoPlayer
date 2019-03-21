@@ -27,6 +27,8 @@ namespace OnTheGoPlayer.ViewModels
 
         #region Public Properties
 
+        public IMediaDatabase Database { get; set; }
+
         public ExportViewModel ExportViewModel { get; }
 
         public IPlaylistContainer LoadedPlaylist { get; set; }

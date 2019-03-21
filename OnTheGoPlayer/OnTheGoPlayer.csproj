@@ -193,6 +193,7 @@
     </Compile>
     <Compile Include="Dal\MediaMonkeyDropboxDB\MMDropboxDBMediaDatabase.cs" />
     <Compile Include="Dal\Profile.cs" />
+    <Compile Include="Dal\ProfileRepository.cs" />
     <Compile Include="Helpers\Constants.cs" />
     <Compile Include="Helpers\CultureScope.cs" />
     <Compile Include="Helpers\CollectionLoader.cs" />
@@ -215,11 +216,18 @@
     <Compile Include="ViewModels\MenuViewModel.cs" />
     <Compile Include="Helpers\MethodBindingExpression.cs" />
     <Compile Include="ViewModels\PlayerControlViewModel.cs" />
+    <Compile Include="ViewModels\ProfileManagerViewModel.cs" />
     <Compile Include="Views\Controls\PlayerControl.xaml.cs">
       <DependentUpon>PlayerControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\PlayerView.xaml.cs">
       <DependentUpon>PlayerView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ProfileManagerDatabaseSelectDialog.xaml.cs">
+      <DependentUpon>ProfileManagerDatabaseSelectDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ProfileManagerWindow.xaml.cs">
+      <DependentUpon>ProfileManagerWindow.xaml</DependentUpon>
     </Compile>
     <Page Include="Dal\MediaMonkeyDropboxDB\DropboxAuthDialog.xaml">
       <SubType>Designer</SubType>
@@ -288,6 +296,14 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Views\PlayerView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ProfileManagerDatabaseSelectDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ProfileManagerWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
