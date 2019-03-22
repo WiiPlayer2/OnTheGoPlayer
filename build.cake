@@ -52,7 +52,7 @@ Task("Restore")
     NuGetRestore("./OnTheGoPlayer.sln");
 });
 
-Task("Build")
+Task("BuildPublish")
 .IsDependentOn("Restore")
 .Does(() => {
     MSBuild("./OnTheGoPlayer.sln", config =>
@@ -63,8 +63,16 @@ Task("Build")
             .WithProperty("ApplicationVersion", appVersion.ToString(4)));
 });
 
+Task("BuildTest")
+.IsDependentOn("Restore")
+.Does(() => {
+    MSBuild("./OnTheGoPlayer.Test/OnTheGoPlayer.Test.csproj", config =>
+        config.SetConfiguration(configuration)
+            .SetVerbosity(Verbosity.Minimal));
+});
+
 Task("Test")
-.IsDependentOn("Build")
+.IsDependentOn("BuildTest")
 .Does(() =>
 {
     NUnit3($"./OnTheGoPlayer.Test/bin/{configuration}/OnTheGoPlayer.Test.dll",
@@ -75,6 +83,7 @@ Task("Test")
 });
 
 Task("Pack")
+.IsDependentOn("BuildPublish")
 .IsDependentOn("Test")
 .Does(() => {
     var lastCommit = GitLogTip("./");
