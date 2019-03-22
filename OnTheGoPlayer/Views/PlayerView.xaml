@@ -54,13 +54,14 @@
         </Grid>
 
         <Grid>
-            <metro:ProgressRing Visibility="{Binding IsLoading, Converter={conv:BooleanToVisibilityConverter}}" />
+            <metro:ProgressRing Panel.ZIndex="100" Visibility="{Binding IsLoading, Converter={conv:BooleanToVisibilityConverter}}" />
 
             <ListView
+                IsHitTestVisible="{Binding IsLoading, Converter={conv:InvertBooleanConverter}}"
                 ItemsSource="{Binding FilteredSongsLoader.Collection}"
                 MouseDoubleClick="{ev:MethodBinding PlaySelectedSong}"
                 SelectedItem="{Binding SelectedSong}"
-                Visibility="{Binding IsLoading, Converter={conv:BooleanToVisibilityConverter FalseValue=Visible, TrueValue=Hidden}}">
+                Visibility="{Binding IsLoading, Converter={conv:BooleanToVisibilityConverter FalseValue=Visible, TrueValue=Visible}}">
                 <ListView.View>
                     <GridView>
                         <GridViewColumn DisplayMemberBinding="{Binding Song.Title}" Header="Title" />

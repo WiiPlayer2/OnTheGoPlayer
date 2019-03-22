@@ -41,7 +41,7 @@ namespace OnTheGoPlayer.Helpers
 
         #region Public Properties
 
-        public ObservableCollection<T> Collection { get; } = new ObservableCollection<T>();
+        public ObservableCollection<T> Collection { get; private set; } = new ObservableCollection<T>();
 
         public bool IsEnabled { get; set; }
 
@@ -66,12 +66,17 @@ namespace OnTheGoPlayer.Helpers
         {
             var items = Items;
             await loadSemaphore.WaitAsync();
+
             if (currentLoadTask != null)
                 await currentLoadTask.Stop();
+
             IsLoading = true;
-            await dispatcher.InvokeAsync(Collection.Clear);
-            currentLoadTask = new LoadTask(this, items);
+            var collection = await dispatcher.InvokeAsync(() => new ObservableCollection<T>());
+            currentLoadTask = new LoadTask(dispatcher, collection, items, () => IsLoading = false);
+            await currentLoadTask.AddBatch();
+            await dispatcher.InvokeAsync(() => Collection = collection);
             await currentLoadTask.SetEnabled(IsEnabled);
+
             loadSemaphore.Release();
         }
 
@@ -87,9 +92,13 @@ namespace OnTheGoPlayer.Helpers
 
             private const int DELAY_LENGTH = 50;
 
+            private readonly ObservableCollection<T> collection;
+
+            private readonly Dispatcher dispatcher;
+
             private readonly IEnumerator<T> enumerator;
 
-            private readonly CollectionLoader<T> loader;
+            private readonly Action loadingReset;
 
             private CancellationTokenSource cancellationTokenSource;
 
@@ -99,15 +108,27 @@ namespace OnTheGoPlayer.Helpers
 
             #region Public Constructors
 
-            public LoadTask(CollectionLoader<T> collectionLoader, IEnumerable<T> items)
+            public LoadTask(Dispatcher dispatcher, ObservableCollection<T> collection, IEnumerable<T> items, Action loadingReset)
             {
                 enumerator = items.GetEnumerator();
-                loader = collectionLoader;
+                this.dispatcher = dispatcher;
+                this.collection = collection;
+                this.loadingReset = loadingReset;
             }
 
             #endregion Public Constructors
 
             #region Public Methods
+
+            public async Task<bool> AddBatch()
+            {
+                bool hasItem = false;
+                for (var i = 0; i < BATCH_SIZE && (hasItem = enumerator.MoveNext()); i++)
+                {
+                    await dispatcher.InvokeAsync(() => collection.Add(enumerator.Current));
+                }
+                return hasItem;
+            }
 
             public async Task SetEnabled(bool isEnabled)
             {
@@ -145,22 +166,13 @@ namespace OnTheGoPlayer.Helpers
             {
                 token.ThrowIfCancellationRequested();
 
-                var n = 0;
-                while (enumerator.MoveNext())
+                while (await AddBatch())
                 {
-                    await loader.dispatcher.InvokeAsync(() => loader.Collection.Add(enumerator.Current));
-
-                    n++;
-                    if (n >= BATCH_SIZE)
-                    {
-                        await Task.Delay(DELAY_LENGTH, token);
-                        n = 0;
-                    }
-
+                    await Task.Delay(DELAY_LENGTH, token);
                     token.ThrowIfCancellationRequested();
                 }
 
-                loader.dispatcher.Invoke(() => loader.IsLoading = false);
+                dispatcher.Invoke(loadingReset);
             }
 
             #endregion Private Methods
