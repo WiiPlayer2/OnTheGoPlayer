@@ -83,8 +83,8 @@ Task("Test")
 });
 
 Task("Pack")
-.IsDependentOn("BuildPublish")
 .IsDependentOn("Test")
+.IsDependentOn("BuildPublish")
 .Does(() => {
     var lastCommit = GitLogTip("./");
     Zip($"./OnTheGoPlayer/bin/{configuration}", $"./{configuration}-{lastCommit.Sha}.zip");
