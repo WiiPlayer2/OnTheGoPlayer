@@ -100,7 +100,8 @@ namespace OnTheGoPlayer.Bl
 
         private void SoundOut_Stopped(object sender, PlaybackStoppedEventArgs e)
         {
-            CurrentSongEnded?.Invoke(this, EventArgs.Empty);
+            if (soundOut != null)
+                CurrentSongEnded?.Invoke(this, EventArgs.Empty);
         }
 
         #endregion Private Methods
