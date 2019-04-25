@@ -1,16 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json.Linq;
 using NullGuard;
 using OnTheGoPlayer.Helpers;
 using OnTheGoPlayer.Models;
 using SongsDB;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace OnTheGoPlayer.Dal.MediaMonkeyCOM
 {

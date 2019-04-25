@@ -169,6 +169,7 @@
     </ApplicationDefinition>
     <Compile Include="Bl\NullWaveSource.cs" />
     <Compile Include="Bl\Player.cs" />
+    <Compile Include="Bl\WaveSourcePlayer.cs" />
     <Compile Include="Dal\IO\SongInfoReader.cs" />
     <Compile Include="Dal\IO\SongInfoWriter.cs" />
     <Compile Include="Dal\MediaMonkeyDB\BaseDBMediaDatabase.cs" />

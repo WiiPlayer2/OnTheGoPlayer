@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 
@@ -16,8 +17,9 @@ namespace OnTheGoPlayer.Helpers
             return attr != null ? getFunc(attr) : defaultValue;
         }
 
-        public static void InvokePropertyChanged()
+        public static void InvokePropertyChanged(this INotifyPropertyChanged obj, PropertyChangedEventHandler propertyChanged, string propertyName)
         {
+            propertyChanged?.Invoke(obj, new PropertyChangedEventArgs(propertyName));
         }
 
         public static Option<T> ToOption<T>(this T value) => new Option<T>(value);

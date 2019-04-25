@@ -1,13 +1,12 @@
-﻿using System;
+﻿using OnTheGoPlayer.Dal.MediaMonkeyDB.Collations;
+using OnTheGoPlayer.Dal.MediaMonkeyDB.Queries;
+using OnTheGoPlayer.Models;
+using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Windows;
-using OnTheGoPlayer.Dal.MediaMonkeyDB.Collations;
-using OnTheGoPlayer.Dal.MediaMonkeyDB.Queries;
-using OnTheGoPlayer.Models;
 
 namespace OnTheGoPlayer.Dal.MediaMonkeyDB
 {

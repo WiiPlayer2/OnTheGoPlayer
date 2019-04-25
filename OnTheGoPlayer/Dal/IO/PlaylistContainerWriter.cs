@@ -1,7 +1,7 @@
-﻿using System;
+﻿using OnTheGoPlayer.Models;
+using System;
 using System.IO;
 using System.Threading.Tasks;
-using OnTheGoPlayer.Models;
 
 namespace OnTheGoPlayer.Dal.IO
 {

@@ -1,25 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.SQLite;
+﻿using System.Data.SQLite;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace OnTheGoPlayer.Dal.MediaMonkeyDB.Collations
 {
     internal static class CollationsHelper
     {
-        #region Public Methods
-
-        public static void InitSQLiteFunctions()
-        {
-            SQLiteFunction.RegisterFunction(typeof(IUnicodeCollation));
-            SQLiteFunction.RegisterFunction(typeof(NumericStringCollation));
-            SQLiteFunction.RegisterFunction(typeof(UserLocaleCollation));
-        }
-
-        #endregion Public Methods
-
         #region Public Methods
 
         public static void BindFunction(this SQLiteConnection connection, SQLiteFunction function)
@@ -33,6 +18,13 @@ namespace OnTheGoPlayer.Dal.MediaMonkeyDB.Collations
             connection.BindFunction(new IUnicodeCollation());
             connection.BindFunction(new NumericStringCollation());
             connection.BindFunction(new UserLocaleCollation());
+        }
+
+        public static void InitSQLiteFunctions()
+        {
+            SQLiteFunction.RegisterFunction(typeof(IUnicodeCollation));
+            SQLiteFunction.RegisterFunction(typeof(NumericStringCollation));
+            SQLiteFunction.RegisterFunction(typeof(UserLocaleCollation));
         }
 
         #endregion Public Methods

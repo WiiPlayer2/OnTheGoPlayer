@@ -138,12 +138,13 @@ namespace OnTheGoPlayer.ViewModels
         private void Player_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             Debug.WriteLine($"Player_PropertyChanged({e.PropertyName})");
-            MapProperty(e, nameof(Player.CurrentSong), nameof(Position));
-            MapProperty(e, nameof(Player.CurrentSong), nameof(Length));
+            //MapProperty(e, nameof(Player.CurrentSong), nameof(Length));
             MapProperty(e, nameof(Player.CurrentSong), nameof(CurrentSong));
             MapProperty(e, nameof(Player.CurrentState), nameof(CurrentState));
             MapProperty(e, nameof(Player.IsShuffleEnabled), nameof(IsShuffleEnabled));
             MapProperty(e, nameof(Player.CurrentRepeatMode), nameof(CurrentRepeatMode));
+            MapProperty(e, nameof(Player.Length), nameof(Position));
+            MapProperty(e, nameof(Player.Length), nameof(Player.Length));
         }
 
         private void PlayPause()

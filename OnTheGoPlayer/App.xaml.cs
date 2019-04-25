@@ -22,12 +22,14 @@ namespace OnTheGoPlayer
 
         private void Application_Startup(object sender, StartupEventArgs e)
         {
+#if !DEBUG
             singleInstanceMutex = new Mutex(true, $"Local\\{APP_GUID}", out var createdNew);
             if (!createdNew)
             {
                 Shutdown();
                 return;
             }
+#endif
 
             Current.ShutdownMode = ShutdownMode.OnExplicitShutdown;
 
