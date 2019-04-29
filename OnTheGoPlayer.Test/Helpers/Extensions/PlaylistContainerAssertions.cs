@@ -2,6 +2,7 @@
 using FluentAssertions.Primitives;
 using OnTheGoPlayer.Dal;
 using System.Linq;
+using System.Threading;
 
 namespace OnTheGoPlayer.Test.Helpers.Extensions
 {
@@ -41,7 +42,7 @@ namespace OnTheGoPlayer.Test.Helpers.Extensions
 
             foreach (var pair in zipped)
             {
-                actualContainer.GetSongStream(pair.actual).Result.Should().Equal(expectedValue.GetSongStream(pair.expected).Result);
+                actualContainer.GetSongStream(pair.actual, CancellationToken.None).Result.Should().Equal(expectedValue.GetSongStream(pair.expected, CancellationToken.None).Result);
             }
         }
 

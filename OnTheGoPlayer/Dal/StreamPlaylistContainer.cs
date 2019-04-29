@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using OnTheGoPlayer.Models;
 
@@ -11,7 +12,7 @@ namespace OnTheGoPlayer.Dal
     {
         #region Private Fields
 
-        private readonly Func<string, Task<Stream>> getStreamFunc;
+        private readonly Func<string, CancellationToken, Task<Stream>> getStreamFunc;
 
         private readonly Dictionary<int, (Song, string FilePath)> songData;
 
@@ -19,7 +20,7 @@ namespace OnTheGoPlayer.Dal
 
         #region Public Constructors
 
-        public StreamPlaylistContainer(PlaylistMetaData metaData, IEnumerable<(Song Song, string)> songs, Func<string, Task<Stream>> getStreamFunc)
+        public StreamPlaylistContainer(PlaylistMetaData metaData, IEnumerable<(Song Song, string)> songs, Func<string, CancellationToken, Task<Stream>> getStreamFunc)
         {
             songData = songs
                 .GroupBy(o => o.Song.ID)
@@ -42,10 +43,10 @@ namespace OnTheGoPlayer.Dal
 
         #region Public Methods
 
-        public async Task<Stream> GetSongStream(Song song)
+        public async Task<Stream> GetSongStream(Song song, CancellationToken token)
         {
             var data = songData[song.ID];
-            return await getStreamFunc(data.FilePath);
+            return await getStreamFunc(data.FilePath, token);
         }
 
         #endregion Public Methods

@@ -1,5 +1,6 @@
 ﻿using OnTheGoPlayer.Models;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace OnTheGoPlayer.Dal
@@ -14,7 +15,7 @@ namespace OnTheGoPlayer.Dal
 
         #region Public Methods
 
-        Task<Stream> GetSongStream(Song song);
+        Task<Stream> GetSongStream(Song song, CancellationToken token);
 
         #endregion Public Methods
     }

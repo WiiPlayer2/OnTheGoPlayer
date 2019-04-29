@@ -90,7 +90,7 @@ namespace OnTheGoPlayer.Dal.MediaMonkeyDB
             return $"{driveBaseName}{song.SongPath}";
         }
 
-        protected override Task<Stream> GetStream(string path)
+        protected override Task<Stream> GetStream(string path, CancellationToken cancellationToken)
         {
             return Task.FromResult<Stream>(File.Open(path, FileMode.Open, FileAccess.Read, FileShare.Read));
         }

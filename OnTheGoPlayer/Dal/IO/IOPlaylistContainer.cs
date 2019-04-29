@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace OnTheGoPlayer.Dal.IO
@@ -38,7 +39,7 @@ namespace OnTheGoPlayer.Dal.IO
 
         #region Public Methods
 
-        public abstract Task<Stream> GetSongStream(Song song);
+        public abstract Task<Stream> GetSongStream(Song song, CancellationToken token);
 
         public abstract void Save();
 

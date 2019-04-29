@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace OnTheGoPlayer.Dal.IO
@@ -26,7 +27,7 @@ namespace OnTheGoPlayer.Dal.IO
 
         #region Public Methods
 
-        public override Task<Stream> GetSongStream(Song song)
+        public override Task<Stream> GetSongStream(Song song, CancellationToken token)
         {
             var entry = songDataEntries[song.ID];
             var fstream = File.Open(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);

@@ -3,6 +3,7 @@ using OnTheGoPlayer.Dal;
 using OnTheGoPlayer.Models;
 using System.IO;
 using System.Linq;
+using System.Threading;
 
 namespace OnTheGoPlayer.Test.Dal.IO
 {
@@ -30,7 +31,7 @@ namespace OnTheGoPlayer.Test.Dal.IO
                         FileFormat = "bin",
                     }).ToList(),
                 });
-                ret.GetSongStream(null).ReturnsForAnyArgs(callInfo =>
+                ret.GetSongStream(null, CancellationToken.None).ReturnsForAnyArgs(callInfo =>
                     new MemoryStream(Enumerable.Range(0, 256).Select(o => (byte)o).ToArray()));
                 return ret;
             }

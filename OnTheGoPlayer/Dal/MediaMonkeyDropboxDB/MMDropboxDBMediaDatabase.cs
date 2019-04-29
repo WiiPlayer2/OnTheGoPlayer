@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using OnTheGoPlayer.Dal.MediaMonkeyDB;
 
@@ -92,13 +93,17 @@ namespace OnTheGoPlayer.Dal.MediaMonkeyDropboxDB
             return song.SongPath.Remove(0, mappedMediaName.Length).Replace('\\', '/');
         }
 
-        protected override async Task<Stream> GetStream(string path)
+        protected override async Task<Stream> GetStream(string path, CancellationToken cancellationToken)
         {
-            var downloadResponse = await TaskHelper.Retry(() => client.Files.DownloadAsync(path), TimeSpan.FromSeconds(1));
+            var downloadResponse = await TaskHelper.Retry(token => client.Files.DownloadAsync(path), TimeSpan.FromSeconds(1), cancellationToken);
             //var downloadStream = await downloadResponse.GetContentAsStreamAsync();
             //var bufferStream = new BufferStream(downloadStream, (int)downloadResponse.Response.Size);
             //return bufferStream;
+            cancellationToken.ThrowIfCancellationRequested();
+
             var downloadData = await downloadResponse.GetContentAsByteArrayAsync();
+            cancellationToken.ThrowIfCancellationRequested();
+
             return new MemoryStream(downloadData)
             {
                 Position = 0

@@ -123,13 +123,18 @@ namespace OnTheGoPlayer.Bl
 
         public void Play(Song song)
         {
+            CancellationToken token;
+            lock (this)
+            {
+                currentCancellationTokenSource?.Cancel();
+                currentCancellationTokenSource = new CancellationTokenSource();
+                token = currentCancellationTokenSource.Token;
+            }
+
             IsLoading = true;
             CurrentSong = song;
             Stop();
 
-            currentCancellationTokenSource?.Cancel();
-            currentCancellationTokenSource = new CancellationTokenSource();
-            var token = currentCancellationTokenSource.Token;
             GetWaveSource(song, token)
                 .ContinueWith(task =>
                 {
@@ -177,7 +182,7 @@ namespace OnTheGoPlayer.Bl
 
         private async Task<IWaveSource> GetWaveSource(Song song, CancellationToken token)
         {
-            var stream = await playlistContainer.GetSongStream(song);
+            var stream = await playlistContainer.GetSongStream(song, token);
 
             switch (song.FileFormat)
             {

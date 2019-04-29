@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace OnTheGoPlayer.Helpers
@@ -27,20 +28,21 @@ namespace OnTheGoPlayer.Helpers
             }
         }
 
-        public static async Task<T> Retry<T>(Func<Task<T>> taskFunc, TimeSpan initialWaitTime)
+        public static async Task<T> Retry<T>(Func<CancellationToken, Task<T>> taskFunc, TimeSpan initialWaitTime, CancellationToken cancellationToken)
         {
             var currentWaitTime = initialWaitTime;
             while (true)
             {
                 try
                 {
-                    return await taskFunc();
+                    cancellationToken.ThrowIfCancellationRequested();
+                    return await taskFunc(cancellationToken);
                 }
                 catch (Exception exception)
                 {
                     Console.WriteLine(exception);
                     Console.WriteLine($"Retrying after {currentWaitTime}");
-                    await Task.Delay(currentWaitTime);
+                    await Task.Delay(currentWaitTime, cancellationToken);
                     currentWaitTime += currentWaitTime;
                 }
             }

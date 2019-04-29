@@ -116,7 +116,7 @@ namespace OnTheGoPlayer.Dal.MediaMonkeyDB
 
         protected abstract string GetPath(MMDBSong song, string mappedMediaName);
 
-        protected abstract Task<Stream> GetStream(string path);
+        protected abstract Task<Stream> GetStream(string path, CancellationToken cancellationToken);
 
         protected async Task OpenDatabase(string path)
         {

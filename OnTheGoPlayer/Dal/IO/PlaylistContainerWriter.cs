@@ -1,6 +1,7 @@
 ﻿using OnTheGoPlayer.Models;
 using System;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace OnTheGoPlayer.Dal.IO
@@ -83,7 +84,7 @@ namespace OnTheGoPlayer.Dal.IO
             foreach (var song in playlistContainer.Playlist.Songs)
             {
                 progress.Report((((double)i) / count, $"Writing song {song.Artist} - {song.Title} ({i + 1}/{count})..."));
-                var stream = await playlistContainer.GetSongStream(song);
+                var stream = await playlistContainer.GetSongStream(song, CancellationToken.None);
                 writer.Write(song.ID);
                 writer.Write(stream.Length);
                 await stream.CopyToAsync(writer.BaseStream);
