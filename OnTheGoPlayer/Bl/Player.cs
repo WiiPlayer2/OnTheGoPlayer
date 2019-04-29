@@ -129,12 +129,13 @@ namespace OnTheGoPlayer.Bl
 
             currentCancellationTokenSource?.Cancel();
             currentCancellationTokenSource = new CancellationTokenSource();
-            GetWaveSource(song, currentCancellationTokenSource.Token)
+            var token = currentCancellationTokenSource.Token;
+            GetWaveSource(song, token)
                 .ContinueWith(task =>
                 {
-                    currentCancellationTokenSource.Token.ThrowIfCancellationRequested();
+                    token.ThrowIfCancellationRequested();
                     Play(task.Result);
-                }, TaskContinuationOptions.OnlyOnRanToCompletion);
+                }, token, TaskContinuationOptions.OnlyOnRanToCompletion, TaskScheduler.Default);
         }
 
         public void Play(IWaveSource waveSource)
