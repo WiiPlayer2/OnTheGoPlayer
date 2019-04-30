@@ -135,12 +135,16 @@ namespace OnTheGoPlayer.Bl
             CurrentSong = song;
             Stop();
 
-            GetWaveSource(song, token)
-                .ContinueWith(task =>
-                {
-                    token.ThrowIfCancellationRequested();
-                    Play(task.Result);
-                }, token, TaskContinuationOptions.OnlyOnRanToCompletion, TaskScheduler.Default);
+            Task.Run(
+                () => GetWaveSource(song, token).ContinueWith(
+                    task =>
+                    {
+                        token.ThrowIfCancellationRequested();
+                        Play(task.Result);
+                    },
+                    token,
+                    TaskContinuationOptions.OnlyOnRanToCompletion,
+                    TaskScheduler.Default));
         }
 
         public void Play(IWaveSource waveSource)
