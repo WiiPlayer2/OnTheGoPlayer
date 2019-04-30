@@ -144,7 +144,8 @@ namespace OnTheGoPlayer.Bl
                     },
                     token,
                     TaskContinuationOptions.OnlyOnRanToCompletion,
-                    TaskScheduler.Default));
+                    TaskScheduler.Default),
+                token);
         }
 
         public void Play(IWaveSource waveSource)
