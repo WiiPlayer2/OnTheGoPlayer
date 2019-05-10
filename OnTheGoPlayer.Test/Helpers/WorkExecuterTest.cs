@@ -27,7 +27,7 @@ namespace OnTheGoPlayer.Test.Helpers
         }
 
         [Test]
-        public async void Execute_WithAnyAction_ShouldSetIsWorking()
+        public async Task Execute_WithAnyAction_ShouldSetIsWorking()
         {
             var executer = new WorkExecuter();
 
