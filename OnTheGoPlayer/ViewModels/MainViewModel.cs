@@ -1,4 +1,5 @@
 ﻿using OnTheGoPlayer.Dal;
+using OnTheGoPlayer.Helpers;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -15,6 +16,14 @@ namespace OnTheGoPlayer.ViewModels
         {
             MenuViewModel = new MenuViewModel(this);
             ExportViewModel = new ExportViewModel(this);
+            Work = new WorkExecuter();
+
+            Work.PropertyChanged += Work_PropertyChanged;
+        }
+
+        private void Work_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            this.MapPropertyChanged(e, PropertyChanged, nameof(Work.IsWorking), nameof(IsWorking));
         }
 
         #endregion Public Constructors
@@ -31,11 +40,15 @@ namespace OnTheGoPlayer.ViewModels
 
         public ExportViewModel ExportViewModel { get; }
 
+        public bool IsWorking => Work.IsWorking;
+
         public IPlaylistContainer LoadedPlaylist { get; set; }
 
         public MenuViewModel MenuViewModel { get; }
 
         public PlayerViewModel PlayerViewModel { get; private set; } = new PlayerViewModel();
+
+        public WorkExecuter Work { get; }
 
         #endregion Public Properties
 

@@ -22,6 +22,14 @@ namespace OnTheGoPlayer.Helpers
             propertyChanged?.Invoke(obj, new PropertyChangedEventArgs(propertyName));
         }
 
+        public static void MapPropertyChanged(this INotifyPropertyChanged obj, PropertyChangedEventArgs e, PropertyChangedEventHandler propertyChanged, string propertyName, string mappedPropertyName)
+        {
+            if (e.PropertyName == propertyName)
+            {
+                obj.InvokePropertyChanged(propertyChanged, mappedPropertyName);
+            }
+        }
+
         public static Option<T> ToOption<T>(this T value) => new Option<T>(value);
 
         public static IEnumerable<T> Yield<T>(this T obj)

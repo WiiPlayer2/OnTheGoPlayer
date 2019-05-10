@@ -17,6 +17,19 @@ namespace OnTheGoPlayer.Test.Helpers
         #region Public Methods
 
         [Test]
+        public async Task Execute_WithAnyAction_ShouldRaisePropertyChanged()
+        {
+            var executer = new WorkExecuter();
+
+            using (var monitor = executer.Monitor())
+            {
+                await executer.Execute(() => { });
+
+                monitor.GetEventRecorder(nameof(executer.PropertyChanged)).Should().NotBeEmpty();
+            }
+        }
+
+        [Test]
         public void Execute_WithAnyAction_ShouldReturnImmediately()
         {
             var executer = new WorkExecuter();
