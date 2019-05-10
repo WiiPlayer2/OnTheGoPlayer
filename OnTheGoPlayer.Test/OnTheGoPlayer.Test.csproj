@@ -94,6 +94,7 @@
     <Compile Include="Dal\IO\PlaylistContainerTestData.cs" />
     <Compile Include="Dal\IO\PlaylistContainerWriterTest.cs" />
     <Compile Include="Helpers\OptionTest.cs" />
+    <Compile Include="Helpers\WorkExecuterTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

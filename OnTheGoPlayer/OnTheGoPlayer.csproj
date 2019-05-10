@@ -217,6 +217,7 @@
     <Compile Include="Helpers\StaticResourcePath.cs" />
     <Compile Include="Helpers\TaskHelper.cs" />
     <Compile Include="Helpers\WebBrowserBehaviors.cs" />
+    <Compile Include="Helpers\WorkExecuter.cs" />
     <Compile Include="Models\FullSongInfo.cs" />
     <Compile Include="Models\SongInfo.cs" />
     <Compile Include="Helpers\BindingProxy.cs" />
