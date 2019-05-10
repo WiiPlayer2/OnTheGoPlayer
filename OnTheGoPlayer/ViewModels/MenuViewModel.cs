@@ -28,9 +28,21 @@ namespace OnTheGoPlayer.ViewModels
             LoadCommand = new Command(Load);
             ExportCommand = new Command(Export);
             CommitCommand = new Command(Commit);
+            SyncCommand = new Command(() => mainViewModel.Work.Execute(Sync));
         }
 
         #endregion Public Constructors
+
+        #region Private Methods
+
+        private async Task Sync()
+        {
+            var songInfo = await SongInfoDB.Instance.GetAllChangedInformation();
+            await mainViewModel.Database.ImportSongInfo(songInfo);
+            await SongInfoDB.Instance.CommitInformation();
+        }
+
+        #endregion Private Methods
 
         #region Public Properties
 
@@ -39,6 +51,8 @@ namespace OnTheGoPlayer.ViewModels
         public Command ExportCommand { get; }
 
         public Command LoadCommand { get; }
+
+        public Command SyncCommand { get; }
 
         #endregion Public Properties
 
