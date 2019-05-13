@@ -15,15 +15,15 @@ namespace OnTheGoPlayer.Helpers
 
         #endregion Private Fields
 
-        #region Public Constructors
+        #region Private Constructors
 
-        public Option(T value)
+        private Option(T value)
         {
             IsSome = true;
             this.value = value;
         }
 
-        #endregion Public Constructors
+        #endregion Private Constructors
 
         #region Public Properties
 
@@ -36,6 +36,13 @@ namespace OnTheGoPlayer.Helpers
         #endregion Public Properties
 
         #region Public Methods
+
+        public static Option<T> FromObject([AllowNull]T obj)
+        {
+            if (obj != null)
+                return new Option<T>(obj);
+            return None;
+        }
 
         public static implicit operator Option<T>(T value) => new Option<T>(value);
 

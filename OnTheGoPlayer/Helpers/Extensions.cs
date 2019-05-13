@@ -30,7 +30,12 @@ namespace OnTheGoPlayer.Helpers
             }
         }
 
-        public static Option<T> ToOption<T>(this T value) => new Option<T>(value);
+        public static Option<T> ToOption<T>(this T value) => Option<T>.FromObject(value);
+
+        // TODO maybe rewrite this to just use Option<>.FromObject()
+        public static Option<T> ToOption<T>(this T? value)
+            where T : struct
+            => value.HasValue ? Option<T>.FromObject(value.Value) : Option<T>.None;
 
         public static IEnumerable<T> Yield<T>(this T obj)
         {
