@@ -7,6 +7,7 @@ using System.Data.SQLite;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using OnTheGoPlayer.Dal.MediaMonkeyDB;
 
 namespace OnTheGoPlayer.Dal.MediaMonkeyDB
 {
@@ -85,9 +86,24 @@ namespace OnTheGoPlayer.Dal.MediaMonkeyDB
             }, result, GetStream);
         }
 
-        public Task ImportSongInfo(IEnumerable<SongInfo> songInfos)
+        public virtual async Task ImportSongInfo(IEnumerable<SongInfo> songInfos)
         {
-            throw new NotImplementedException();
+            foreach (var songInfo in songInfos)
+            {
+                var dbSong = (await connection.Find<MMDBSong>("SELECT PlayCounter, LastTimePlayed FROM Songs WHERE ID = ?;", songInfo.SongID)).ToOption();
+                await dbSong.Match(async song =>
+                {
+                    var playCount = songInfo.PlayCount - songInfo.CommitedPlayCount + song.PlayCounter;
+                    var lastPlayed = songInfo.LastPlayed > song.LastTimePlayedDateTime ? song.LastTimePlayedDateTime : songInfo.LastPlayed;
+
+                    var cmd = connection.CreateCommand(
+                        "UPDATE Songs SET PlayCounter = ?, LastTimePlayed = ? WHERE ID = ?;",
+                        playCount,
+                        lastPlayed.ToOption().Match<double?>(o => o.ToOADate(), () => null),
+                        songInfo.SongID);
+                    await cmd.ExecuteNonQueryAsync();
+                }, () => Task.CompletedTask);
+            }
         }
 
         public async Task<IEnumerable<PlaylistMetaData>> ListPlaylists()
@@ -122,7 +138,7 @@ namespace OnTheGoPlayer.Dal.MediaMonkeyDB
         {
             await Close();
 
-            var newConnection = new SQLiteConnection($"Data Source={path};Version=3;Read Only=True;");
+            var newConnection = new SQLiteConnection($"Data Source={path};Version=3;Read Only=False;");
             newConnection.Open();
             newConnection.BindFunctions();
             // TODO check schema

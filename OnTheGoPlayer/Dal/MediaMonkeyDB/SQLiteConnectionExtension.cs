@@ -5,6 +5,7 @@ using System.Data;
 using System.Data.SQLite;
 using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -30,8 +31,19 @@ namespace OnTheGoPlayer.Dal.MediaMonkeyDB
 
         #region Public Methods
 
+        public static SQLiteCommand CreateCommand(this SQLiteConnection connection, string query, params object[] args)
+        {
+            var command = connection.CreateCommand();
+            command.CommandText = query;
+            for (var i = 0; i < args.Length; i++)
+            {
+                command.Parameters.AddWithValue(null, args[i]);
+            }
+            return command;
+        }
+
         public static async Task<T> Find<T>(this SQLiteConnection connection, string query, params object[] args)
-            where T : new()
+                    where T : new()
         {
             var result = await connection.Query<T>(query, args);
             return result.FirstOrDefault();
@@ -70,7 +82,7 @@ namespace OnTheGoPlayer.Dal.MediaMonkeyDB
         private static T Convert<T>(string[] names, object[] row)
             where T : new()
         {
-            var props = typeof(T).GetProperties();
+            var props = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
             var ret = new T();
 
             for (var i = 0; i < names.Length; i++)
@@ -102,17 +114,6 @@ namespace OnTheGoPlayer.Dal.MediaMonkeyDB
             }
 
             return ret;
-        }
-
-        private static SQLiteCommand CreateCommand(this SQLiteConnection connection, string query, params object[] args)
-        {
-            var command = connection.CreateCommand();
-            command.CommandText = query;
-            for (var i = 0; i < args.Length; i++)
-            {
-                command.Parameters.AddWithValue(null, args[i]);
-            }
-            return command;
         }
 
         private static void Register<TIn, TOut>(Func<TIn, TOut> convertFunc)
