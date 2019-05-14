@@ -50,6 +50,10 @@ namespace OnTheGoPlayer.Dal.MediaMonkeyDB
             try
             {
                 connection.Close();
+                connection.Dispose();
+
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
             }
             // NullReferenceException is thrown when no connection has been opened yet.
             catch (NullReferenceException) { }
@@ -86,25 +90,7 @@ namespace OnTheGoPlayer.Dal.MediaMonkeyDB
             }, result, GetStream);
         }
 
-        public virtual async Task ImportSongInfo(IEnumerable<SongInfo> songInfos)
-        {
-            foreach (var songInfo in songInfos)
-            {
-                var dbSong = (await connection.Find<MMDBSong>("SELECT PlayCounter, LastTimePlayed FROM Songs WHERE ID = ?;", songInfo.SongID)).ToOption();
-                await dbSong.Match(async song =>
-                {
-                    var playCount = songInfo.PlayCount - songInfo.CommitedPlayCount + song.PlayCounter;
-                    var lastPlayed = songInfo.LastPlayed > song.LastTimePlayedDateTime ? song.LastTimePlayedDateTime : songInfo.LastPlayed;
-
-                    var cmd = connection.CreateCommand(
-                        "UPDATE Songs SET PlayCounter = ?, LastTimePlayed = ? WHERE ID = ?;",
-                        playCount,
-                        lastPlayed.ToOption().Match<double?>(o => o.ToOADate(), () => null),
-                        songInfo.SongID);
-                    await cmd.ExecuteNonQueryAsync();
-                }, () => Task.CompletedTask);
-            }
-        }
+        public virtual Task ImportSongInfo(IEnumerable<SongInfo> songInfos) => CheckedImportSongInfo(songInfos);
 
         public async Task<IEnumerable<PlaylistMetaData>> ListPlaylists()
         {
@@ -127,6 +113,30 @@ namespace OnTheGoPlayer.Dal.MediaMonkeyDB
         #endregion Public Methods
 
         #region Protected Methods
+
+        protected async Task<bool> CheckedImportSongInfo(IEnumerable<SongInfo> songInfos)
+        {
+            if (!songInfos.Any())
+                return false;
+
+            foreach (var songInfo in songInfos)
+            {
+                var dbSong = (await connection.Find<MMDBSong>("SELECT PlayCounter, LastTimePlayed FROM Songs WHERE ID = ?;", songInfo.SongID)).ToOption();
+                await dbSong.Match(async song =>
+                {
+                    var playCount = songInfo.PlayCount - songInfo.CommitedPlayCount + song.PlayCounter;
+                    var lastPlayed = songInfo.LastPlayed > song.LastTimePlayedDateTime ? song.LastTimePlayedDateTime : songInfo.LastPlayed;
+
+                    var cmd = connection.CreateCommand(
+                        "UPDATE Songs SET PlayCounter = ?, LastTimePlayed = ? WHERE ID = ?;",
+                        playCount,
+                        lastPlayed.ToOption().Match<double?>(o => o.ToOADate(), () => null),
+                        songInfo.SongID);
+                    await cmd.ExecuteNonQueryAsync();
+                }, () => Task.CompletedTask);
+            }
+            return true;
+        }
 
         protected abstract Task<string> FindMap(MMDBSong song);
 

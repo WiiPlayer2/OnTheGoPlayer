@@ -6,15 +6,21 @@ using OnTheGoPlayer.Dal.MediaMonkeyDB;
 namespace OnTheGoPlayer.Dal.MediaMonkeyDropboxDB
 {
     using System;
+    using System.Collections.Generic;
     using System.IO;
     using Dropbox.Api;
     using OnTheGoPlayer.Helpers;
+    using OnTheGoPlayer.Models;
 
     internal class MMDropboxDBMediaDatabase : BaseDBMediaDatabase<DropboxProfileData>
     {
         #region Private Fields
 
         private DropboxClient client;
+
+        private string localDbPath;
+
+        private string remoteDbPath;
 
         #endregion Private Fields
 
@@ -26,21 +32,51 @@ namespace OnTheGoPlayer.Dal.MediaMonkeyDropboxDB
 
         #region Public Methods
 
+        public override async Task ImportSongInfo(IEnumerable<SongInfo> songInfos)
+        {
+            if (!await CheckedImportSongInfo(songInfos))
+                return;
+
+            using (var memStream = new MemoryStream())
+            {
+                await Close();
+                try
+                {
+                    await Task.Delay(1000);
+                    using (var fStream = File.Open(localDbPath, FileMode.Open, FileAccess.Read, FileShare.Read))
+                    {
+                        await fStream.CopyToAsync(memStream);
+                        await fStream.FlushAsync();
+                    }
+
+                    memStream.Position = 0;
+                    await client.Files.UploadAsync(
+                        remoteDbPath,
+                        body: memStream);
+                }
+                finally
+                {
+                    await OpenDatabase(localDbPath);
+                }
+            }
+        }
+
         public override async Task Open(DropboxProfileData profileData)
         {
             client = new DropboxClient(profileData.AccessToken);
 
-            var downloadResponse = await client.Files.DownloadAsync(profileData.DatabasePath);
+            remoteDbPath = profileData.DatabasePath;
+            var downloadResponse = await client.Files.DownloadAsync(remoteDbPath);
             var stream = await downloadResponse.GetContentAsStreamAsync();
-            var tmpPath = Path.GetTempFileName();
+            localDbPath = Path.GetTempFileName();
 
-            using (var fileStream = File.OpenWrite(tmpPath))
+            using (var fileStream = File.OpenWrite(localDbPath))
             {
                 await stream.CopyToAsync(fileStream);
                 await fileStream.FlushAsync();
             }
 
-            await OpenDatabase(tmpPath);
+            await OpenDatabase(localDbPath);
         }
 
         public override async Task<Option<Profile<DropboxProfileData>>> TryRegister()

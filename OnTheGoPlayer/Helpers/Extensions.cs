@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace OnTheGoPlayer.Helpers
 {
@@ -20,6 +22,12 @@ namespace OnTheGoPlayer.Helpers
         public static void InvokePropertyChanged(this INotifyPropertyChanged obj, PropertyChangedEventHandler propertyChanged, string propertyName)
         {
             propertyChanged?.Invoke(obj, new PropertyChangedEventArgs(propertyName));
+        }
+
+        public static async Task<IDisposable> Lock(this SemaphoreSlim semaphore)
+        {
+            await semaphore.WaitAsync();
+            return new ActionOnDispose(() => semaphore.Release());
         }
 
         public static void MapPropertyChanged(this INotifyPropertyChanged obj, PropertyChangedEventArgs e, PropertyChangedEventHandler propertyChanged, string propertyName, string mappedPropertyName)
@@ -45,5 +53,34 @@ namespace OnTheGoPlayer.Helpers
         }
 
         #endregion Public Methods
+
+        #region Private Classes
+
+        [Janitor.SkipWeaving]
+        private class ActionOnDispose : IDisposable
+        {
+            #region Private Fields
+
+            private readonly Action action;
+
+            #endregion Private Fields
+
+            #region Public Constructors
+
+            public ActionOnDispose(Action action)
+            {
+                this.action = action ?? throw new ArgumentNullException(nameof(action));
+            }
+
+            #endregion Public Constructors
+
+            #region Public Methods
+
+            public void Dispose() => action();
+
+            #endregion Public Methods
+        }
+
+        #endregion Private Classes
     }
 }
