@@ -1,4 +1,5 @@
 ﻿using CSCore;
+using CSCore.Codecs.AAC;
 using CSCore.Codecs.FLAC;
 using CSCore.Codecs.MP3;
 using CSCore.Codecs.OGG;
@@ -191,6 +192,9 @@ namespace OnTheGoPlayer.Bl
 
             switch (song.FileFormat)
             {
+                case "m4a":
+                    return new AacDecoder(stream);
+
                 case "mp3":
                     return new DmoMp3Decoder(stream);
 
