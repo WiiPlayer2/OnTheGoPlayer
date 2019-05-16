@@ -12,8 +12,19 @@ namespace OnTheGoPlayer.Helpers
     {
         #region Public Methods
 
+        public static IEnumerable<Exception> GetAllExceptions(this Exception e)
+        {
+            if (e.InnerException == null)
+                return e.Yield();
+
+            if (e is AggregateException aggregateException)
+                return e.Yield().Concat(aggregateException.InnerExceptions.SelectMany(GetAllExceptions));
+            else
+                return e.Yield().Concat(e.InnerException.Yield());
+        }
+
         public static TValue GetValue<TAttribute, TValue>(this Assembly assembly, Func<TAttribute, TValue> getFunc, TValue defaultValue = default(TValue))
-            where TAttribute : Attribute
+                    where TAttribute : Attribute
         {
             var attr = assembly.GetCustomAttribute<TAttribute>();
             return attr != null ? getFunc(attr) : defaultValue;
@@ -30,11 +41,12 @@ namespace OnTheGoPlayer.Helpers
             return new ActionOnDispose(() => semaphore.Release());
         }
 
-        public static void MapPropertyChanged(this INotifyPropertyChanged obj, PropertyChangedEventArgs e, PropertyChangedEventHandler propertyChanged, string propertyName, string mappedPropertyName)
+        public static void MapPropertyChanged(this INotifyPropertyChanged obj, PropertyChangedEventArgs e, PropertyChangedEventHandler propertyChanged, string propertyName, params string[] mappedPropertyNames)
         {
             if (e.PropertyName == propertyName)
             {
-                obj.InvokePropertyChanged(propertyChanged, mappedPropertyName);
+                foreach (var name in mappedPropertyNames)
+                    obj.InvokePropertyChanged(propertyChanged, name);
             }
         }
 

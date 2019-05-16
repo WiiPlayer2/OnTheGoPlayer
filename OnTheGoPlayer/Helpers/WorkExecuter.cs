@@ -1,4 +1,5 @@
-﻿using PropertyChanged;
+﻿using NullGuard;
+using PropertyChanged;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -25,7 +26,13 @@ namespace OnTheGoPlayer.Helpers
 
         #region Public Properties
 
+        [DependsOn(nameof(LastException))]
+        public bool HasError => LastException != null;
+
         public bool IsWorking { get; private set; }
+
+        [AllowNull]
+        public Exception LastException { get; private set; }
 
         #endregion Public Properties
 
@@ -35,19 +42,30 @@ namespace OnTheGoPlayer.Helpers
 
         public Task Execute(Func<Task> asyncAction, Action<Exception> onException = null) => InternalExecute(() => Task.Run(asyncAction), onException);
 
+        #endregion Public Methods
+
+        #region Private Methods
+
         private async Task InternalExecute(Func<Task> asyncTaskCreator, Action<Exception> onException)
         {
             Interlocked.Increment(ref workCount);
             IsWorking = true;
+            LastException = null;
             await asyncTaskCreator()
-                .ContinueWith(task => onException?.Invoke(task.Exception), TaskContinuationOptions.OnlyOnFaulted)
+                .ContinueWith(task =>
+                {
+                    LastException = task.Exception;
+                    onException?.Invoke(task.Exception);
+                }, TaskContinuationOptions.OnlyOnFaulted)
                 .ContinueWith(_ =>
                 {
                     if (Interlocked.Decrement(ref workCount) == 0)
+                    {
                         IsWorking = false;
+                    }
                 });
         }
 
-        #endregion Public Methods
+        #endregion Private Methods
     }
 }

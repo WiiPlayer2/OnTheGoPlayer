@@ -203,6 +203,7 @@
     <Compile Include="Dal\Profile.cs" />
     <Compile Include="Dal\ProfileRepository.cs" />
     <Compile Include="Helpers\Constants.cs" />
+    <Compile Include="Helpers\Converters\ExceptionUnwrapperConverter.cs" />
     <Compile Include="Helpers\CultureScope.cs" />
     <Compile Include="Helpers\CollectionLoader.cs" />
     <Compile Include="Helpers\ListViewBehaviors.cs" />
@@ -226,8 +227,12 @@
     <Compile Include="Helpers\MethodBindingExpression.cs" />
     <Compile Include="ViewModels\PlayerControlViewModel.cs" />
     <Compile Include="ViewModels\ProfileManagerViewModel.cs" />
+    <Compile Include="ViewModels\WorkExecuterViewModel.cs" />
     <Compile Include="Views\Controls\PlayerControl.xaml.cs">
       <DependentUpon>PlayerControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Controls\WorkExecuterControl.xaml.cs">
+      <DependentUpon>WorkExecuterControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\PlayerView.xaml.cs">
       <DependentUpon>PlayerView.xaml</DependentUpon>
@@ -251,6 +256,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Controls\ProgressDataBar.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Controls\WorkExecuterControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -16,14 +16,9 @@ namespace OnTheGoPlayer.ViewModels
         {
             MenuViewModel = new MenuViewModel(this);
             ExportViewModel = new ExportViewModel(this);
-            Work = new WorkExecuter();
+            WorkExecuterViewModel = new WorkExecuterViewModel(new WorkExecuter());
 
             Work.PropertyChanged += Work_PropertyChanged;
-        }
-
-        private void Work_PropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            this.MapPropertyChanged(e, PropertyChanged, nameof(Work.IsWorking), nameof(IsWorking));
         }
 
         #endregion Public Constructors
@@ -48,7 +43,9 @@ namespace OnTheGoPlayer.ViewModels
 
         public PlayerViewModel PlayerViewModel { get; private set; } = new PlayerViewModel();
 
-        public WorkExecuter Work { get; }
+        public WorkExecuter Work => WorkExecuterViewModel.WorkExecuter;
+
+        public WorkExecuterViewModel WorkExecuterViewModel { get; }
 
         #endregion Public Properties
 
@@ -57,6 +54,11 @@ namespace OnTheGoPlayer.ViewModels
         private void OnLoadedPlaylistChanged()
         {
             PlayerViewModel.LoadedPlaylist = LoadedPlaylist;
+        }
+
+        private void Work_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            this.MapPropertyChanged(e, PropertyChanged, nameof(Work.IsWorking), nameof(IsWorking));
         }
 
         #endregion Private Methods
