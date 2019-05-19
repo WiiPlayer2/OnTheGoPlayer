@@ -12,11 +12,14 @@ namespace OnTheGoPlayer.ViewModels
     {
         #region Public Constructors
 
-        public MainViewModel()
+        public MainViewModel(IMediaDatabase mediaDatabase)
         {
+            Database = mediaDatabase;
+
             MenuViewModel = new MenuViewModel(this);
             ExportViewModel = new ExportViewModel(this);
             WorkExecuterViewModel = new WorkExecuterViewModel(new WorkExecuter());
+            SearchViewModel = new SearchViewModel(this, mediaDatabase);
 
             Work.PropertyChanged += Work_PropertyChanged;
         }
@@ -31,7 +34,7 @@ namespace OnTheGoPlayer.ViewModels
 
         #region Public Properties
 
-        public IMediaDatabase Database { get; set; }
+        public IMediaDatabase Database { get; }
 
         public ExportViewModel ExportViewModel { get; }
 
@@ -41,7 +44,9 @@ namespace OnTheGoPlayer.ViewModels
 
         public MenuViewModel MenuViewModel { get; }
 
-        public PlayerViewModel PlayerViewModel { get; private set; } = new PlayerViewModel();
+        public PlayerViewModel PlayerViewModel { get; } = new PlayerViewModel();
+
+        public SearchViewModel SearchViewModel { get; }
 
         public WorkExecuter Work => WorkExecuterViewModel.WorkExecuter;
 

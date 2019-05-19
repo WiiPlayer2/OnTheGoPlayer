@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SongsDB;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -33,6 +34,16 @@ namespace OnTheGoPlayer.Helpers
         public static void InvokePropertyChanged(this INotifyPropertyChanged obj, PropertyChangedEventHandler propertyChanged, string propertyName)
         {
             propertyChanged?.Invoke(obj, new PropertyChangedEventArgs(propertyName));
+        }
+
+        public static IEnumerable<SDBSongData> Iterate(this ISDBSongIterator iter)
+        {
+            iter.Next();
+            while (!iter.EOF)
+            {
+                yield return iter.Item;
+                iter.Next();
+            }
         }
 
         public static async Task<IDisposable> Lock(this SemaphoreSlim semaphore)

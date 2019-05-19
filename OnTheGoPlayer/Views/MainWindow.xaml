@@ -52,6 +52,9 @@
                 <TabItem Header="Player">
                     <local:PlayerView DataContext="{Binding PlayerViewModel}" />
                 </TabItem>
+                <TabItem Header="Search">
+                    <local:SearchView DataContext="{Binding SearchViewModel}" />
+                </TabItem>
                 <TabItem Header="Playlists">
                     <local:ExportView DataContext="{Binding ExportViewModel}" />
                 </TabItem>

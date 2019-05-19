@@ -43,10 +43,7 @@ namespace OnTheGoPlayer
 
             var wnd = new MainWindow
             {
-                DataContext = new MainViewModel()
-                {
-                    Database = profileManagerViewModel.SelectedDatabase,
-                },
+                DataContext = new MainViewModel(profileManagerViewModel.SelectedDatabase)
             };
 
             Current.ShutdownMode = ShutdownMode.OnMainWindowClose;

@@ -227,6 +227,7 @@
     <Compile Include="Helpers\MethodBindingExpression.cs" />
     <Compile Include="ViewModels\PlayerControlViewModel.cs" />
     <Compile Include="ViewModels\ProfileManagerViewModel.cs" />
+    <Compile Include="ViewModels\SearchViewModel.cs" />
     <Compile Include="ViewModels\WorkExecuterViewModel.cs" />
     <Compile Include="Views\Controls\PlayerControl.xaml.cs">
       <DependentUpon>PlayerControl.xaml</DependentUpon>
@@ -242,6 +243,9 @@
     </Compile>
     <Compile Include="Views\ProfileManagerWindow.xaml.cs">
       <DependentUpon>ProfileManagerWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\SearchView.xaml.cs">
+      <DependentUpon>SearchView.xaml</DependentUpon>
     </Compile>
     <Page Include="Dal\MediaMonkeyDropboxDB\DropboxAuthDialog.xaml">
       <SubType>Designer</SubType>
@@ -322,6 +326,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\ProfileManagerWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\SearchView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
