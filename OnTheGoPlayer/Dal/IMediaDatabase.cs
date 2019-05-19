@@ -3,6 +3,7 @@ using OnTheGoPlayer.Helpers;
 using OnTheGoPlayer.Models;
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace OnTheGoPlayer.Dal
@@ -28,6 +29,8 @@ namespace OnTheGoPlayer.Dal
         Task<IEnumerable<PlaylistMetaData>> ListPlaylists();
 
         Task Open(JToken profileData);
+
+        Task<IPlaylistContainer> Search(string query, CancellationToken cancellationToken);
 
         Task<Option<Profile>> TryRegister();
 

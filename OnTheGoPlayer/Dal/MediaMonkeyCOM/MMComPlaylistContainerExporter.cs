@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace OnTheGoPlayer.Dal.MediaMonkeyCOM
@@ -96,6 +97,21 @@ namespace OnTheGoPlayer.Dal.MediaMonkeyCOM
                 application = new SDBApplication();
                 application.ShutdownAfterDisconnect = false;
             });
+        }
+
+        public Task<IPlaylistContainer> Search(string query, CancellationToken cancellationToken)
+        {
+            return Task.Run<IPlaylistContainer>(() =>
+            {
+                var songIterator = application.Database.QuerySongs($"Artist LIKE '%{query}%' OR Album LIKE '%{query}%' OR SongTitle LIKE '%{query}%'") as SDBSongIterator;
+                var songs = songIterator.Iterate().Select(ToSongData).ToList();
+                var playlist = new FilesPlaylistContainer(new PlaylistMetaData
+                {
+                    ID = -1,
+                    Title = query,
+                }, songs);
+                return playlist;
+            }, cancellationToken);
         }
 
         public Task<Option<Profile>> TryRegister()

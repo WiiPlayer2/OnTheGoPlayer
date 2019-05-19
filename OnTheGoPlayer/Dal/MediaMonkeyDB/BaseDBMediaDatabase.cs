@@ -106,6 +106,11 @@ namespace OnTheGoPlayer.Dal.MediaMonkeyDB
 
         Task IMediaDatabase.Open(JToken profileData) => Open(profileData.ToObject<TProfileData>());
 
+        public Task<IPlaylistContainer> Search(string query, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+
         public abstract Task<Option<Profile<TProfileData>>> TryRegister();
 
         async Task<Option<Profile>> IMediaDatabase.TryRegister() => (await TryRegister()).Map<Profile>(o => o);
