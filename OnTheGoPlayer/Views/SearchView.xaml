@@ -25,7 +25,7 @@
                 <TextBox
                     Name="_searchBox"
                     Background="Transparent"
-                    Text="{Binding SearchText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Delay=1000}" />
+                    Text="{Binding SearchText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Delay=100}" />
             </Grid>
 
             <Button

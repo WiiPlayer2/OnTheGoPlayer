@@ -106,9 +106,19 @@ namespace OnTheGoPlayer.Dal.MediaMonkeyDB
 
         Task IMediaDatabase.Open(JToken profileData) => Open(profileData.ToObject<TProfileData>());
 
-        public Task<IPlaylistContainer> Search(string query, CancellationToken cancellationToken)
+        public async Task<IPlaylistContainer> Search(string query, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            var dbSongs = await connection.Query<MMDBSong>($"SELECT * FROM Songs WHERE Artist LIKE '%{query}%' OR Album LIKE '%{query}%' OR SongTitle LIKE '%{query}%'");
+
+            var mediaMap = new Dictionary<int, string>();
+            var mapSemaphore = new SemaphoreSlim(1, 1);
+            var songs = await Task.WhenAll(dbSongs.Select(o => FindSong(o, mediaMap, mapSemaphore)));
+
+            return new StreamPlaylistContainer(new PlaylistMetaData()
+            {
+                ID = -1,
+                Title = query,
+            }, songs, GetStream);
         }
 
         public abstract Task<Option<Profile<TProfileData>>> TryRegister();
