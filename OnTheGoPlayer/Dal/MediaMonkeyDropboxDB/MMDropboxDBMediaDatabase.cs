@@ -9,6 +9,7 @@ namespace OnTheGoPlayer.Dal.MediaMonkeyDropboxDB
     using System.Collections.Generic;
     using System.IO;
     using Dropbox.Api;
+    using Dropbox.Api.Files;
     using OnTheGoPlayer.Helpers;
     using OnTheGoPlayer.Models;
 
@@ -21,6 +22,8 @@ namespace OnTheGoPlayer.Dal.MediaMonkeyDropboxDB
         private string localDbPath;
 
         private string remoteDbPath;
+
+        private string remoteDbRev;
 
         #endregion Private Fields
 
@@ -42,7 +45,6 @@ namespace OnTheGoPlayer.Dal.MediaMonkeyDropboxDB
                 await Close();
                 try
                 {
-                    await Task.Delay(1000);
                     using (var fStream = File.Open(localDbPath, FileMode.Open, FileAccess.Read, FileShare.Read))
                     {
                         await fStream.CopyToAsync(memStream);
@@ -52,6 +54,7 @@ namespace OnTheGoPlayer.Dal.MediaMonkeyDropboxDB
                     memStream.Position = 0;
                     await client.Files.UploadAsync(
                         remoteDbPath,
+                        mode: new WriteMode.Update(remoteDbRev),
                         body: memStream);
                 }
                 finally
@@ -67,6 +70,7 @@ namespace OnTheGoPlayer.Dal.MediaMonkeyDropboxDB
 
             remoteDbPath = profileData.DatabasePath;
             var downloadResponse = await client.Files.DownloadAsync(remoteDbPath);
+            remoteDbRev = downloadResponse.Response.Rev;
             var stream = await downloadResponse.GetContentAsStreamAsync();
             localDbPath = Path.GetTempFileName();
 
