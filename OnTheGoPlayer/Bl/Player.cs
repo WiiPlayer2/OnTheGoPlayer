@@ -3,6 +3,7 @@ using CSCore.Codecs.AAC;
 using CSCore.Codecs.FLAC;
 using CSCore.Codecs.MP3;
 using CSCore.Codecs.OGG;
+using CSCore.Codecs.WAV;
 using NullGuard;
 using OnTheGoPlayer.Dal;
 using OnTheGoPlayer.Helpers;
@@ -203,6 +204,9 @@ namespace OnTheGoPlayer.Bl
 
                 case "ogg":
                     return new OggSource(stream).ToWaveSource();
+
+                case "wav":
+                    return new WaveFileReader(stream);
 
                 default:
                     Debug.Fail($"Format {song.FileFormat} not supported.");
