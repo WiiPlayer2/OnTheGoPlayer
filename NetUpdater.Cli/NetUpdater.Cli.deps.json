@@ -1,0 +1,113 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v2.1",
+    "signature": "638e392af03e55ba4c1e7c4bc124867ea40ccf9b"
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v2.1": {
+      "NetUpdater.Cli/0.1": {
+        "dependencies": {
+          "CommandLineParser": "2.5.0",
+          "NetUpdater.Core": "0.1.0"
+        },
+        "runtime": {
+          "NetUpdater.Cli.dll": {}
+        }
+      },
+      "CommandLineParser/2.5.0": {
+        "runtime": {
+          "lib/netstandard2.0/CommandLine.dll": {
+            "assemblyVersion": "2.5.0.0",
+            "fileVersion": "2.5.0.0"
+          }
+        }
+      },
+      "Glob/1.1.3": {
+        "dependencies": {
+          "System.ValueTuple": "4.5.0"
+        },
+        "runtime": {
+          "lib/netstandard2.0/Glob.dll": {
+            "assemblyVersion": "1.1.3.0",
+            "fileVersion": "1.1.3.0"
+          }
+        }
+      },
+      "MicroElements.Functional/0.15.0": {
+        "runtime": {
+          "lib/netstandard2.0/MicroElements.Functional.dll": {
+            "assemblyVersion": "0.15.0.0",
+            "fileVersion": "0.15.0.0"
+          }
+        }
+      },
+      "SharpZipLib/1.1.0": {
+        "runtime": {
+          "lib/netstandard2.0/ICSharpCode.SharpZipLib.dll": {
+            "assemblyVersion": "1.1.0.145",
+            "fileVersion": "1.1.0.145"
+          }
+        }
+      },
+      "System.ValueTuple/4.5.0": {},
+      "NetUpdater.Core/0.1.0": {
+        "dependencies": {
+          "Glob": "1.1.3",
+          "MicroElements.Functional": "0.15.0",
+          "SharpZipLib": "1.1.0"
+        },
+        "runtime": {
+          "NetUpdater.Core.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "NetUpdater.Cli/0.1": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "CommandLineParser/2.5.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-ukoCfILrFB5+Trg0a8LHpNMyNyLicXG08SvWAl0BAwDATS7bzNbdSxemHM8waj7ZMOfXJ5s4exHW6Jp1XEC5DA==",
+      "path": "commandlineparser/2.5.0",
+      "hashPath": "commandlineparser.2.5.0.nupkg.sha512"
+    },
+    "Glob/1.1.3": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-6JHzn3mdodMFN/CrjOBUTvEVQNfSTxNEgkwgZl+ZemSoUrwNY+jFEYSV0SmeQcdKj/6yieTbHctnCGwqNahuAA==",
+      "path": "glob/1.1.3",
+      "hashPath": "glob.1.1.3.nupkg.sha512"
+    },
+    "MicroElements.Functional/0.15.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-ToC2wzegEJzUoW1/UzJRJ256FD3/NQ2VexUFZg8Fyk63GCZHMccQ7oj8BU0IbRPbYIOWOUZVaUbDxuZMNx64nw==",
+      "path": "microelements.functional/0.15.0",
+      "hashPath": "microelements.functional.0.15.0.nupkg.sha512"
+    },
+    "SharpZipLib/1.1.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-6cwSz51tzupsfb8q5AVRDqvD4vSeDDJuv3CYWCvQ+T3wrAjQtniICiczb+++j93z3NNuCZN+TiRjZ5lnfWtleQ==",
+      "path": "sharpziplib/1.1.0",
+      "hashPath": "sharpziplib.1.1.0.nupkg.sha512"
+    },
+    "System.ValueTuple/4.5.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-okurQJO6NRE/apDIP23ajJ0hpiNmJ+f0BwOlB/cSqTLQlw5upkf+5+96+iG2Jw40G1fCVCyPz/FhIABUjMR+RQ==",
+      "path": "system.valuetuple/4.5.0",
+      "hashPath": "system.valuetuple.4.5.0.nupkg.sha512"
+    },
+    "NetUpdater.Core/0.1.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}
