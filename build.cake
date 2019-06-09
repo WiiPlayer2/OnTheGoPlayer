@@ -48,28 +48,24 @@ Task("Cleanup")
         CleanDirectory($"./_build/{configuration}");
 });
 
-Task("Restore")
-.IsDependentOn("Cleanup")
-.Does(() => {
-    NuGetRestore("./OnTheGoPlayer.sln");
-});
-
 Task("BuildPublish")
-.IsDependentOn("Restore")
+.IsDependentOn("Cleanup")
 .Does(() => {
     MSBuild("./OnTheGoPlayer.sln", config =>
         config.SetConfiguration(configuration)
             .SetVerbosity(Verbosity.Minimal)
             .SetPlatformTarget(PlatformTarget.MSIL)
+            .WithRestore()
             .WithProperty("ApplicationVersion", appVersion.ToString(4)));
 });
 
 Task("BuildTest")
-.IsDependentOn("Restore")
+.IsDependentOn("Cleanup")
 .Does(() => {
     MSBuild("./OnTheGoPlayer.Test/OnTheGoPlayer.Test.csproj", config =>
         config.SetConfiguration(configuration)
-            .SetVerbosity(Verbosity.Minimal));
+            .SetVerbosity(Verbosity.Minimal)
+            .WithRestore());
 });
 
 Task("Test")
