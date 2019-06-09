@@ -100,7 +100,8 @@ Task("Pack")
         .AppendSwitch("--applicationPath", $"./OnTheGoPlayer/bin/{configuration}")
         .AppendSwitch("--output", $"./{configuration}-update.zip")
         .AppendSwitch("--output-version", appVersion.ToString())
-        .AppendSwitch("--channel", channel));
+        .AppendSwitch("--channel", channel)
+        .AppendSwitch("--manifest", "MANIFEST"));
     Unzip($"./{configuration}-update.zip", $"./_build/{configuration}");
 });
 
