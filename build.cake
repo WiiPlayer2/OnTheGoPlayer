@@ -44,6 +44,8 @@ Task("Cleanup")
     CleanDirectory($"./OnTheGoPlayer/obj/{configuration}");
     DeleteFiles($"./OnTheGoPlayer.Test/bin/{configuration}/TestResult.xml");
     DeleteFiles($"./{configuration}-*.zip");
+    if(DirectoryExists($"./_build/{configuration}"))
+        CleanDirectory($"./_build/{configuration}");
 });
 
 Task("Restore")
@@ -59,7 +61,7 @@ Task("BuildPublish")
         config.SetConfiguration(configuration)
             .SetVerbosity(Verbosity.Minimal)
             .SetPlatformTarget(PlatformTarget.MSIL)
-            .WithTarget("publish")
+            // .WithTarget("publish")
             .WithProperty("ApplicationVersion", appVersion.ToString(4)));
 });
 
@@ -82,12 +84,29 @@ Task("Test")
         });
 });
 
+Task("InstallUpdater")
+.Does(() => {
+    CopyDirectory("./NetUpdater.Cli", $"./OnTheGoPlayer/bin/{configuration}/updater");
+});
+
 Task("Pack")
 .IsDependentOn("Test")
 .IsDependentOn("BuildPublish")
+.IsDependentOn("InstallUpdater")
 .Does(() => {
     var lastCommit = GitLogTip("./");
     Zip($"./OnTheGoPlayer/bin/{configuration}", $"./{configuration}-{lastCommit.Sha}.zip");
+
+    var channel = GitBranchCurrent(".").FriendlyName;
+    if(Jenkins.IsRunningOnJenkins)
+        channel = Jenkins.Environment.Repository.BranchName;
+    DotNetCoreExecute("./NetUpdater.Cli/NetUpdater.Cli.dll", new ProcessArgumentBuilder()
+        .Append("pack")
+        .AppendSwitch("--applicationPath", $"./OnTheGoPlayer/bin/{configuration}")
+        .AppendSwitch("--output", $"./{configuration}-update.zip")
+        .AppendSwitch("--output-version", appVersion.ToString())
+        .AppendSwitch("--channel", channel));
+    Unzip($"./{configuration}-update.zip", $"./_build/{configuration}");
 });
 
 RunTarget(target);
