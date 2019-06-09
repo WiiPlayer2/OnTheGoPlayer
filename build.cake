@@ -61,7 +61,6 @@ Task("BuildPublish")
         config.SetConfiguration(configuration)
             .SetVerbosity(Verbosity.Minimal)
             .SetPlatformTarget(PlatformTarget.MSIL)
-            // .WithTarget("publish")
             .WithProperty("ApplicationVersion", appVersion.ToString(4)));
 });
 
