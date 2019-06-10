@@ -48,6 +48,11 @@ Task("Cleanup")
         CleanDirectory($"./_build/{configuration}");
 });
 
+Task("NugetRestore")
+.Does(() => {
+    NuGetRestore("./OnTheGoPlayer.sln");
+});
+
 Task("BuildPublish")
 .IsDependentOn("Cleanup")
 .Does(() => {
@@ -85,6 +90,7 @@ Task("InstallUpdater")
 });
 
 Task("Pack")
+.IsDependentOn("NugetRestore")
 .IsDependentOn("Test")
 .IsDependentOn("BuildPublish")
 .IsDependentOn("InstallUpdater")
