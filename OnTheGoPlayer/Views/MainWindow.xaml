@@ -47,6 +47,9 @@
                     <MenuItem Command="{Binding CommitCommand}" Header="_Commit Play Information" />
                     <MenuItem Command="{Binding SyncCommand}" Header="_Sync Play Information" />
                 </MenuItem>
+                <MenuItem Header="_?">
+                    <MenuItem Command="{Binding UpdateCommand}" Header="_Check for Updates" />
+                </MenuItem>
             </Menu>
             <TabControl>
                 <TabItem Header="Player">

@@ -1,4 +1,5 @@
-﻿using OnTheGoPlayer.Dal;
+﻿using NetUpdater.Core;
+using OnTheGoPlayer.Dal;
 using OnTheGoPlayer.Dal.IO;
 using OnTheGoPlayer.Helpers;
 using OnTheGoPlayer.Properties;
@@ -6,8 +7,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace OnTheGoPlayer.ViewModels
 {
@@ -15,7 +18,15 @@ namespace OnTheGoPlayer.ViewModels
     {
         #region Private Fields
 
+        private const string MANIFEST_NAME = "MANIFEST";
+
+        private readonly CliInvoker cliInvoker = new CliInvoker("./updater/NetUpdater.Cli.dll", MANIFEST_NAME);
+
         private readonly MainViewModel mainViewModel;
+
+        private readonly Updater updater;
+
+        private readonly Uri updateUri = new Uri("https://apps.dark-link.info/deploy/OnTheGoPlayer/");
 
         #endregion Private Fields
 
@@ -29,20 +40,17 @@ namespace OnTheGoPlayer.ViewModels
             ExportCommand = new Command(Export);
             CommitCommand = new Command(Commit);
             SyncCommand = new Command(() => mainViewModel.Work.Execute(Sync));
+            UpdateCommand = new Command(() => mainViewModel.Work.Execute(Update));
+
+            var applicationPath = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
+#if DEBUG
+            updater = new Updater(WebLocator.Instance, applicationPath, MicroElements.Functional.OptionNone.Default, "master");
+#else
+            updater = new Updater(WebLocator.Instance, applicationPath, MANIFEST_NAME, MicroElements.Functional.OptionNone.Default);
+#endif
         }
 
         #endregion Public Constructors
-
-        #region Private Methods
-
-        private async Task Sync()
-        {
-            var songInfo = await SongInfoDB.Instance.GetAllChangedInformation();
-            await mainViewModel.Database.ImportSongInfo(songInfo);
-            await SongInfoDB.Instance.CommitInformation();
-        }
-
-        #endregion Private Methods
 
         #region Public Properties
 
@@ -53,6 +61,8 @@ namespace OnTheGoPlayer.ViewModels
         public Command LoadCommand { get; }
 
         public Command SyncCommand { get; }
+
+        public Command UpdateCommand { get; }
 
         #endregion Public Properties
 
@@ -111,6 +121,31 @@ namespace OnTheGoPlayer.ViewModels
                 return;
 
             await Load(path);
+        }
+
+        private async Task Sync()
+        {
+            var songInfo = await SongInfoDB.Instance.GetAllChangedInformation();
+            await mainViewModel.Database.ImportSongInfo(songInfo);
+            await SongInfoDB.Instance.CommitInformation();
+        }
+
+        private async Task Update()
+        {
+            var checkResult = await updater.GetNewerVersion(updateUri);
+            await checkResult.Match(
+                versionDataOption => versionDataOption.Match(
+                    async versionData =>
+                    {
+                        var result = MessageBox.Show($"Update to version {versionData.Version}-{versionData.Channel} found. Do you want to install it?", "Update found", MessageBoxButton.YesNo);
+                        if (result != MessageBoxResult.Yes)
+                            return;
+
+                        await cliInvoker.Update(updateUri, "master");
+                        await Application.Current.Dispatcher.InvokeAsync(() => Application.Current.Shutdown());
+                    },
+                    async () => MessageBox.Show("No update found.")),
+                async e => MessageBox.Show(e.ToString(), "Error checking for updates."));
         }
 
         #endregion Private Methods
